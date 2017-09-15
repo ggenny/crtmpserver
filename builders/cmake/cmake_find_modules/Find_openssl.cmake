@@ -35,6 +35,7 @@ FIND_LIBRARY(OPENSSL_LIBRARY_PATH
 		/usr/local/lib
 		/lib/i386-linux-gnu
 		/usr/lib/i386-linux-gnu
+		/usr/lib/arm-linux-gnueabihf
 		/usr/local/ssl/lib
 		NO_DEFAULT_PATH)
 
@@ -57,6 +58,7 @@ FIND_LIBRARY(CRYPTO_LIBRARY_PATH
 		/usr/local/lib
 		/lib/i386-linux-gnu
 		/usr/lib/i386-linux-gnu
+		/usr/lib/arm-linux-gnueabihf
 		/usr/local/ssl/lib
 		NO_DEFAULT_PATH)
 
