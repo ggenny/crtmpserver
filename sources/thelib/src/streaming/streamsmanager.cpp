@@ -78,11 +78,11 @@ void StreamsManager::UnRegisterStreams(uint32_t protocolId) {
 	}
 }
 
-void StreamsManager::UnRegisterStreams(string streamName, uint32_t protocolId) {
-	map<uint32_t, BaseStream *> streams = FindByProtocolIdByTypeByName(protocolId, ST_IN_NET, streamName, true, false);
-
+void StreamsManager::DeleteExists(string streamName) {
+	map<uint32_t, BaseStream *> streams = FindByName(streamName, true);
 	FOR_MAP(streams, uint32_t, BaseStream *, i) {
-		UnRegisterStream(MAP_VAL(i));
+		INFO("Delete Stream - %s (%s)", STR(MAP_VAL(i)->GetName()), STR(tagToString(MAP_VAL(i)->GetType())));
+		MAP_VAL(i)->EnqueueForDelete();
 	}
 }
 
