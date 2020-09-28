@@ -67,14 +67,19 @@ void ConsoleLogLocation::Log(int32_t level, const char *pFileName,
 				STR(message));
 	}
 #else
+	time_t now = time(NULL);
+	struct tm *tminfo;
+	char buf[sizeof "YYYY-MM-DD HH:MM:SS"];
+	tminfo = localtime(&now);
+	strftime(buf, sizeof(buf), "%F %T", tminfo);
 	if (_allowColors) {
 		SET_CONSOLE_TEXT_COLOR(_colors[level]);
-		fprintf(stdout, "%s:%" PRIu32" %s", pFileName, lineNumber, STR(message));
+		fprintf(stdout, "%s %s:%" PRIu32" %s", STR(buf), pFileName, lineNumber, STR(message));
 		//fprintf(stdout, "%d %s:%" PRIu32" %s", (int) getpid(), pFileName, lineNumber, STR(message));
 		SET_CONSOLE_TEXT_COLOR(_colors[6]);
 		fprintf(stdout, "\n");
 	} else {
-		fprintf(stdout, "%s:%" PRIu32" %s\n", pFileName, lineNumber, STR(message));
+		fprintf(stdout, "%s %s:%" PRIu32" %s\n", STR(buf), pFileName, lineNumber, STR(message));
 	}
 #endif /* ANDROID */
 	fflush(stdout);
