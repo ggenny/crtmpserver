@@ -82,9 +82,11 @@ bool TCPCarrier::OnEvent(struct epoll_event &event) {
 		o_assert(pInputBuffer != NULL);
 		if (!pInputBuffer->ReadFromTCPFd(_inboundFd, _recvBufferSize, _ioAmount,
 				_lastRecvError)) {
-			FATAL("Unable to read data from connection: %s. Error was (%d): %s",
-					(_pProtocol != NULL) ? STR(*_pProtocol) : "", _lastRecvError,
-					strerror(_lastRecvError));
+			if (_lastRecvError != ECONNRESET) {
+				FATAL("Unable to read data from connection: %s. Error was (%d): %s",
+					  (_pProtocol != NULL) ? STR(*_pProtocol) : "", _lastRecvError,
+					  strerror(_lastRecvError));
+			}
 			return false;
 		}
 		_rx += _ioAmount;
