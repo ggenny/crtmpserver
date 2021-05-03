@@ -31,11 +31,11 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 - [] Align to 4b094dfaa132
 - [] Advaced geographical architecture (routing and control)
 - [] Autotest the code
-- [] Create a Docker
+- [*] Create a Docker
 - [] Add new audio codec to RTSP
 - [] Add RTSP h265 support
-- [] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
-- [] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
+- [*] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
+- [*] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
  
 ## 1.1-rc1 Version
 
