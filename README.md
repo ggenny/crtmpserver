@@ -87,7 +87,7 @@ After you compiled the package, it's time to test it. Run the following command:
 If everything goes well, you'll get on your console a table with IP's, ports, protocols, and application names
 If you see this table, then crtmpserver  is working.
 
-# Installing crtmpserver
+## Installing crtmpserver
 
 * Go to the directory crtmpserver/cmake
 * Run the following command: cmake -DCRTMPSERVER_INSTALL_PREFIX=<path> (for example /usr/local/crtmpserver)
@@ -103,11 +103,11 @@ Also look into builders/packing directory. There are several OS specific builder
 * in directory "debian" builder for Debian, also can be used for Ubuntu and other distributions based on debian
 * in directory "freebsd" builder(port) for FreeBSD
 
-# crtmpserver settings
+## Settings
 
 * All crtmpserver settings are located in a detailed file calle: crtmpserver.lua
 
-# Support/Help:
+## Support/Help:
 
 If you're lookingo for assistance with crtmpserver, feel free to join us at:
 http://groups.google.com/group/c-rtmp-server
