@@ -39,7 +39,7 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
  
 ## 1.1-rc1 Version
 
-aligned to ( -- ported netio )  Gavriloaie Eugen-Andrei commit.
+aligned to ( d2af6198341a ) Gavriloaie Eugen-Andrei commit with minor build fix
 
 ## Features
 
