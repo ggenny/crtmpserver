@@ -18,7 +18,7 @@
  */
 
 
-#ifdef HAS_PROTOCOL_TS
+#if defined HAS_PROTOCOL_TS && defined HAS_MEDIA_TS
 #include "protocols/ts/basetsappprotocolhandler.h"
 #include "protocols/baseprotocol.h"
 #include "protocols/ts/innettsstream.h"

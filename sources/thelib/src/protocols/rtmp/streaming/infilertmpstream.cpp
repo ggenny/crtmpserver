@@ -75,12 +75,12 @@ bool InFileRTMPStream::AVCBuilder::BuildFrame(MediaFile* pFile, MediaFrame& medi
 	}
 
 	if (!pFile->SeekTo(mediaFrame.start)) {
-		FATAL("Unable to seek to position %"PRIu64, mediaFrame.start);
+		FATAL("Unable to seek to position %" PRIu64, mediaFrame.start);
 		return false;
 	}
 
 	if (!buffer.ReadFromFs(*pFile, (uint32_t) mediaFrame.length)) {
-		FATAL("Unable to read %"PRIu64" bytes from offset %"PRIu64, mediaFrame.length, mediaFrame.start);
+		FATAL("Unable to read %" PRIu64" bytes from offset %" PRIu64, mediaFrame.length, mediaFrame.start);
 		return false;
 	}
 
@@ -108,13 +108,13 @@ bool InFileRTMPStream::AACBuilder::BuildFrame(MediaFile* pFile, MediaFrame& medi
 
 	//2. Seek into the data file at the correct position
 	if (!pFile->SeekTo(mediaFrame.start)) {
-		FATAL("Unable to seek to position %"PRIu64, mediaFrame.start);
+		FATAL("Unable to seek to position %" PRIu64, mediaFrame.start);
 		return false;
 	}
 
 	//3. Read the data
 	if (!buffer.ReadFromFs(*pFile, (uint32_t) mediaFrame.length)) {
-		FATAL("Unable to read %"PRIu64" bytes from offset %"PRIu64, mediaFrame.length, mediaFrame.start);
+		FATAL("Unable to read %" PRIu64" bytes from offset %" PRIu64, mediaFrame.length, mediaFrame.start);
 		return false;
 	}
 
@@ -135,13 +135,13 @@ bool InFileRTMPStream::MP3Builder::BuildFrame(MediaFile *pFile,
 
 	//2. Seek into the data file at the correct position
 	if (!pFile->SeekTo(mediaFrame.start)) {
-		FATAL("Unable to seek to position %"PRIu64, mediaFrame.start);
+		FATAL("Unable to seek to position %" PRIu64, mediaFrame.start);
 		return false;
 	}
 
 	//3. Read the data
 	if (!buffer.ReadFromFs(*pFile, (uint32_t) mediaFrame.length)) {
-		FATAL("Unable to read %"PRIu64" bytes from offset %"PRIu64, mediaFrame.length, mediaFrame.start);
+		FATAL("Unable to read %" PRIu64" bytes from offset %" PRIu64, mediaFrame.length, mediaFrame.start);
 		return false;
 	}
 
@@ -160,13 +160,13 @@ bool InFileRTMPStream::PassThroughBuilder::BuildFrame(MediaFile *pFile,
 		MediaFrame &mediaFrame, IOBuffer &buffer) {
 	//1. Seek into the data file at the correct position
 	if (!pFile->SeekTo(mediaFrame.start)) {
-		FATAL("Unable to seek to position %"PRIu64, mediaFrame.start);
+		FATAL("Unable to seek to position %" PRIu64, mediaFrame.start);
 		return false;
 	}
 
 	//2. Read the data
 	if (!buffer.ReadFromFs(*pFile, (uint32_t) mediaFrame.length)) {
-		FATAL("Unable to read %"PRIu64" bytes from offset %"PRIu64, mediaFrame.length, mediaFrame.start);
+		FATAL("Unable to read %" PRIu64" bytes from offset %" PRIu64, mediaFrame.length, mediaFrame.start);
 		return false;
 	}
 
@@ -332,14 +332,14 @@ bool InFileRTMPStream::FeedMetaData(MediaFile *pFile, MediaFrame &mediaFrame) {
 		return true;
 	//1. Seek into the data file at the correct position
 	if (!pFile->SeekTo(mediaFrame.start)) {
-		FATAL("Unable to seek to position %"PRIu64, mediaFrame.start);
+		FATAL("Unable to seek to position %" PRIu64, mediaFrame.start);
 		return false;
 	}
 
 	//2. Read the data
 	_metadataBuffer.IgnoreAll();
 	if (!_metadataBuffer.ReadFromFs(*pFile, (uint32_t) mediaFrame.length)) {
-		FATAL("Unable to read %"PRIu64" bytes from offset %"PRIu64, mediaFrame.length, mediaFrame.start);
+		FATAL("Unable to read %" PRIu64" bytes from offset %" PRIu64, mediaFrame.length, mediaFrame.start);
 		return false;
 	}
 

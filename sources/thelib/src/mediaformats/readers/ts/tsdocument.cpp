@@ -95,7 +95,7 @@ bool TSDocument::ParseDocument() {
 	}
 
 	if (!_mediaFile.SeekTo(_chunkSizeDetectionCount)) {
-		FATAL("Unable to seek at %"PRIu32, _chunkSizeDetectionCount);
+		FATAL("Unable to seek at %" PRIu32, _chunkSizeDetectionCount);
 		return false;
 	}
 
@@ -116,7 +116,7 @@ bool TSDocument::ParseDocument() {
 		uint32_t blockSize = defaultBlockSize < available ? defaultBlockSize : available;
 		buffer.MoveData();
 		if (!buffer.ReadFromFs(_mediaFile, blockSize)) {
-			WARN("Unable to read %"PRIu32" bytes from file", blockSize);
+			WARN("Unable to read %" PRIu32" bytes from file", blockSize);
 			break;
 		}
 		if (!_pParser->ProcessBuffer(buffer, false)) {
@@ -173,7 +173,7 @@ bool TSDocument::DetermineChunkSize() {
 			return false;
 		}
 
-		//FINEST("Check for %"PRIu8" at %"PRIu8, (uint8_t) TS_CHUNK_188, _chunkSizeDetectionCount);
+		//FINEST("Check for %" PRIu8" at %" PRIu8, (uint8_t) TS_CHUNK_188, _chunkSizeDetectionCount);
 		if (!TestChunkSize(TS_CHUNK_188)) {
 			FATAL("I give up. I'm unable to detect the ts chunk size");
 			return false;
@@ -181,7 +181,7 @@ bool TSDocument::DetermineChunkSize() {
 		if (_chunkSize != 0)
 			return true;
 
-		//FINEST("Check for %"PRIu8" at %"PRIu8, (uint8_t) TS_CHUNK_204, _chunkSizeDetectionCount);
+		//FINEST("Check for %" PRIu8" at %" PRIu8, (uint8_t) TS_CHUNK_204, _chunkSizeDetectionCount);
 		if (!TestChunkSize(TS_CHUNK_204)) {
 			FATAL("I give up. I'm unable to detect the ts chunk size");
 			return false;
@@ -189,7 +189,7 @@ bool TSDocument::DetermineChunkSize() {
 		if (_chunkSize != 0)
 			return true;
 
-		//FINEST("Check for %"PRIu8" at %"PRIu8, (uint8_t) TS_CHUNK_208, _chunkSizeDetectionCount);
+		//FINEST("Check for %" PRIu8" at %" PRIu8, (uint8_t) TS_CHUNK_208, _chunkSizeDetectionCount);
 		if (!TestChunkSize(TS_CHUNK_208)) {
 			FATAL("I give up. I'm unable to detect the ts chunk size");
 			return false;
@@ -204,17 +204,17 @@ bool TSDocument::DetermineChunkSize() {
 bool TSDocument::GetByteAt(uint64_t offset, uint8_t &byte) {
 	uint64_t backup = _mediaFile.Cursor();
 	if (!_mediaFile.SeekTo(offset)) {
-		FATAL("Unable to seek to offset %"PRIu64, offset);
+		FATAL("Unable to seek to offset %" PRIu64, offset);
 		return false;
 	}
 
 	if (!_mediaFile.ReadUI8(&byte)) {
-		FATAL("Unable to read byte at offset %"PRIu64, offset);
+		FATAL("Unable to read byte at offset %" PRIu64, offset);
 		return false;
 	}
 
 	if (!_mediaFile.SeekTo(backup)) {
-		FATAL("Unable to seek to offset %"PRIu64, backup);
+		FATAL("Unable to seek to offset %" PRIu64, backup);
 		return false;
 	}
 
@@ -228,7 +228,7 @@ bool TSDocument::TestChunkSize(uint8_t chunkSize) {
 		return true;
 
 	if (!GetByteAt(_chunkSizeDetectionCount, byte)) {
-		FATAL("Unable to read byte at offset %"PRIu32, _chunkSizeDetectionCount);
+		FATAL("Unable to read byte at offset %" PRIu32, _chunkSizeDetectionCount);
 		return false;
 	}
 
@@ -236,7 +236,7 @@ bool TSDocument::TestChunkSize(uint8_t chunkSize) {
 		return true;
 
 	if (!GetByteAt(_chunkSizeDetectionCount + chunkSize, byte)) {
-		FATAL("Unable to read byte at offset %"PRIu32, _chunkSizeDetectionCount + chunkSize);
+		FATAL("Unable to read byte at offset %" PRIu32, _chunkSizeDetectionCount + chunkSize);
 		return false;
 	}
 
@@ -244,7 +244,7 @@ bool TSDocument::TestChunkSize(uint8_t chunkSize) {
 		return true;
 
 	if (!GetByteAt(_chunkSizeDetectionCount + 2 * chunkSize, byte)) {
-		FATAL("Unable to read byte at offset %"PRIu32, _chunkSizeDetectionCount + 2 * chunkSize);
+		FATAL("Unable to read byte at offset %" PRIu32, _chunkSizeDetectionCount + 2 * chunkSize);
 		return false;
 	}
 

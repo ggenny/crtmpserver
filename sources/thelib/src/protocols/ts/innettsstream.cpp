@@ -66,11 +66,17 @@ void InNetTSStream::Enable(bool value) {
 	_enabled = value;
 }
 
+uint32_t InNetTSStream::GetFeedTime()  {
+	return GetInputVideoTimescale();
+}
+
+
 bool InNetTSStream::FeedData(uint8_t *pData, uint32_t dataLength,
 		uint32_t processedLength, uint32_t totalLength,
 		double pts, double dts, bool isAudio) {
 	if (((_hasAudio)&&(_streamCapabilities.GetAudioCodecType() != CODEC_AUDIO_AAC))
-			|| ((_hasVideo)&&(_streamCapabilities.GetVideoCodecType() != CODEC_VIDEO_H264))
+			|| ((_hasVideo)&&(_streamCapabilities.GetVideoCodecType() != CODEC_VIDEO_H264 
+			&& _streamCapabilities.GetVideoCodecType() != CODEC_VIDEO_H265 ))
 			|| (!_enabled)) {
 		if (isAudio) {
 			_stats.audio.droppedBytesCount += dataLength;

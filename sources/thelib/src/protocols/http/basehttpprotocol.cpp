@@ -400,7 +400,7 @@ bool BaseHTTPProtocol::HandleChunkedContent(IOBuffer &buffer) {
 		//8. Get its actual value and test it as well
 		chunkSize = strtol((char *) pBuffer, NULL, 16);
 		if (chunkSize > HTTP_MAX_CHUNK_SIZE) {
-			FATAL("Chunk size too large. Maximum allowed is %"PRIu32" and we got %"PRIu32,
+			FATAL("Chunk size too large. Maximum allowed is %" PRIu32" and we got %" PRIu32,
 					(uint32_t) HTTP_MAX_CHUNK_SIZE, chunkSize);
 			return false;
 		}
@@ -436,12 +436,12 @@ bool BaseHTTPProtocol::HandleChunkedContent(IOBuffer &buffer) {
 		}
 
 		//13. Ignore the bytes from the input buffer
-		DEBUG_HTTP("available bytes before ignore: %"PRIu32, GETAVAILABLEBYTESCOUNT(buffer));
+		DEBUG_HTTP("available bytes before ignore: %" PRIu32, GETAVAILABLEBYTESCOUNT(buffer));
 		//				if (GETAVAILABLEBYTESCOUNT(buffer) == ((uint32_t) chunkSizeSize - 2 + 2 + chunkSize + 2)) {
 		//					DEBUG_HTTP("%s", STR(buffer));
 		//				}
 		buffer.Ignore((uint32_t) chunkSizeSize - 2 + 2 + chunkSize + 2);
-		DEBUG_HTTP("available bytes  after ignore: %"PRIu32, GETAVAILABLEBYTESCOUNT(buffer));
+		DEBUG_HTTP("available bytes  after ignore: %" PRIu32, GETAVAILABLEBYTESCOUNT(buffer));
 
 		//14. reset the state if necessary
 		if (TransferCompleted()) {

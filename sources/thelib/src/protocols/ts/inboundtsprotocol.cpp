@@ -161,7 +161,7 @@ void InboundTSProtocol::SignalPMT(TSPacketPMT *pPMT) {
 	if (GetCustomParameters().HasKeyChain(V_STRING, true, 1, "localStreamName"))
 		streamName = (string) GetCustomParameters()["localStreamName"];
 	else
-		streamName = format("ts_%"PRIu32"_%s", GetId(), STR(generateRandomString(4)));
+		streamName = format("ts_%" PRIu32"_%s", GetId(), STR(generateRandomString(4)));
 
 	if (!GetApplication()->StreamNameAvailable(streamName, this)) {
 		FATAL("Stream name %s already taken", STR(streamName));

@@ -169,7 +169,7 @@ bool TSParser::ProcessPacket(uint32_t packetHeader, IOBuffer &buffer,
 		case PID_TYPE_UNKNOWN:
 		{
 			if (!MAP_HAS1(_unknownPids, pPIDDescriptor->pid)) {
-				//WARN("PID %"PRIu16" not known yet", pPIDDescriptor->pid);
+				//WARN("PID %" PRIu16" not known yet", pPIDDescriptor->pid);
 				_unknownPids[pPIDDescriptor->pid] = pPIDDescriptor->pid;
 			}
 			return true;
@@ -182,7 +182,7 @@ bool TSParser::ProcessPacket(uint32_t packetHeader, IOBuffer &buffer,
 		}
 		default:
 		{
-			WARN("PID type not implemented: %d. Pid number: %"PRIu16,
+			WARN("PID type not implemented: %d. Pid number: %" PRIu16,
 					pPIDDescriptor->type, pPIDDescriptor->pid);
 			return false;
 		}
@@ -451,7 +451,7 @@ bool TSParser::ProcessPidTypeAV(PIDDescriptor *pPIDDescriptor, uint8_t *pData,
 		if (length >= 8) {
 			if (((pData[3]&0xE0) != 0xE0)&&((pData[3]&0xC0) != 0xC0)) {
 				BaseInStream *pTemp = pPIDDescriptor->pAVContext->GetInStream();
-				WARN("PID %"PRIu16" from %s is not h264/aac. The type is 0x%02"PRIx8,
+				WARN("PID %" PRIu16" from %s is not h264/aac. The type is 0x%02" PRIx8,
 						pPIDDescriptor->pid,
 						pTemp != NULL ? STR(*pTemp) : "",
 						pData[3]);
@@ -516,7 +516,7 @@ bool TSParser::ProcessPidTypeAV(PIDDescriptor *pPIDDescriptor, uint8_t *pData,
 			}
 
 			if (pPIDDescriptor->pAVContext->_dts.time > tempDtsTime) {
-				WARN("Back timestamp: %.2f -> %.2f on pid %"PRIu16,
+				WARN("Back timestamp: %.2f -> %.2f on pid %" PRIu16,
 						pPIDDescriptor->pAVContext->_dts.time, tempDtsTime, pPIDDescriptor->pid);
 				pPIDDescriptor->pAVContext->DropPacket();
 				return true;

@@ -119,17 +119,17 @@ BaseInFileStream::~BaseInFileStream() {
 
 void BaseInFileStream::SetClientSideBuffer(uint32_t value) {
 	if (value == 0) {
-		//WARN("Invalid client side buffer value: %"PRIu32, value);
+		//WARN("Invalid client side buffer value: %" PRIu32, value);
 		return;
 	}
 	if (value > 120) {
 		value = 120;
 	}
 	if (_clientSideBufferLength > value) {
-		//WARN("Client side buffer must be bigger than %"PRIu32, _clientSideBufferLength);
+		//WARN("Client side buffer must be bigger than %" PRIu32, _clientSideBufferLength);
 		return;
 	}
-	//	FINEST("Client side buffer modified: %"PRIu32" -> %"PRIu32,
+	//	FINEST("Client side buffer modified: %" PRIu32" -> %" PRIu32,
 	//			_clientSideBufferLength, value);
 	_clientSideBufferLength = value;
 }
@@ -211,7 +211,7 @@ bool BaseInFileStream::Initialize(Metadata &metadata, TimerType timerType,
 	//5. Compute the optimal window size by reading the biggest frame size
 	//from the seek file.
 	if (!_pSeekFile->SeekTo(_pSeekFile->Size() - 8)) {
-		FATAL("Unable to seek to %"PRIu64" position", _pSeekFile->Cursor() - 8);
+		FATAL("Unable to seek to %" PRIu64" position", _pSeekFile->Cursor() - 8);
 		return false;
 	}
 	uint64_t maxFrameSize = 0;
@@ -237,7 +237,7 @@ bool BaseInFileStream::Initialize(Metadata &metadata, TimerType timerType,
 
 	//4. Read the frames count from the file
 	if (!_pSeekFile->SeekTo(_seekBaseOffset)) {
-		FATAL("Unable to seek to _seekBaseOffset: %"PRIu64, _seekBaseOffset);
+		FATAL("Unable to seek to _seekBaseOffset: %" PRIu64, _seekBaseOffset);
 		return false;
 	}
 	if (!_pSeekFile->ReadUI32(&_totalFrames)) {
@@ -260,7 +260,7 @@ bool BaseInFileStream::Initialize(Metadata &metadata, TimerType timerType,
 
 bool BaseInFileStream::InitializeTimer(int32_t clientSideBufferLength, TimerType timerType,
 		uint32_t granularity) {
-	//	FINEST("clientSideBufferLength: %"PRId32"; timerType: %s; granularity: %"PRIu32,
+	//	FINEST("clientSideBufferLength: %"PRId32"; timerType: %s; granularity: %" PRIu32,
 	//			clientSideBufferLength,
 	//			(timerType == TIMER_TYPE_HIGH_GRANULARITY) ?
 	//			"highGranularity"
@@ -791,7 +791,7 @@ bool BaseInFileStream::FeedTS(bool &dataSent) {
 		}
 
 		_tsChunkSize = _currentFrame.start - _tsChunkSize;
-		//FINEST("_tsChukSize: %"PRIu64, _tsChunkSize);
+		//FINEST("_tsChukSize: %" PRIu64, _tsChunkSize);
 	}
 
 	if (!_pFile->SeekTo(_tsChunkStart)) {
@@ -806,7 +806,7 @@ bool BaseInFileStream::FeedTS(bool &dataSent) {
 
 	while (_tsChunkSize != 0) {
 		uint32_t size = (GETAVAILABLEBYTESCOUNT(_videoBuffer) > 7 * 188) ? 7 * 188 : GETAVAILABLEBYTESCOUNT(_videoBuffer);
-		//FINEST("size: %"PRIu32, size);
+		//FINEST("size: %" PRIu32, size);
 
 		_tsChunkSize -= size;
 		_tsChunkStart += size;

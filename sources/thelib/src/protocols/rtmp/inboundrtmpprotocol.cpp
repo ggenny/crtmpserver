@@ -139,11 +139,11 @@ bool InboundRTMPProtocol::ValidateClient(IOBuffer &inputBuffer) {
 }
 
 bool InboundRTMPProtocol::ValidateClientScheme(IOBuffer &inputBuffer, uint8_t scheme) {
-	DEBUG_HANDSHAKE("SERVER: Validate: 1. _usedScheme %"PRIu8, scheme);
+	DEBUG_HANDSHAKE("SERVER: Validate: 1. _usedScheme %" PRIu8, scheme);
 	uint8_t *pBuffer = GETIBPOINTER(inputBuffer);
 
 	uint32_t clientDigestOffset = GetDigestOffset(pBuffer, scheme);
-	DEBUG_HANDSHAKE("SERVER: Validate: 2. clientDigestOffset %"PRIu32"; _usedScheme: %"PRIu8, clientDigestOffset, scheme);
+	DEBUG_HANDSHAKE("SERVER: Validate: 2. clientDigestOffset %" PRIu32"; _usedScheme: %" PRIu8, clientDigestOffset, scheme);
 
 	uint8_t *pTempBuffer = new uint8_t[1536 - 32];
 	memcpy(pTempBuffer, pBuffer, clientDigestOffset);
@@ -245,7 +245,7 @@ bool InboundRTMPProtocol::PerformComplexHandshake(IOBuffer &buffer, bool encrypt
 	//compute DH key position
 	uint32_t serverDHOffset = GetDHOffset(_pOutputBuffer, _usedScheme);
 	uint32_t clientDHOffset = GetDHOffset(pInputBuffer, _usedScheme);
-	DEBUG_HANDSHAKE("SERVER: 1. serverDHOffset: %"PRIu32"; clientDHOffset: %"PRIu32"; _usedScheme: %"PRIu8,
+	DEBUG_HANDSHAKE("SERVER: 1. serverDHOffset: %" PRIu32"; clientDHOffset: %" PRIu32"; _usedScheme: %" PRIu8,
 			serverDHOffset, clientDHOffset, _usedScheme);
 
 	//generate DH key
@@ -256,7 +256,7 @@ bool InboundRTMPProtocol::PerformComplexHandshake(IOBuffer &buffer, bool encrypt
 		return false;
 	}
 
-	DEBUG_HANDSHAKE("SERVER: 2. clientDHOffset: %"PRIu32"; _usedScheme: %"PRIu8"; clientPublicKey: %s",
+	DEBUG_HANDSHAKE("SERVER: 2. clientDHOffset: %" PRIu32"; _usedScheme: %" PRIu8"; clientPublicKey: %s",
 			clientDHOffset,
 			_usedScheme,
 			STR(hex(pInputBuffer + clientDHOffset, 128)));
@@ -269,7 +269,7 @@ bool InboundRTMPProtocol::PerformComplexHandshake(IOBuffer &buffer, bool encrypt
 		FATAL("Couldn't write public key!");
 		return false;
 	}
-	DEBUG_HANDSHAKE("SERVER: 3. serverDHOffset: %"PRIu32"; serverPublicKey: %s",
+	DEBUG_HANDSHAKE("SERVER: 3. serverDHOffset: %" PRIu32"; serverPublicKey: %s",
 			serverDHOffset,
 			STR(hex(_pOutputBuffer + serverDHOffset, 128)));
 
@@ -309,7 +309,7 @@ bool InboundRTMPProtocol::PerformComplexHandshake(IOBuffer &buffer, bool encrypt
 
 	//put the digest in place
 	memcpy(_pOutputBuffer + serverDigestOffset, pTempHash, 32);
-	DEBUG_HANDSHAKE("SERVER: 5. serverDigestOffset: %"PRIu32"; _usedScheme: %"PRIu8"; serverDigest: %s",
+	DEBUG_HANDSHAKE("SERVER: 5. serverDigestOffset: %" PRIu32"; _usedScheme: %" PRIu8"; serverDigest: %s",
 			serverDigestOffset, _usedScheme,
 			STR(hex(pTempHash, 32)));
 
@@ -321,7 +321,7 @@ bool InboundRTMPProtocol::PerformComplexHandshake(IOBuffer &buffer, bool encrypt
 	//**** SECOND 1536 bytes from server response ****//
 	//Compute the chalange index from the initial client request
 	uint32_t clientDigestOffset = GetDigestOffset(pInputBuffer, _usedScheme);
-	DEBUG_HANDSHAKE("SERVER: 6. clientDigestOffset: %"PRIu32"; _usedScheme: %"PRIu8, clientDigestOffset, _usedScheme);
+	DEBUG_HANDSHAKE("SERVER: 6. clientDigestOffset: %" PRIu32"; _usedScheme: %" PRIu8, clientDigestOffset, _usedScheme);
 
 	//compute the key
 	pTempHash = new uint8_t[512];

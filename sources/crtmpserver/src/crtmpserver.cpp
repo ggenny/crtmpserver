@@ -406,7 +406,7 @@ void WritePidFile(pid_t pid) {
 		return;
 	}
 
-	string content = format("%"PRIz"d", pid);
+	string content = format("%" PRIz"d", pid);
 	if (!f.WriteString(content)) {
 		WARN("Unable to write PID to file %s", STR(pidFile));
 		return;

@@ -36,7 +36,7 @@ bool AtomASRT::ReadData() {
 		FATAL("Unable to read _qualityEntryCount");
 		return false;
 	}
-		//FINEST("_qualityEntryCount: %"PRIu8, _qualityEntryCount);
+		//FINEST("_qualityEntryCount: %" PRIu8, _qualityEntryCount);
 
 	for (uint8_t i = 0; i < _qualityEntryCount; i++) {
 		string temp;
@@ -44,7 +44,7 @@ bool AtomASRT::ReadData() {
 			FATAL("Unable to read _qualitySegmentUrlModifiers");
 			return false;
 		}
-		//		FINEST("%"PRIu8": _qualitySegmentUrlModifiers: %s", i, STR(temp));
+		//		FINEST("%" PRIu8": _qualitySegmentUrlModifiers: %s", i, STR(temp));
 		ADD_VECTOR_END(_qualitySegmentUrlModifiers, temp);
 	}
 
@@ -52,7 +52,7 @@ bool AtomASRT::ReadData() {
 		FATAL("Unable to read _segmentRunEntryCount");
 		return false;
 	}
-		//FINEST("_segmentRunEntryCount: %"PRIu32, _segmentRunEntryCount);
+		//FINEST("_segmentRunEntryCount: %" PRIu32, _segmentRunEntryCount);
 
 	for (uint32_t i = 0; i < _segmentRunEntryCount; i++) {
 		SEGMENTRUNENTRY temp;
@@ -64,7 +64,7 @@ bool AtomASRT::ReadData() {
 			FATAL("Unable to read SEGMENTRUNENTRY.FragmentsPerSegment");
 			return false;
 		}
-				//FINEST("%"PRIu32": SEGMENTRUNENTRY.FirstSegment: %"PRIu32"; SEGMENTRUNENTRY.FragmentsPerSegment: %"PRIu32,
+				//FINEST("%" PRIu32": SEGMENTRUNENTRY.FirstSegment: %" PRIu32"; SEGMENTRUNENTRY.FragmentsPerSegment: %" PRIu32,
 				//		i, temp.firstSegment, temp.fragmentsPerSegment);
 		ADD_VECTOR_END(_segmentRunEntryTable, temp);
 	}

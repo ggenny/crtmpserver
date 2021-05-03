@@ -68,7 +68,7 @@ Variant AtomDATA::GetVariant() {
 		}
 		default:
 		{
-			FATAL("Type %"PRIu32" not yet implemented", _type);
+			FATAL("Type %" PRIu32" not yet implemented", _type);
 			return false;
 		}
 	}

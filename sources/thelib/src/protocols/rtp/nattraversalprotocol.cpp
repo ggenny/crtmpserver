@@ -61,11 +61,11 @@ bool NATTraversalProtocol::SignalInputData(IOBuffer &buffer, sockaddr_in *pPeerA
 	}
 	//string ipAddress = inet_ntoa(_pOutboundAddress->sin_addr);
 	//	if (_pOutboundAddress->sin_port == pPeerAddress->sin_port) {
-	//		FINEST("The client has public endpoint: %s:%"PRIu16,
+	//		FINEST("The client has public endpoint: %s:%" PRIu16,
 	//				STR(ipAddress),
 	//				ENTOHS(_pOutboundAddress->sin_port));
 	//	} else {
-	//		FINEST("The client is behind firewall: %s:%"PRIu16" -> %s:%"PRIu16,
+	//		FINEST("The client is behind firewall: %s:%" PRIu16" -> %s:%" PRIu16,
 	//				STR(ipAddress),
 	//				ENTOHS(_pOutboundAddress->sin_port),
 	//				STR(ipAddress),

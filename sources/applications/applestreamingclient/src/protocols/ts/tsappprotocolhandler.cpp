@@ -50,7 +50,7 @@ void TSAppProtocolHandler::RegisterProtocol(BaseProtocol *pProtocol) {
 	pProtocol->GetFarProtocol()->DeleteNearProtocol(false);
 
 	//4. This is a step-by-step feed process
-	((InboundTSProtocol *) pProtocol)->SetStepByStep(true);
+	//((InboundTSProtocol *) pProtocol)->SetStepByStep(true);
 
 	//5. Tell the context about this new TS protocol
 	uint32_t bw = pProtocol->GetCustomParameters()["payload"]["bw"];

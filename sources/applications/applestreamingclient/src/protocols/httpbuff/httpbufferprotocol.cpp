@@ -57,7 +57,7 @@ bool HTTPBufferProtocol::SignalInputData(IOBuffer &buffer) {
 
 	//2. Compute the speed
 	double currentTimestamp = 0;
-	GETCLOCKS(currentTimestamp);
+	GETCLOCKS(currentTimestamp,double);
 
 	if (_lastTimestamp != 0) {
 		double instantTime = currentTimestamp - _lastTimestamp;
@@ -67,7 +67,7 @@ bool HTTPBufferProtocol::SignalInputData(IOBuffer &buffer) {
 	}
 
 	_lastAmount = ((TCPProtocol *) GetFarEndpoint())->GetDecodedBytesCount();
-	GETCLOCKS(_lastTimestamp);
+	GETCLOCKS(_lastTimestamp,double);
 
 	if (_isEncrypted) {
 		if (!GetNearProtocol()->SignalInputData(buffer)) {

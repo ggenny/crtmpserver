@@ -83,7 +83,7 @@ bool ConfigFile::LoadLuaFile(string path, bool forceDaemon) {
 	}
 	if (forceDaemon)
 		_configuration[CONF_DAEMON] = (bool)true;
-	return Normalize();
+ 	return Normalize();
 }
 
 bool ConfigFile::LoadXmlFile(string path, bool forceDaemon) {

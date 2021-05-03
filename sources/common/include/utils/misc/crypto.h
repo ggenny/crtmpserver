@@ -33,7 +33,7 @@
 #include <openssl/aes.h>
 #include <openssl/engine.h>
 #include <openssl/conf.h>
-
+#include "utils/misc/libcrypto-compat.h"
 /*!
 	@class DHWrapper
 	@brief Class that handles the DH wrapper
@@ -83,7 +83,7 @@ public:
 	bool CopySharedKey(uint8_t *pDst, int32_t dstLength);
 private:
 	void Cleanup();
-	bool CopyKey(BIGNUM *pNum, uint8_t *pDst, int32_t dstLength);
+	bool CopyKey(const BIGNUM *pNum, uint8_t *pDst, int32_t dstLength);
 };
 
 DLLEXP void InitRC4Encryption(uint8_t *secretKey, uint8_t *pubKeyIn, uint8_t *pubKeyOut,

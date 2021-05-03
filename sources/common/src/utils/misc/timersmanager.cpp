@@ -22,7 +22,7 @@
 #include "utils/logging/logging.h"
 
 TimerEvent::operator string() {
-	return format("id: %4"PRIu32"; period: %6"PRIu32"; nextRun: %"PRIu64,
+	return format("id: %4" PRIu32"; period: %6" PRIu32"; nextRun: %" PRIu64,
 			id, period, triggerTime);
 }
 
@@ -134,13 +134,13 @@ string TimersManager::DumpTimers() {
 	string result = "";
 	map<uint64_t, map<uint32_t, TimerEvent *> >::iterator i;
 	for (i = _timers.begin(); i != _timers.end(); i++) {
-		result += format("%"PRIu64"\n", MAP_KEY(i));
+		result += format("%" PRIu64"\n", MAP_KEY(i));
 
 		FOR_MAP(MAP_VAL(i), uint32_t, TimerEvent *, j) {
 			if (MAP_VAL(j) != NULL)
 				result += "\t" + MAP_VAL(j)->operator string() + "\n";
 			else
-				result += format("\tid: %4"PRIu32"; NULL\n", MAP_KEY(j));
+				result += format("\tid: %4" PRIu32"; NULL\n", MAP_KEY(j));
 		}
 		if (MAP_VAL(i).size() == 0)
 			result += "\n";

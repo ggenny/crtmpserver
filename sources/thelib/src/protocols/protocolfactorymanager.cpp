@@ -53,7 +53,7 @@ bool ProtocolFactoryManager::RegisterProtocolFactory(BaseProtocolFactory *pFacto
 
 	FOR_VECTOR(protocols, i) {
 		if (MAP_HAS1(_factoriesByProtocolId, protocols[i])) {
-			FATAL("protocol %"PRIx64" already handled by factory %u", protocols[i],
+			FATAL("protocol %" PRIx64" already handled by factory %u", protocols[i],
 					_factoriesByProtocolId[protocols[i]]->GetId());
 			return false;
 		}
@@ -137,7 +137,7 @@ BaseProtocol *ProtocolFactoryManager::CreateProtocolChain(vector<uint64_t> &chai
 
 	FOR_VECTOR(chain, i) {
 		if (!MAP_HAS1(_factoriesByProtocolId, chain[i])) {
-			FATAL("protocol %"PRIx64" not handled by anyone", chain[i]);
+			FATAL("protocol %" PRIx64" not handled by anyone", chain[i]);
 			return NULL;
 		}
 	}

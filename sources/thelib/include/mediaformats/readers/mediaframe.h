@@ -37,7 +37,7 @@ typedef struct _MediaFrame {
 	bool isBinaryHeader;
 
 	operator string() {
-		return format("s: %16"PRIx64"; l: %6"PRIx64"; t: %"PRIu8"; kf: %"PRIu8"; pts: %8.2f; dts: %8.2f; cts: %6.2f; bh: %"PRIu8,
+		return format("s: %16" PRIx64"; l: %6" PRIx64"; t: %" PRIu8"; kf: %" PRIu8"; pts: %8.2f; dts: %8.2f; cts: %6.2f; bh: %" PRIu8,
 				start, length, type, isKeyFrame, pts, dts, cts, isBinaryHeader);
 	};
 } MediaFrame;

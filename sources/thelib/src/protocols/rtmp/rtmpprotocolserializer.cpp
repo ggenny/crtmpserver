@@ -732,7 +732,7 @@ bool RTMPProtocolSerializer::DeserializeFlexSharedObject(IOBuffer &buffer,
 		Variant &message) {
 	AMF_CHECK_BOUNDARIES(buffer, 1);
 	if (GETIBPOINTER(buffer)[0] != 0) {
-		FATAL("Encoding %"PRIu8" not supported yet", GETIBPOINTER(buffer)[0]);
+		FATAL("Encoding %" PRIu8" not supported yet", GETIBPOINTER(buffer)[0]);
 		return false;
 	}
 

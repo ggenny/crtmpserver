@@ -181,7 +181,7 @@ bool File::SeekAhead(int64_t count) {
 	}
 
 	if (fseek64(_pFile, (PIOFFT) count, SEEK_CUR) != 0) {
-		FATAL("Unable to seek ahead %"PRId64" bytes", count);
+		FATAL("Unable to seek ahead %" PRId64" bytes", count);
 		return false;
 	}
 
@@ -205,7 +205,7 @@ bool File::SeekBehind(int64_t count) {
 	}
 
 	if (fseek64(_pFile, (PIOFFT) (-1 * count), SEEK_CUR) != 0) {
-		FATAL("Unable to seek behind %"PRId64" bytes", count);
+		FATAL("Unable to seek behind %" PRId64" bytes", count);
 		return false;
 	}
 
@@ -224,7 +224,7 @@ bool File::SeekTo(uint64_t position) {
 	}
 
 	if (fseek64(_pFile, (PIOFFT) position, SEEK_SET) != 0) {
-		FATAL("Unable to seek to position %"PRIu64, position);
+		FATAL("Unable to seek to position %" PRIu64, position);
 		return false;
 	}
 
@@ -314,7 +314,7 @@ bool File::ReadBuffer(uint8_t *pBuffer, uint64_t count) {
 	}
 	if (fread(pBuffer, (uint32_t) count, 1, _pFile) != 1) {
 		int err = errno;
-		FATAL("Unable to read %"PRIu64" bytes from the file. Cursor: %"PRIu64" (0x%"PRIx64"); (%d) %s",
+		FATAL("Unable to read %" PRIu64" bytes from the file. Cursor: %" PRIu64" (0x%"PRIx64"); (%d) %s",
 				count, Cursor(), Cursor(), err, strerror(err));
 		return false;
 	}
@@ -487,7 +487,7 @@ bool File::WriteBuffer(const uint8_t *pBuffer, uint64_t count) {
 		return false;
 	}
 	if (fwrite(pBuffer, (uint32_t) count, 1, _pFile) != 1) {
-		FATAL("Unable to write %"PRIu64" bytes to file", count);
+		FATAL("Unable to write %" PRIu64" bytes to file", count);
 		return false;
 	}
 	_size += count;

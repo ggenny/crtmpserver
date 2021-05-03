@@ -85,10 +85,10 @@ void BaseFdStats::ResetInOutBytes() {
 
 BaseFdStats::operator string() {
 #ifdef GLOBALLY_ACCOUNT_BYTES
-	return format("current: %"PRId64"; max: %"PRId64"; total: %"PRIu64"; in: %"PRIu64"; out: %"PRIu64,
+	return format("current: %" PRId64"; max: %" PRId64"; total: %" PRIu64"; in: %" PRIu64"; out: %" PRIu64,
 			_current, _max, _total, _inBytes, _outBytes);
 #else
-	return format("current: %"PRId64"; max: %"PRId64"; total: %"PRIu64,
+	return format("current: %" PRId64"; max: %" PRId64"; total: %" PRIu64,
 			_current, _max, _total);
 #endif /* GLOBALLY_ACCOUNT_BYTES */
 }
@@ -267,7 +267,7 @@ FdStats::operator string() {
 			"          managedUdp: %s\n"
 			"    managedNonTcpUdp: %s\n"
 			"              rawUdp: %s\n"
-			"         grand total: current: %"PRId64"; max: %"PRId64"; total: %"PRIu64"; in: %"PRIu64"; out: %"PRIu64,
+			"         grand total: current: %" PRId64"; max: %" PRId64"; total: %" PRIu64"; in: %" PRIu64"; out: %" PRIu64,
 			STR(_managedTcp),
 			STR(_managedTcpAcceptors),
 			STR(_managedTcpConnectors),
@@ -287,7 +287,7 @@ FdStats::operator string() {
 			"          managedUdp: %s\n"
 			"    managedNonTcpUdp: %s\n"
 			"              rawUdp: %s\n"
-			"         grand total: current: %"PRId64"; max: %"PRId64"; total: %"PRIu64,
+			"         grand total: current: %" PRId64"; max: %" PRId64"; total: %" PRIu64,
 			STR(_managedTcp),
 			STR(_managedTcpAcceptors),
 			STR(_managedTcpConnectors),

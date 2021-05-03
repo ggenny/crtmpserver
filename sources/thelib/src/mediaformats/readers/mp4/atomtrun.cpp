@@ -70,7 +70,7 @@ bool AtomTRUN::ReadData() {
 		FATAL("Unable to read sample count");
 		return false;
 	}
-	//FINEST("_sampleCount: %"PRIu32, _sampleCount);
+	//FINEST("_sampleCount: %" PRIu32, _sampleCount);
 	if (HasDataOffset()) {
 		if (!ReadInt32(_dataOffset)) {
 			FATAL("Unable to read data offset");
@@ -83,7 +83,7 @@ bool AtomTRUN::ReadData() {
 			FATAL("Unable to read first sample flags");
 			return false;
 		}
-		//FINEST("_firstSampleFlags: %"PRIu32, _firstSampleFlags);
+		//FINEST("_firstSampleFlags: %" PRIu32, _firstSampleFlags);
 	}
 	for (uint32_t i = 0; i < _sampleCount; i++) {
 		TRUNSample *pSample = new TRUNSample();
@@ -92,28 +92,28 @@ bool AtomTRUN::ReadData() {
 				FATAL("Unable to read sample duration");
 				return false;
 			}
-			//FINEST("duration: %"PRIu32, pSample->duration);
+			//FINEST("duration: %" PRIu32, pSample->duration);
 		}
 		if (HasSampleSize()) {
 			if (!ReadUInt32(pSample->size)) {
 				FATAL("Unable to read sample size");
 				return false;
 			}
-			//FINEST("size: %"PRIu32, pSample->size);
+			//FINEST("size: %" PRIu32, pSample->size);
 		}
 		if (HasSampleFlags()) {
 			if (!ReadUInt32(pSample->flags)) {
 				FATAL("Unable to read sample flags");
 				return false;
 			}
-			//FINEST("flags: %"PRIu32, pSample->flags);
+			//FINEST("flags: %" PRIu32, pSample->flags);
 		}
 		if (HasSampleCompositionTimeOffsets()) {
 			if (!ReadUInt32(pSample->compositionTimeOffset)) {
 				FATAL("Unable to read sample composition time offset");
 				return false;
 			}
-			//FINEST("compositionTimeOffset: %"PRIu32, pSample->compositionTimeOffset);
+			//FINEST("compositionTimeOffset: %" PRIu32, pSample->compositionTimeOffset);
 		}
 		ADD_VECTOR_END(_samples, pSample);
 	}

@@ -48,7 +48,7 @@ bool StreamMetadataResolverTimer::TimePeriodElapsed() {
 	FOR_VECTOR(*_pWorkQueue, i) {
 		if (_pResolver == NULL)
 			continue;
-		//		FINEST("mediaFullPath: %s statsFile: %s operation: %d value: %"PRIu64,
+		//		FINEST("mediaFullPath: %s statsFile: %s operation: %d value: %" PRIu64,
 		//				STR((*_pWorkQueue)[i].mediaFullPath),
 		//				STR((*_pWorkQueue)[i].statsFile),
 		//				(*_pWorkQueue)[i].operation,
@@ -247,7 +247,7 @@ bool StreamMetadataResolver::InitializeStorage(string name, Variant &config,
 		if (files[i].size()<(1 + minSize))
 			continue;
 		string fullFile = files[i];
-		if (fullFile.substr(fullFile.size() - minSize) == "."MEDIA_TYPE_STATS".tmp") {
+		if (fullFile.substr(fullFile.size() - minSize) == "." MEDIA_TYPE_STATS".tmp") {
 			string statsFile = fullFile.substr(0, fullFile.size() - 4);
 			WARN("Moving opened stats file %s -> %s", STR(fullFile), STR(statsFile));
 			moveFile(fullFile, statsFile);
@@ -591,7 +591,7 @@ void StreamMetadataResolver::UpdateStats(MetadataStats &stats,
 		}
 		default:
 		{
-			WARN("Stats operation %"PRIu32" not implemented", (uint32_t) operation);
+			WARN("Stats operation %" PRIu32" not implemented", (uint32_t) operation);
 			break;
 		}
 	}
@@ -662,7 +662,7 @@ bool StreamMetadataResolver::ComputeSeekMetaPaths(Metadata &result) {
 			result.statsFileFullPath(result.mediaFullPath() + "." + MEDIA_TYPE_STATS);
 		}
 	} else {
-		string fingerprint = format("%s_%d_%"PRIu32,
+		string fingerprint = format("%s_%d_%" PRIu32,
 				STR(result.mediaFullPath()),
 				storage.keyframeSeek(),
 				storage.seekGranularity());

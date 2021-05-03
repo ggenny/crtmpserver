@@ -40,7 +40,7 @@ BaseProtocol::BaseProtocol(uint64_t type) {
 	_gracefullyEnqueueForDelete = false;
 	_pApplication = NULL;
 #ifdef LOG_CONSTRUCTOR_DESTRUCTOR
-	FINEST("Protocol with id %"PRIu32" of type %s created; F: %p,N: %p, DF: %d, DN: %d",
+	FINEST("Protocol with id %" PRIu32" of type %s created; F: %p,N: %p, DF: %d, DN: %d",
 			_id, STR(tagToString(_type)),
 			_pFarProtocol, _pNearProtocol, _deleteFar, _deleteNear);
 #endif
@@ -53,7 +53,7 @@ BaseProtocol::BaseProtocol(uint64_t type) {
 
 BaseProtocol::~BaseProtocol() {
 #ifdef LOG_CONSTRUCTOR_DESTRUCTOR
-	FINEST("Protocol with id %"PRIu32"(%p) of type %s going to be deleted; F: %p,N: %p, DF: %d, DN: %d",
+	FINEST("Protocol with id %" PRIu32"(%p) of type %s going to be deleted; F: %p,N: %p, DF: %d, DN: %d",
 			_id,
 			this,
 			STR(tagToString(_type)),
@@ -80,7 +80,7 @@ BaseProtocol::~BaseProtocol() {
 		}
 	}
 #ifdef LOG_CONSTRUCTOR_DESTRUCTOR
-	FINEST("Protocol with id %"PRIu32"(%p) of type %s deleted; F: %p,N: %p, DF: %d, DN: %d",
+	FINEST("Protocol with id %" PRIu32"(%p) of type %s deleted; F: %p,N: %p, DF: %d, DN: %d",
 			_id,
 			this,
 			STR(tagToString(_type)),
@@ -123,7 +123,7 @@ void BaseProtocol::SetFarProtocol(BaseProtocol *pProtocol) {
 		_pFarProtocol = pProtocol;
 		pProtocol->SetNearProtocol(this);
 #ifdef LOG_CONSTRUCTOR_DESTRUCTOR
-		FINEST("Protocol with id %"PRIu32" of type %s setted up; F: %p,N: %p, DF: %d, DN: %d",
+		FINEST("Protocol with id %" PRIu32" of type %s setted up; F: %p,N: %p, DF: %d, DN: %d",
 				_id, STR(tagToString(_type)),
 				_pFarProtocol, _pNearProtocol, _deleteFar, _deleteNear);
 #endif
@@ -160,7 +160,7 @@ void BaseProtocol::SetNearProtocol(BaseProtocol *pProtocol) {
 		_pNearProtocol = pProtocol;
 		pProtocol->SetFarProtocol(this);
 #ifdef LOG_CONSTRUCTOR_DESTRUCTOR
-		FINEST("Protocol with id %"PRIu32" of type %s setted up; F: %p,N: %p, DF: %d, DN: %d",
+		FINEST("Protocol with id %" PRIu32" of type %s setted up; F: %p,N: %p, DF: %d, DN: %d",
 				_id, STR(tagToString(_type)),
 				_pFarProtocol, _pNearProtocol, _deleteFar, _deleteNear);
 #endif
@@ -272,7 +272,7 @@ BaseProtocol::operator string() {
 				result = format("A(%d) <-> ", pHandler->GetInboundFd());
 				break;
 			case IOHT_TCP_CARRIER:
-				result = format("(Far: %s:%"PRIu16"; Near: %s:%"PRIu16") CTCP(%d) <-> ",
+				result = format("(Far: %s:%" PRIu16"; Near: %s:%" PRIu16") CTCP(%d) <-> ",
 						STR(((TCPCarrier *) pHandler)->GetFarEndpointAddressIp()),
 						((TCPCarrier *) pHandler)->GetFarEndpointPort(),
 						STR(((TCPCarrier *) pHandler)->GetNearEndpointAddressIp()),
@@ -280,7 +280,7 @@ BaseProtocol::operator string() {
 						pHandler->GetInboundFd());
 				break;
 			case IOHT_UDP_CARRIER:
-				result = format("(Bound on: %s:%"PRIu16") CUDP(%d) <-> ",
+				result = format("(Bound on: %s:%" PRIu16") CUDP(%d) <-> ",
 						STR(((UDPCarrier *) pHandler)->GetNearEndpointAddress()),
 						((UDPCarrier *) pHandler)->GetNearEndpointPort(),
 						pHandler->GetInboundFd());

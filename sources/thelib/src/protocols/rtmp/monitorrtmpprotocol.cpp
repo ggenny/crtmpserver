@@ -278,7 +278,7 @@ bool MonitorRTMPProtocol::ProcessBytes(IOBuffer &buffer) {
 						if ((uint8_t) VH_MT(msg) == RM_HEADER_MESSAGETYPE_ABORTMESSAGE) {
 							uint32_t channelId = (uint32_t) msg[RM_ABORTMESSAGE];
 							if (channelId >= _maxChannelsCount) {
-								FATAL("Invalid channel id in reset message: %"PRIu32, channelId);
+								FATAL("Invalid channel id in reset message: %" PRIu32, channelId);
 								return false;
 							}
 							o_assert(_channels[channelId].id == channelId);

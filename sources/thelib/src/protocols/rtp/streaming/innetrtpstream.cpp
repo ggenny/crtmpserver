@@ -46,7 +46,7 @@ InNetRTPStream::InNetRTPStream(BaseProtocol *pProtocol, string name, Variant &vi
 		_hasAudio = (bool)(pInfo != NULL);
 		if (pInfo != NULL) {
 			if (sdpSampleRate != pInfo->_samplingRate) {
-				WARN("Audio sample rate advertised inside SDP is different from the actual value compued from the codec setup bytes. SDP: %"PRIu32"; codec setup bytes: %"PRIu32". Using the value from SDP",
+				WARN("Audio sample rate advertised inside SDP is different from the actual value compued from the codec setup bytes. SDP: %" PRIu32"; codec setup bytes: %" PRIu32". Using the value from SDP",
 						sdpSampleRate, pInfo->_samplingRate);
 				_audioSampleRate = sdpSampleRate;
 			} else {
@@ -174,7 +174,7 @@ bool InNetRTPStream::FeedVideoData(uint8_t *pData, uint32_t dataLength,
 		_videoSequence = GET_RTP_SEQ(rtpHeader);
 	} else {
 		if ((uint16_t) (_videoSequence + 1) != (uint16_t) GET_RTP_SEQ(rtpHeader)) {
-			WARN("Missing video packet. Wanted: %"PRIu16"; got: %"PRIu16" on stream: %s",
+			WARN("Missing video packet. Wanted: %" PRIu16"; got: %" PRIu16" on stream: %s",
 					(uint16_t) (_videoSequence + 1),
 					(uint16_t) GET_RTP_SEQ(rtpHeader),
 					STR(GetName()));
@@ -194,7 +194,7 @@ bool InNetRTPStream::FeedVideoData(uint8_t *pData, uint32_t dataLength,
 	uint8_t naluType = NALU_TYPE(pData[0]);
 	if (naluType <= 23) {
 		//3. Standard NALU
-		//FINEST("V: %08"PRIx32, rtpHeader._timestamp);
+		//FINEST("V: %08" PRIx32, rtpHeader._timestamp);
 		_stats.video.packetsCount++;
 		_stats.video.bytesCount += dataLength;
 		_currentNalu.IgnoreAll();
@@ -213,7 +213,7 @@ bool InNetRTPStream::FeedVideoData(uint8_t *pData, uint32_t dataLength,
 			//middle NAL
 			_currentNalu.ReadFromBuffer(pData + 2, dataLength - 2);
 			if (((pData[1] >> 6)&0x01) == 1) {
-				//FINEST("V: %08"PRIx32, rtpHeader._timestamp);
+				//FINEST("V: %08" PRIx32, rtpHeader._timestamp);
 				_stats.video.packetsCount++;
 				_stats.video.bytesCount += GETAVAILABLEBYTESCOUNT(_currentNalu);
 				if (!InternalFeedData(GETIBPOINTER(_currentNalu),
@@ -289,7 +289,7 @@ bool InNetRTPStream::FeedAudioDataAU(uint8_t *pData, uint32_t dataLength,
 		_audioSequence = GET_RTP_SEQ(rtpHeader);
 	} else {
 		if ((uint16_t) (_audioSequence + 1) != (uint16_t) GET_RTP_SEQ(rtpHeader)) {
-			WARN("Missing audio packet. Wanted: %"PRIu16"; got: %"PRIu16" on stream: %s",
+			WARN("Missing audio packet. Wanted: %" PRIu16"; got: %" PRIu16" on stream: %s",
 					(uint16_t) (_audioSequence + 1),
 					(uint16_t) GET_RTP_SEQ(rtpHeader),
 					STR(GetName()));
@@ -323,7 +323,7 @@ bool InNetRTPStream::FeedAudioDataAU(uint8_t *pData, uint32_t dataLength,
 		}
 		ts = (double) (rtpTs + i * 1024) / _audioSampleRate * 1000.00;
 		if ((cursor + chunkSize) > dataLength) {
-			FATAL("Unable to feed data: cursor: %"PRIu32"; chunkSize: %"PRIu16"; dataLength: %"PRIu32"; chunksCount: %"PRIu16,
+			FATAL("Unable to feed data: cursor: %" PRIu32"; chunkSize: %" PRIu16"; dataLength: %" PRIu32"; chunksCount: %" PRIu16,
 					cursor, chunkSize, dataLength, chunksCount);
 			return false;
 		}
@@ -378,7 +378,7 @@ bool InNetRTPStream::FeedAudioDataLATM(uint8_t *pData, uint32_t dataLength,
 			return false;
 		}
 		cursor += currentLength;
-		//      FINEST("currentLength: %"PRIu32"; dataLength: %"PRIu32"; ts: %.2f",
+		//      FINEST("currentLength: %" PRIu32"; dataLength: %" PRIu32"; ts: %.2f",
 		//              currentLength, dataLength, ts / 1000.0);
 		index++;
 	}
@@ -442,7 +442,7 @@ bool InNetRTPStream::InternalFeedData(uint8_t *pData, uint32_t dataLength,
 	switch (_rtcpPresence) {
 		case RTCP_PRESENCE_UNKNOWN:
 		{
-			DEBUG_RTCP_PRESENCE("RTCP_PRESENCE_UNKNOWN: %"PRIz"u", (time(NULL) - _rtcpDetectionStart));
+			DEBUG_RTCP_PRESENCE("RTCP_PRESENCE_UNKNOWN: %" PRIz"u", (time(NULL) - _rtcpDetectionStart));
 			if (_rtcpDetectionInterval == 0) {
 				WARN("RTCP disabled on stream %s. A/V drifting may occur over long periods of time",
 						STR(*this));
@@ -503,7 +503,7 @@ bool InNetRTPStream::InternalFeedData(uint8_t *pData, uint32_t dataLength,
 		}
 		default:
 		{
-			ASSERT("Invalid _rtcpPresence: %"PRIu8, _rtcpPresence);
+			ASSERT("Invalid _rtcpPresence: %" PRIu8, _rtcpPresence);
 			return false;
 		}
 	}
@@ -551,7 +551,7 @@ bool InNetRTPStream::InternalFeedData(uint8_t *pData, uint32_t dataLength,
 	//	}
 
 	if (lastDts > dts) {
-		WARN("Back time on %s. ATS: %.08f LTS: %.08f; D: %.8f; isAudio: %d; _dtsCacheSize: %"PRIz"u",
+		WARN("Back time on %s. ATS: %.08f LTS: %.08f; D: %.8f; isAudio: %d; _dtsCacheSize: %" PRIz"u",
 				STR(GetName()),
 				dts,
 				lastDts,

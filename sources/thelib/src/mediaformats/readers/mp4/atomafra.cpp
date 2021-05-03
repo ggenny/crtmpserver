@@ -38,19 +38,19 @@ bool AtomAFRA::ReadData() {
 		FATAL("Unable to read flags");
 		return false;
 	}
-	//FINEST("flags: %"PRIu8, _flags);
+	//FINEST("flags: %" PRIu8, _flags);
 
 	if (!ReadUInt32(_timeScale)) {
 		FATAL("Unable to read timeScale");
 		return false;
 	}
-	//FINEST("_timeScale: %"PRIu32, _timeScale);
+	//FINEST("_timeScale: %" PRIu32, _timeScale);
 
 	if (!ReadUInt32(_entryCount)) {
 		FATAL("Unable to read entryCount");
 		return false;
 	}
-	//FINEST("_entryCount: %"PRIu32, _entryCount);
+	//FINEST("_entryCount: %" PRIu32, _entryCount);
 
 	bool longOffsets = (_flags >> 6)&0x01;
 	bool longIds = (_flags >> 7)&0x01;
@@ -75,7 +75,7 @@ bool AtomAFRA::ReadData() {
 			}
 			temp.offset = ui32;
 		}
-				//FINEST("%"PRIu32": AFRAENTRY.Time: %"PRIu64"; AFRAENTRY.Offset: %"PRIu64, i, temp.time, temp.offset);
+				//FINEST("%" PRIu32": AFRAENTRY.Time: %" PRIu64"; AFRAENTRY.Offset: %" PRIu64, i, temp.time, temp.offset);
 		ADD_VECTOR_END(_localAccessEntries, temp);
 	}
 
@@ -142,13 +142,13 @@ bool AtomAFRA::ReadData() {
 			}
 
 
-			//			FINEST("%"PRIu32": GLOBALAFRAENTRY.Time: %"PRIu64"; GLOBALAFRAENTRY.Segment: %"PRIu32"; GLOBALAFRAENTRY.Fragment: %"PRIu32"; GLOBALAFRAENTRY.AfraOffset: %"PRIu64"; GLOBALAFRAENTRY.OffsetFromAfra: %"PRIu64,
+			//			FINEST("%" PRIu32": GLOBALAFRAENTRY.Time: %" PRIu64"; GLOBALAFRAENTRY.Segment: %" PRIu32"; GLOBALAFRAENTRY.Fragment: %" PRIu32"; GLOBALAFRAENTRY.AfraOffset: %" PRIu64"; GLOBALAFRAENTRY.OffsetFromAfra: %" PRIu64,
 			//					i, temp.time, temp.segment, temp.fragment, temp.afraOffset, temp.offsetFromAfra);
 			ADD_VECTOR_END(_globalAccessEntries, temp);
 		}
 	}
 
-		//FINEST("%02"PRIx8"; timeScale: %"PRIu32"; entryCount: %"PRIu32"; globalEntryCount: %"PRIu32,
+		//FINEST("%02" PRIx8"; timeScale: %" PRIu32"; entryCount: %" PRIu32"; globalEntryCount: %" PRIu32,
 		//		_flags, _timeScale, _entryCount, _globalEntryCount);
 
 	return true;

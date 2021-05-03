@@ -100,7 +100,7 @@ bool OutNetRTMP4TSStream::PushAudioData(IOBuffer &buffer, double pts, double dts
 bool OutNetRTMP4TSStream::IsCodecSupported(uint64_t codec) {
 	return (codec == CODEC_VIDEO_H264)
 			|| (codec == CODEC_AUDIO_AAC)
-			;
+			|| (codec == CODEC_VIDEO_H265);
 }
 
 #endif /* HAS_PROTOCOL_RTMP */

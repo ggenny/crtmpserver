@@ -74,7 +74,7 @@ void FileLogLocation::Log(int32_t level, const char *pFileName,
 		if (_fileIsClosed)
 			return;
 	}
-	string logEntry = format("%"PRIu64":%d:%s:%u:%s:%s",
+	string logEntry = format("%" PRIu64":%d:%s:%u:%s:%s",
 			(uint64_t) time(NULL), level, pFileName, lineNumber, pFunctionName,
 			STR(message));
 	if (_singleLine) {
@@ -101,12 +101,12 @@ bool FileLogLocation::OpenFile() {
 	double ts;
 	GETCLOCKS(ts, double);
 	ts = (ts / CLOCKS_PER_SECOND) * 1000;
-	string filename = format("%s.%"PRIu64".%"PRIu64".log", STR(_fileName), (uint64_t) GetPid(), (uint64_t) ts);
+	string filename = format("%s.%" PRIu64".%" PRIu64".log", STR(_fileName), (uint64_t) GetPid(), (uint64_t) ts);
 	_fileStream = new File();
 	if (!_fileStream->Initialize(filename, FILE_OPEN_MODE_TRUNCATE)) {
 		return false;
 	}
-	string header = format("PID: %"PRIu64"; TIMESTAMP: %"PRIz"u%s%s%s",
+	string header = format("PID: %" PRIu64"; TIMESTAMP: %" PRIz"u%s%s%s",
 			(uint64_t) GetPid(),
 			time(NULL),
 			STR(_newLineCharacters),

@@ -113,20 +113,20 @@ bool AtomESDS::ReadData() {
 			FATAL("Unable to read tag type and length");
 			return false;
 		}
-		//FINEST("tag: %02"PRIx8"; length: %"PRIu32, tag, length);
+		//FINEST("tag: %02" PRIx8"; length: %" PRIu32, tag, length);
 
 		switch (tag) {
 			case ESTAG_ES_DescrTag:
 			{
 				if (!ReadESDescrTag()) {
-					FATAL("Unable to read tag: 0x%02"PRIu8, tag);
+					FATAL("Unable to read tag: 0x%02" PRIu8, tag);
 					return false;
 				}
 				break;
 			}
 			default:
 			{
-				FATAL("Unknown descriptor tag: 0x%02"PRIu8, tag);
+				FATAL("Unknown descriptor tag: 0x%02" PRIu8, tag);
 				return false;
 			}
 		}
@@ -256,7 +256,7 @@ bool AtomESDS::ReadDecoderConfigDescriptorTag() {
 		case 0x6c: //Visual ISO/IEC 10918-1
 		case 0x6e: //Visual ISO/IEC 15444-1
 		{
-			FATAL("Visual objectTypeIndication 0x%02"PRIx8" not implemented yet", objectTypeIndication);
+			FATAL("Visual objectTypeIndication 0x%02" PRIx8" not implemented yet", objectTypeIndication);
 			return false;
 		}
 		case 0x6b: //Audio ISO/IEC 11172-3
@@ -293,12 +293,12 @@ bool AtomESDS::ReadDecoderConfigDescriptorTag() {
 		case 0x67: //Audio ISO/IEC 13818-7 LowComplexity Profile
 		case 0x68: //Audio ISO/IEC 13818-7 Scalable Sampling Rate Profile
 		{
-			FATAL("Audio objectTypeIndication 0x%02"PRIx8" not implemented yet", objectTypeIndication);
+			FATAL("Audio objectTypeIndication 0x%02" PRIx8" not implemented yet", objectTypeIndication);
 			return false;
 		}
 		default:
 		{
-			FATAL("objectTypeIndication 0x%02"PRIx8" not supported", objectTypeIndication);
+			FATAL("objectTypeIndication 0x%02" PRIx8" not supported", objectTypeIndication);
 			return false;
 		}
 	}

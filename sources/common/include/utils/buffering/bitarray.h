@@ -134,6 +134,20 @@ public:
 		value = value - 1;
 		return true;
 	}
+
+
+	bool ReadSExpGolomb(int64_t &value) {
+		uint64_t temp = 0;
+		if (ReadExpGolomb(temp)) {
+			value = *((int64_t *)(&temp));
+			if (value % 2)
+				value = (value + 1) / 2;
+			else
+				value = -(value / 2);
+			return true;
+		}
+		return false;
+	}
 };
 
 

@@ -64,13 +64,13 @@ TCPCarrier::TCPCarrier(int32_t fd)
 
 	Variant stats;
 	GetStats(stats);
-	EventLogger::GetDefaultLogger()->LogCarrierCreated(stats);
+	//EventLogger::GetDefaultLogger()->LogCarrierCreated(stats);
 }
 
 TCPCarrier::~TCPCarrier() {
 	Variant stats;
 	GetStats(stats);
-	EventLogger::GetDefaultLogger()->LogCarrierClosed(stats);
+	//EventLogger::GetDefaultLogger()->LogCarrierClosed(stats);
 
 	CLOSE_SOCKET(_inboundFd);
 }

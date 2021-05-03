@@ -578,8 +578,8 @@ bool BaseRTMPAppProtocolHandler::ProcessUsrCtrl(BaseRTMPProtocol *pFrom,
 				bufferLen = bufferLen / 1000 + 1;
 			else
 				bufferLen = bufferLen / 1000;
-			//			FINEST("streamId: %"PRIu32, streamId);
-			//			FINEST("bufferLen: %"PRIu32, bufferLen);
+			//			FINEST("streamId: %" PRIu32, streamId);
+			//			FINEST("bufferLen: %" PRIu32, bufferLen);
 			BaseStream *pStream = pFrom->GetRTMPStream(streamId);
 			if (pStream == NULL) {
 				return true;
@@ -906,7 +906,7 @@ bool BaseRTMPAppProtocolHandler::ProcessInvokePublish(BaseRTMPProtocol *pFrom,
 	map<uint32_t, BaseOutStream *> subscribedOutStreams =
 			GetApplication()->GetStreamsManager()->GetWaitingSubscribers(
 			streamName, pInNetRTMPStream->GetType(), true);
-	//FINEST("subscribedOutStreams count: %"PRIz"u", subscribedOutStreams.size());
+	//FINEST("subscribedOutStreams count: %" PRIz"u", subscribedOutStreams.size());
 
 
 	//7. Bind the waiting subscribers

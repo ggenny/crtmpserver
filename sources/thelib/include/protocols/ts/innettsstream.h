@@ -46,6 +46,7 @@ public:
 	bool HasVideo();
 	void HasVideo(bool value);
 	void Enable(bool value);
+	uint32_t GetFeedTime();
 
 	virtual bool FeedData(uint8_t *pData, uint32_t dataLength,
 			uint32_t processedLength, uint32_t totalLength,

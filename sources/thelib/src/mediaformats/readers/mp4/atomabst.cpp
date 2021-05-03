@@ -67,37 +67,37 @@ bool AtomABST::ReadData() {
 		FATAL("Unable to read _bootstrapInfoVersion");
 		return false;
 	}
-		//FINEST("_bootstrapInfoVersion: %"PRIu32, _bootstrapInfoVersion);
+		//FINEST("_bootstrapInfoVersion: %" PRIu32, _bootstrapInfoVersion);
 
 	uint8_t ui8;
 	if (!ReadUInt8(ui8)) {
 		FATAL("Unable to read flags");
 		return false;
 	}
-	//FINEST("flags: %"PRIu8, ui8);
+	//FINEST("flags: %" PRIu8, ui8);
 
 	_profile = (ui8 >> 6)&0x03;
 	_live = (ui8 >> 5)&0x01;
 	_update = (ui8 >> 4)&0x01;
-		//FINEST("_profile: %"PRIu8"; _live: %d; _update: %d", _profile, _live, _update);
+		//FINEST("_profile: %" PRIu8"; _live: %d; _update: %d", _profile, _live, _update);
 
 	if (!ReadUInt32(_timeScale)) {
 		FATAL("Unable to read _timeScale");
 		return false;
 	}
-		//FINEST("_timeScale: %"PRIu32, _timeScale);
+		//FINEST("_timeScale: %" PRIu32, _timeScale);
 
 	if (!ReadUInt64(_currentMediaTime)) {
 		FATAL("Unable to read _currentMediaTime");
 		return false;
 	}
-		//FINEST("_currentMediaTime: %"PRIu64, _currentMediaTime);
+		//FINEST("_currentMediaTime: %" PRIu64, _currentMediaTime);
 
 	if (!ReadUInt64(_smpteTimeCodeOffset)) {
 		FATAL("Unable to read _smpteTimeCodeOffset");
 		return false;
 	}
-		//FINEST("_smpteTimeCodeOffset: %"PRIu64, _smpteTimeCodeOffset);
+		//FINEST("_smpteTimeCodeOffset: %" PRIu64, _smpteTimeCodeOffset);
 
 	if (!ReadNullTerminatedString(_movieIdentifier)) {
 		FATAL("Unable to read _movieIdentifier");
@@ -109,7 +109,7 @@ bool AtomABST::ReadData() {
 		FATAL("Unable to read _serverEntryCount");
 		return false;
 	}
-		//FINEST("_serverEntryCount: %"PRIu8, _serverEntryCount);
+		//FINEST("_serverEntryCount: %" PRIu8, _serverEntryCount);
 
 	for (uint8_t i = 0; i < _serverEntryCount; i++) {
 		string temp;
@@ -117,7 +117,7 @@ bool AtomABST::ReadData() {
 			FATAL("Unable to read SERVERENTRY.serverBaseURL");
 			return false;
 		}
-				//FINEST("%"PRIu8"; SERVERENTRY.serverBaseURL: %s", i, STR(temp));
+				//FINEST("%" PRIu8"; SERVERENTRY.serverBaseURL: %s", i, STR(temp));
 		ADD_VECTOR_END(_serverEntryTable, temp);
 	}
 
@@ -125,7 +125,7 @@ bool AtomABST::ReadData() {
 		FATAL("Unable to read _qualityEntryCount");
 		return false;
 	}
-		//FINEST("_qualityEntryCount: %"PRIu8, _qualityEntryCount);
+		//FINEST("_qualityEntryCount: %" PRIu8, _qualityEntryCount);
 
 	for (uint8_t i = 0; i < _qualityEntryCount; i++) {
 		string temp;
@@ -133,7 +133,7 @@ bool AtomABST::ReadData() {
 			FATAL("Unable to read QUALITYENTRY.qualitySegmentUrlModifier");
 			return false;
 		}
-				//FINEST("%"PRIu8"; QUALITYENTRY.qualitySegmentUrlModifier: %s", i, STR(temp));
+				//FINEST("%" PRIu8"; QUALITYENTRY.qualitySegmentUrlModifier: %s", i, STR(temp));
 		ADD_VECTOR_END(_qualityEntryTable, temp);
 	}
 
@@ -153,7 +153,7 @@ bool AtomABST::ReadData() {
 		FATAL("Unable to read _segmentRunTableCount");
 		return false;
 	}
-		//FINEST("_segmentRunTableCount: %"PRIu8, _segmentRunTableCount);
+		//FINEST("_segmentRunTableCount: %" PRIu8, _segmentRunTableCount);
 
 	for (uint8_t i = 0; i < _segmentRunTableCount; i++) {
 		BaseAtom *pAtom = GetDoc()->ReadAtom(this);
@@ -161,7 +161,7 @@ bool AtomABST::ReadData() {
 			FATAL("Unable to read atoms");
 			return false;
 		}
-				//FINEST("%"PRIu8"; _segmentRunTableEntries: %p", i, pAtom);
+				//FINEST("%" PRIu8"; _segmentRunTableEntries: %p", i, pAtom);
 		ADD_VECTOR_END(_segmentRunTableEntries, pAtom);
 	}
 
@@ -169,7 +169,7 @@ bool AtomABST::ReadData() {
 		FATAL("Unable to read _fragmentRunTableCount");
 		return false;
 	}
-		//FINEST("_fragmentRunTableCount: %"PRIu8, _fragmentRunTableCount);
+		//FINEST("_fragmentRunTableCount: %" PRIu8, _fragmentRunTableCount);
 
 	for (uint8_t i = 0; i < _fragmentRunTableCount; i++) {
 		BaseAtom *pAtom = GetDoc()->ReadAtom(this);
@@ -177,7 +177,7 @@ bool AtomABST::ReadData() {
 			FATAL("Unable to read atoms");
 			return false;
 		}
-				//FINEST("%"PRIu8"; _fragmentRunTableEntries: %p", i, pAtom);
+				//FINEST("%" PRIu8"; _fragmentRunTableEntries: %p", i, pAtom);
 		ADD_VECTOR_END(_fragmentRunTableEntries, pAtom);
 	}
 

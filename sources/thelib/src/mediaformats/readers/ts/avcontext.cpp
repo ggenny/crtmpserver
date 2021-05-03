@@ -293,10 +293,10 @@ bool AACAVContext::HandleData() {
 				_bucket.Ignore(1);
 				_droppedBytesCount++;
 				_markerRetryCount++;
-				//FINEST("_markerRetryCount: %"PRIu32, _markerRetryCount);
+				//FINEST("_markerRetryCount: %" PRIu32, _markerRetryCount);
 				if (_markerRetryCount >= TS_MAX_ADTS_DETECTION_COUNT) {
 					BaseInStream *pInStream = GetInStream();
-					FATAL("Unable to reliably detect AAC ADTS headers after %"PRIu32" bytes scanned for ADTS marker. Stream %s corrupted",
+					FATAL("Unable to reliably detect AAC ADTS headers after %" PRIu32" bytes scanned for ADTS marker. Stream %s corrupted",
 							TS_MAX_ADTS_DETECTION_COUNT,
 							pInStream != NULL ? STR(*pInStream) : "");
 					return false;

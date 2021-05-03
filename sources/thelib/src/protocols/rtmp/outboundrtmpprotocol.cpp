@@ -210,7 +210,7 @@ bool OutboundRTMPProtocol::PerformHandshakeStage1(bool encrypted) {
 		FATAL("Couldn't write public key!");
 		return false;
 	}
-	DEBUG_HANDSHAKE("CLIENT: 1. clientDHOffset: %"PRIu32"; _usedScheme: %"PRIu8"; clientPublicKey: %s",
+	DEBUG_HANDSHAKE("CLIENT: 1. clientDHOffset: %" PRIu32"; _usedScheme: %" PRIu8"; clientPublicKey: %s",
 			clientDHOffset,
 			_usedScheme,
 			STR(hex(_pOutputBuffer + clientDHOffset, 128)));
@@ -229,7 +229,7 @@ bool OutboundRTMPProtocol::PerformHandshakeStage1(bool encrypted) {
 	HMACsha256(pTempBuffer, 1536 - 32, genuineFPKey, 30, pTempHash);
 
 	memcpy(_pOutputBuffer + clientDigestOffset, pTempHash, 32);
-	DEBUG_HANDSHAKE("CLIENT: 2. clientDigestOffset: %"PRIu32"; _usedScheme: %"PRIu8"; clientDigest: %s",
+	DEBUG_HANDSHAKE("CLIENT: 2. clientDigestOffset: %" PRIu32"; _usedScheme: %" PRIu8"; clientDigest: %s",
 			clientDigestOffset, _usedScheme,
 			STR(hex(_pOutputBuffer + clientDigestOffset, 32)));
 	_pClientDigest = new uint8_t[32];
@@ -260,7 +260,7 @@ bool OutboundRTMPProtocol::VerifyServer(IOBuffer & inputBuffer) {
 	uint8_t *pBuffer = GETIBPOINTER(inputBuffer) + 1;
 
 	uint32_t serverDigestOffset = GetDigestOffset(pBuffer, _usedScheme);
-	DEBUG_HANDSHAKE("CLIENT: Validate: 1. serverDigestOffset: %"PRIu32"; _usedScheme: %"PRIu8,
+	DEBUG_HANDSHAKE("CLIENT: Validate: 1. serverDigestOffset: %" PRIu32"; _usedScheme: %" PRIu8,
 			serverDigestOffset, _usedScheme);
 
 	uint8_t *pTempBuffer = new uint8_t[1536 - 32];
@@ -323,7 +323,7 @@ bool OutboundRTMPProtocol::PerformHandshakeStage2(IOBuffer &inputBuffer,
 		return false;
 	}
 
-	DEBUG_HANDSHAKE("CLIENT: 1. serverDHOffset: %"PRIu32"; _usedScheme: %"PRIu8"; serverPublicKey: %s",
+	DEBUG_HANDSHAKE("CLIENT: 1. serverDHOffset: %" PRIu32"; _usedScheme: %" PRIu8"; serverPublicKey: %s",
 			serverDHOffset,
 			_usedScheme,
 			STR(hex(pInputBuffer + serverDHOffset, 128)));
@@ -359,7 +359,7 @@ bool OutboundRTMPProtocol::PerformHandshakeStage2(IOBuffer &inputBuffer,
 	_pDHWrapper = NULL;
 
 	uint32_t serverDigestOffset = GetDigestOffset(pInputBuffer, _usedScheme);
-	DEBUG_HANDSHAKE("CLIENT: 3. serverDigestOffset: %"PRIu32"; _usedScheme: %"PRIu8, serverDigestOffset, _usedScheme);
+	DEBUG_HANDSHAKE("CLIENT: 3. serverDigestOffset: %" PRIu32"; _usedScheme: %" PRIu8, serverDigestOffset, _usedScheme);
 
 	if (_pOutputBuffer == NULL) {
 		_pOutputBuffer = new uint8_t[1536];

@@ -199,7 +199,7 @@ bool MP3Document::BuildFrames() {
 
 			//7. Seek to the next frame
 			if (!_mediaFile.SeekTo(frame.start + frame.length)) {
-				WARN("Unable to seek to %"PRIx64, frame.start + frame.length);
+				WARN("Unable to seek to %" PRIx64, frame.start + frame.length);
 				break;
 			}
 

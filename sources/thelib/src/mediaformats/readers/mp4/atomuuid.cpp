@@ -33,7 +33,7 @@ bool AtomUUID::Read() {
 		FATAL("Unable to read UUID");
 		return false;
 	}
-	_metadata["uuid"] = format("%02"PRIx8"%02"PRIx8"%02"PRIx8"%02"PRIx8"-%02"PRIx8"%02"PRIx8"-%02"PRIx8"%02"PRIx8"-%02"PRIx8"%02"PRIx8"-%02"PRIx8"%02"PRIx8"%02"PRIx8"%02"PRIx8"%02"PRIx8"%02"PRIx8,
+	_metadata["uuid"] = format("%02" PRIx8"%02" PRIx8"%02" PRIx8"%02" PRIx8"-%02" PRIx8"%02" PRIx8"-%02" PRIx8"%02" PRIx8"-%02" PRIx8"%02" PRIx8"-%02" PRIx8"%02" PRIx8"%02" PRIx8"%02" PRIx8"%02" PRIx8"%02" PRIx8,
 			buffer[0],
 			buffer[1],
 			buffer[2],

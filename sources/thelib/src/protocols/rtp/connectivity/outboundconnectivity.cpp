@@ -135,20 +135,20 @@ void OutboundConnectivity::SetOutStream(BaseOutNetRTPUDPStream *pOutStream) {
 }
 
 string OutboundConnectivity::GetVideoPorts() {
-	return format("%"PRIu16"-%"PRIu16, _videoDataPort, _videoRTCPPort);
+	return format("%" PRIu16"-%" PRIu16, _videoDataPort, _videoRTCPPort);
 }
 
 string OutboundConnectivity::GetAudioPorts() {
-	return format("%"PRIu16"-%"PRIu16, _audioDataPort, _audioRTCPPort);
+	return format("%" PRIu16"-%" PRIu16, _audioDataPort, _audioRTCPPort);
 }
 
 string OutboundConnectivity::GetVideoChannels() {
-	return format("%"PRIu8"-%"PRIu8, _rtpClient.videoDataChannel,
+	return format("%" PRIu8"-%" PRIu8, _rtpClient.videoDataChannel,
 			_rtpClient.videoRtcpChannel);
 }
 
 string OutboundConnectivity::GetAudioChannels() {
-	return format("%"PRIu8"-%"PRIu8, _rtpClient.audioDataChannel,
+	return format("%" PRIu8"-%" PRIu8, _rtpClient.audioDataChannel,
 			_rtpClient.audioRtcpChannel);
 }
 
@@ -409,7 +409,7 @@ bool OutboundConnectivity::FeedData(MSGHDR &message, double pts, double dts,
 			StreamCapabilities *pCapabilities = _pOutStream->GetCapabilities();
 			VideoCodecInfo *pInfo = NULL;
 			if ((pCapabilities != NULL)
-					&& (pCapabilities->GetVideoCodecType() == CODEC_VIDEO_H264)
+					&& (pCapabilities->GetVideoCodecType() == CODEC_VIDEO_H264 || pCapabilities->GetVideoCodecType() == CODEC_VIDEO_H265)
 					&& ((pInfo = pCapabilities->GetVideoCodec<VideoCodecInfo > ()) != NULL)) {
 				rate = pInfo->_samplingRate;
 			} else {

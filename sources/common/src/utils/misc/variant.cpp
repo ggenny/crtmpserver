@@ -282,7 +282,7 @@ string Variant::ToString(string name, uint32_t indent) {
 		}
 		case V_INT64:
 		{
-			result += format("%s<INT64 name=\"%s\">%"PRId64"</INT64>",
+			result += format("%s<INT64 name=\"%s\">%" PRId64"</INT64>",
 					STR(strIndent), STR(name), _value.i64);
 			break;
 		}
@@ -306,7 +306,7 @@ string Variant::ToString(string name, uint32_t indent) {
 		}
 		case V_UINT64:
 		{
-			result += format("%s<UINT64 name=\"%s\">%"PRIu64"</UINT64>",
+			result += format("%s<UINT64 name=\"%s\">%" PRIu64"</UINT64>",
 					STR(strIndent), STR(name), _value.ui64);
 			break;
 		}
@@ -342,7 +342,7 @@ string Variant::ToString(string name, uint32_t indent) {
 		}
 		case V_BYTEARRAY:
 		{
-			result += format("%s<BYTEARRAY name=\"%s\">%"PRIz"u bytes</BYTEARRAY>",
+			result += format("%s<BYTEARRAY name=\"%s\">%" PRIz"u bytes</BYTEARRAY>",
 					STR(strIndent), STR(name), _value.s->length());
 			break;
 		}
@@ -629,7 +629,7 @@ Variant::operator string() {
 		}
 		case V_INT64:
 		{
-			return format("%"PRId64, this->operator int64_t());
+			return format("%" PRId64, this->operator int64_t());
 		}
 		case V_UINT8:
 		case V_UINT16:
@@ -639,7 +639,7 @@ Variant::operator string() {
 		}
 		case V_UINT64:
 		{
-			return format("%"PRIu64, this->operator uint64_t());
+			return format("%" PRIu64, this->operator uint64_t());
 		}
 		case V_DOUBLE:
 		{
@@ -703,7 +703,7 @@ Variant& Variant::operator[](const char *key) {
 }
 
 Variant& Variant::operator[](const uint32_t &key) {
-	sprintf(_pNumericKey, "0x%08"PRIx32, key);
+	sprintf(_pNumericKey, "0x%08" PRIx32, key);
 	return operator[](_pNumericKey);
 }
 
@@ -715,7 +715,7 @@ Variant& Variant::operator[](Variant &key) {
 		case V_UINT16:
 		case V_UINT32:
 		{
-			sprintf(_pNumericKey, "0x%08"PRIx32, (uint32_t) key);
+			sprintf(_pNumericKey, "0x%08" PRIx32, (uint32_t) key);
 			return operator[](_pNumericKey);
 		}
 		case V_STRING:
@@ -923,7 +923,7 @@ bool Variant::HasKey(const string &key, bool caseSensitive) {
 }
 
 bool Variant::HasIndex(const uint32_t index) {
-	sprintf(_pNumericKey, "0x%08"PRIx32, index);
+	sprintf(_pNumericKey, "0x%08" PRIx32, index);
 	return HasKey(_pNumericKey);
 }
 
@@ -982,7 +982,7 @@ void Variant::RemoveAt(const uint32_t index) {
 		ASSERT("RemoveKey failed: %s", STR(ToString()));
 		return;
 	}
-	sprintf(_pNumericKey, "0x%08"PRIx32, index);
+	sprintf(_pNumericKey, "0x%08" PRIx32, index);
 	_value.m->children.erase(_pNumericKey);
 }
 
@@ -1016,7 +1016,7 @@ uint32_t Variant::MapDenseSize() {
 
 	uint32_t denseCount = 0;
 	for (denseCount = 0; denseCount < MapSize(); denseCount++) {
-		sprintf(_pNumericKey, "0x%08"PRIx32, denseCount);
+		sprintf(_pNumericKey, "0x%08" PRIx32, denseCount);
 		if (!MAP_HAS1(_value.m->children, _pNumericKey))
 			break;
 	}
@@ -1792,7 +1792,7 @@ bool Variant::SerializeToJSON(string &result) {
 		case V_INT64:
 		{
 			int64_t value = (int64_t) (*this);
-			result += format("%"PRId64, value);
+			result += format("%" PRId64, value);
 			break;
 		}
 		case V_UINT8:
@@ -1801,7 +1801,7 @@ bool Variant::SerializeToJSON(string &result) {
 		case V_UINT64:
 		{
 			uint64_t value = (uint64_t) (*this);
-			result += format("%"PRIu64, value);
+			result += format("%" PRIu64, value);
 			break;
 		}
 		case V_DOUBLE:
@@ -1939,7 +1939,7 @@ TiXmlElement *Variant::SerializeToXmlElement(string &name) {
 		case V_INT64:
 		{
 			pResult = new TiXmlElement("INT64");
-			pResult->LinkEndChild(new TiXmlText(format("%"PRId64, _value.i64)));
+			pResult->LinkEndChild(new TiXmlText(format("%" PRId64, _value.i64)));
 			break;
 		}
 		case V_UINT8:
@@ -1963,7 +1963,7 @@ TiXmlElement *Variant::SerializeToXmlElement(string &name) {
 		case V_UINT64:
 		{
 			pResult = new TiXmlElement("UINT64");
-			pResult->LinkEndChild(new TiXmlText(format("%"PRIu64, _value.ui64)));
+			pResult->LinkEndChild(new TiXmlText(format("%" PRIu64, _value.ui64)));
 			break;
 		}
 		case V_DOUBLE:
@@ -2074,7 +2074,7 @@ TiXmlElement *Variant::SerializeToXmlRpcElement() {
 		case V_INT64:
 		{
 			pResult = new TiXmlElement("int");
-			pResult->LinkEndChild(new TiXmlText(format("%"PRId64, _value.i64)));
+			pResult->LinkEndChild(new TiXmlText(format("%" PRId64, _value.i64)));
 			break;
 		}
 		case V_UINT8:
@@ -2098,7 +2098,7 @@ TiXmlElement *Variant::SerializeToXmlRpcElement() {
 		case V_UINT64:
 		{
 			pResult = new TiXmlElement("int");
-			pResult->LinkEndChild(new TiXmlText(format("%"PRIu64, _value.ui64)));
+			pResult->LinkEndChild(new TiXmlText(format("%" PRIu64, _value.ui64)));
 			break;
 		}
 		case V_DOUBLE:
@@ -2409,56 +2409,56 @@ bool Variant::DeserializeFromXml(TiXmlElement *pNode, Variant &variant) {
 		variant.Reset(true);
 		return true;
 	} else if (nodeName == "int8") {
-		if (sscanf(STR(text), "%"PRId64, &val.i64) != 1) {
+		if (sscanf(STR(text), "%" PRId64, &val.i64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (int8_t) val.i64;
 		return true;
 	} else if (nodeName == "int16") {
-		if (sscanf(STR(text), "%"PRId64, &val.i64) != 1) {
+		if (sscanf(STR(text), "%" PRId64, &val.i64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (int16_t) val.i64;
 		return true;
 	} else if (nodeName == "int32") {
-		if (sscanf(STR(text), "%"PRId64, &val.i64) != 1) {
+		if (sscanf(STR(text), "%" PRId64, &val.i64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (int32_t) val.i64;
 		return true;
 	} else if (nodeName == "int64") {
-		if (sscanf(STR(text), "%"PRId64, &val.i64) != 1) {
+		if (sscanf(STR(text), "%" PRId64, &val.i64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (int64_t) val.i64;
 		return true;
 	} else if (nodeName == "uint8") {
-		if (sscanf(STR(text), "%"PRIu64, &val.ui64) != 1) {
+		if (sscanf(STR(text), "%" PRIu64, &val.ui64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (uint8_t) val.ui64;
 		return true;
 	} else if (nodeName == "uint16") {
-		if (sscanf(STR(text), "%"PRIu64, &val.ui64) != 1) {
+		if (sscanf(STR(text), "%" PRIu64, &val.ui64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (uint16_t) val.ui64;
 		return true;
 	} else if (nodeName == "uint32") {
-		if (sscanf(STR(text), "%"PRIu64, &val.ui64) != 1) {
+		if (sscanf(STR(text), "%" PRIu64, &val.ui64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}
 		variant = (uint32_t) val.ui64;
 		return true;
 	} else if (nodeName == "uint64") {
-		if (sscanf(STR(text), "%"PRIu64, &val.ui64) != 1) {
+		if (sscanf(STR(text), "%" PRIu64, &val.ui64) != 1) {
 			FATAL("Invalid number");
 			return false;
 		}

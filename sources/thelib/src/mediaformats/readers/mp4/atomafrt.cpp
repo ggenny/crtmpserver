@@ -37,13 +37,13 @@ bool AtomAFRT::ReadData() {
 		FATAL("Unable to read _timeScale");
 		return false;
 	}
-		//FINEST("_timeScale: %"PRIu32, _timeScale);
+		//FINEST("_timeScale: %" PRIu32, _timeScale);
 
 	if (!ReadUInt8(_qualityEntryCount)) {
 		FATAL("Unable to read _qualityEntryCount");
 		return false;
 	}
-		//FINEST("_qualityEntryCount: %"PRIu8, _qualityEntryCount);
+		//FINEST("_qualityEntryCount: %" PRIu8, _qualityEntryCount);
 
 	for (uint8_t i = 0; i < _qualityEntryCount; i++) {
 		string temp;
@@ -51,7 +51,7 @@ bool AtomAFRT::ReadData() {
 			FATAL("Unable to read QualitySegmentUrlModifiers");
 			return false;
 		}
-		//FINEST("%"PRIu8": QualitySegmentUrlModifiers: %s", i, STR(temp));
+		//FINEST("%" PRIu8": QualitySegmentUrlModifiers: %s", i, STR(temp));
 		ADD_VECTOR_END(_qualitySegmentUrlModifiers, temp);
 	}
 
@@ -59,7 +59,7 @@ bool AtomAFRT::ReadData() {
 		FATAL("Unable to read _fragmentRunEntryCount");
 		return false;
 	}
-		//FINEST("_fragmentRunEntryCount: %"PRIu32, _fragmentRunEntryCount);
+		//FINEST("_fragmentRunEntryCount: %" PRIu32, _fragmentRunEntryCount);
 
 	for (uint32_t i = 0; i < _fragmentRunEntryCount; i++) {
 		FRAGMENTRUNENTRY temp = {0, 0, 0, 0};
@@ -81,7 +81,7 @@ bool AtomAFRT::ReadData() {
 				return false;
 			}
 		}
-				//FINEST("%"PRIu32": FRAGMENTRUNENTRY.FirstFragment: %"PRIu32"; FRAGMENTRUNENTRY.FirstFragmentTimestamp: %"PRIu64"; FRAGMENTRUNENTRY.FragmentDuration: %"PRIu32"; FRAGMENTRUNENTRY.DiscontinuityIndicator: %"PRIu8,
+				//FINEST("%" PRIu32": FRAGMENTRUNENTRY.FirstFragment: %" PRIu32"; FRAGMENTRUNENTRY.FirstFragmentTimestamp: %" PRIu64"; FRAGMENTRUNENTRY.FragmentDuration: %" PRIu32"; FRAGMENTRUNENTRY.DiscontinuityIndicator: %" PRIu8,
 				//		i, temp.firstFragment, temp.firstFragmentTimestamp, temp.fragmentDuration, temp.discontinuityIndicator);
 		ADD_VECTOR_END(_fragmentRunEntryTable, temp);
 	}

@@ -35,7 +35,7 @@ InNetRTMPStream::InNetRTMPStream(BaseProtocol *pProtocol, string name,
 	_rtmpStreamId = rtmpStreamId;
 	_chunkSize = chunkSize;
 	_channelId = channelId;
-	_clientId = format("%d_%d_%"PRIz"u", _pProtocol->GetId(), _rtmpStreamId, (size_t)this);
+	_clientId = format("%d_%d_%" PRIz"u", _pProtocol->GetId(), _rtmpStreamId, (size_t)this);
 	_videoCts = 0;
 
 	_dummy = false;
@@ -317,7 +317,7 @@ bool InNetRTMPStream::FeedData(uint8_t *pData, uint32_t dataLength,
 		if (
 				(processedLength == 0) //start of the packet
 				&&(dataLength >= 2) //enough data
-				&&((_lastVideoCodec != (pData[0]&0x0f)) || ((pData[1] == 0)&&(pData[0] == 0x17))) //different codec or this is a new h264 codec
+				&&((_lastVideoCodec != (pData[0]&0x0f)) || ((pData[1] == 0)&&(pData[0] == 0x17 || pData[0] == 0x1C))) //different codec or this is a new h264 codec
 				) {
 			if (!InitializeVideoCapabilities(this, _streamCapabilities,
 					_dummy, pData, dataLength)) {
@@ -327,7 +327,7 @@ bool InNetRTMPStream::FeedData(uint8_t *pData, uint32_t dataLength,
 			_lastVideoCodec = (pData[0]&0x0f);
 		}
 
-		if ((processedLength == 0) && ((pData[0]&0x0f) == 7) && (dataLength >= 6)) {
+		if ((processedLength == 0) && ((pData[0]&0x0f) == 7 || (pData[0]&0x0f) == 12) && (dataLength >= 6)) {
 			_videoCts = (ENTOHLP(pData + 2) >> 8);
 			_videoCts = ((_videoCts & 0x00800000) == 0x00800000) ? (_videoCts | 0xff000000) : _videoCts;
 		}
@@ -418,7 +418,7 @@ bool InNetRTMPStream::InitializeAudioCapabilities(
 		case 14: //MP3 8-Khz
 		case 15: //Device-specific sound
 		{
-			WARN("RTMP input audio codec %"PRIu8" defaulted to pass through", (uint8_t) (pData[0] >> 4));
+			WARN("RTMP input audio codec %" PRIu8" defaulted to pass through", (uint8_t) (pData[0] >> 4));
 			pCodecInfo = streamCapabilities.AddTrackAudioPassThrough(pStream);
 			if (pCodecInfo == NULL) {
 				FATAL("Unable to parse pass-through codec setup bytes for input RTMP stream");
@@ -515,7 +515,7 @@ bool InNetRTMPStream::InitializeAudioCapabilities(
 				return false;
 			}
 			if (pData[1] != 0) {
-				WARN("stream: %s; this is not an AAC codec setup request. Ignore it: %02"PRIx8"%02"PRIx8,
+				WARN("stream: %s; this is not an AAC codec setup request. Ignore it: %02" PRIx8"%02" PRIx8,
 						(pStream != NULL) ? (STR(pStream->GetName())) : "",
 						pData[0], pData[1]);
 				return true;
@@ -532,7 +532,7 @@ bool InNetRTMPStream::InitializeAudioCapabilities(
 		case 9: //reserved
 		default:
 		{
-			FATAL("Invalid audio codec ID %"PRIu32" detected on an input RTMP stream",
+			FATAL("Invalid audio codec ID %" PRIu32" detected on an input RTMP stream",
 					pData[0] >> 4);
 			return false;
 		}
@@ -557,7 +557,7 @@ bool InNetRTMPStream::InitializeVideoCapabilities(
 		case 5: //On2 VP6 with alpha channel
 		case 6: //Screen video version 2
 		{
-			WARN("RTMP input video codec %"PRIu8" defaulted to pass through", (uint8_t) (pData[0]&0x0f));
+			WARN("RTMP input video codec %" PRIu8" defaulted to pass through", (uint8_t) (pData[0]&0x0f));
 			pCodecInfo = streamCapabilities.AddTrackVideoPassThrough(pStream);
 			if (pCodecInfo == NULL) {
 				FATAL("Unable to parse pass-through codec setup bytes for input RTMP stream");
@@ -573,7 +573,7 @@ bool InNetRTMPStream::InitializeVideoCapabilities(
 			//3 - format2
 			//2*8 or 2*16 - width/height depending on the format2
 			if (length < 11) {
-				FATAL("Not enough data to initialize Sorenson H.263 for an input RTMP stream. Wanted: %"PRIu32"; Got: %"PRIu32,
+				FATAL("Not enough data to initialize Sorenson H.263 for an input RTMP stream. Wanted: %" PRIu32"; Got: %" PRIu32,
 						(uint32_t) (11), length);
 				return false;
 			}
@@ -589,7 +589,7 @@ bool InNetRTMPStream::InitializeVideoCapabilities(
 		case 4: //On2 VP6
 		{
 			if (length < 7) {
-				FATAL("Not enough data to initialize On2 VP6 codec for an input RTMP stream. Wanted: %"PRIu32"; Got: %"PRIu32,
+				FATAL("Not enough data to initialize On2 VP6 codec for an input RTMP stream. Wanted: %" PRIu32"; Got: %" PRIu32,
 						(uint32_t) (7), length);
 				return false;
 			}
@@ -614,25 +614,25 @@ bool InNetRTMPStream::InitializeVideoCapabilities(
 			 * <pps> - pps data
 			 */
 			if (length < 11 + 2) {
-				FATAL("Not enough data to initialize AVC codec for an input RTMP stream. Wanted: %"PRIu32"; Got: %"PRIu32,
+				FATAL("Not enough data to initialize AVC codec for an input RTMP stream. Wanted: %" PRIu32"; Got: %" PRIu32,
 						(uint32_t) (11 + 2), length);
 				return false;
 			}
 			if (((pData[0] >> 4) != 1) || (pData[1] != 0)) {
-				WARN("stream: %s; this is not a key frame or not a H264 codec setup request. Ignore it: %02"PRIx8"%02"PRIx8,
+				WARN("stream: %s; this is not a key frame or not a H264 codec setup request. Ignore it: %02" PRIx8"%02" PRIx8,
 						(pStream != NULL) ? (STR(pStream->GetName())) : "",
 						pData[0], pData[1]);
 				return true;
 			}
 			uint32_t spsLength = ENTOHSP(pData + 11);
 			if (length < 11 + 2 + spsLength + 1 + 2) {
-				FATAL("Not enough data to initialize AVC codec for an input RTMP stream. Wanted: %"PRIu32"; Got: %"PRIu32,
+				FATAL("Not enough data to initialize AVC codec for an input RTMP stream. Wanted: %" PRIu32"; Got: %" PRIu32,
 						11 + 2 + spsLength + 1 + 2, length);
 				return false;
 			}
 			uint32_t ppsLength = ENTOHSP(pData + 11 + 2 + spsLength + 1);
 			if (length < 11 + 2 + spsLength + 1 + 2 + ppsLength) {
-				FATAL("Invalid AVC codec packet length for an input RTMP stream. Wanted: %"PRIu32"; Got: %"PRIu32,
+				FATAL("Invalid AVC codec packet length for an input RTMP stream. Wanted: %" PRIu32"; Got: %" PRIu32,
 						11 + 2 + spsLength + 1 + 2 + ppsLength, length);
 				return false;
 			}
@@ -646,9 +646,40 @@ bool InNetRTMPStream::InitializeVideoCapabilities(
 			}
 			break;
 		}
+		case 12:
+		{
+			/*
+			 * map:
+			 * iiiiiiiiiii ss <sps> i pp <pps> i vv <vps>
+			 *
+			 * i - ignored
+			 * ss - sps length
+			 * <sps> - sps data
+			 * pp - pps length
+			 * <pps> - pps data
+			 */
+			if (length < 22) {
+				FATAL("Not enough data to initialize AVC codec for an input RTMP stream. Wanted: %" PRIu32"; Got: %" PRIu32,
+						(uint32_t) (22), length);
+				return false;
+			}
+			if (((pData[0] >> 4) != 1) || (pData[1] != 0)) {
+				WARN("stream: %s; this is not a key frame or not a H265 codec setup request. Ignore it: %02" PRIx8"%02" PRIx8,
+						(pStream != NULL) ? (STR(pStream->GetName())) : "",
+						pData[0], pData[1]);
+				return true;
+			}
+			pCodecInfo = streamCapabilities.AddTrackVideoH265(
+					pData, length, 90000, pStream);
+			if (pCodecInfo == NULL) {
+				FATAL("Unable to parse SPS/PPS/VPS for input RTMP stream");
+				return false;
+			}
+			break;
+		}
 		default:
 		{
-			FATAL("Invalid audio codec ID %"PRIu32" detected on an input RTMP stream:",
+			FATAL("Invalid audio codec ID %" PRIu32" detected on an input RTMP stream:",
 					pData[0]&0x0f);
 			return false;
 		}

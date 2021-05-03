@@ -68,7 +68,7 @@ BaseOutNetRTMPStream::BaseOutNetRTMPStream(BaseProtocol *pProtocol, uint64_t typ
 	_audioCurrentFrameDropped = false;
 	_videoCurrentFrameDropped = false;
 	_attachedStreamType = 0;
-	_clientId = format("%d_%d_%"PRIz"u", _pProtocol->GetId(), _rtmpStreamId, (size_t)this);
+	_clientId = format("%d_%d_%" PRIz"u", _pProtocol->GetId(), _rtmpStreamId, (size_t)this);
 
 	_paused = false;
 
@@ -685,9 +685,16 @@ bool BaseOutNetRTMPStream::FeedVideoCodecBytes(StreamCapabilities *pCapabilities
 		double dts, bool isAbsolute) {
 	if (dts < 0)
 		dts = 0;
-	if ((pCapabilities == NULL) || (pCapabilities->GetVideoCodecType() != CODEC_VIDEO_H264))
+	if (pCapabilities == NULL)
 		return true;
-	VideoCodecInfoH264 *pInfo = pCapabilities->GetVideoCodec<VideoCodecInfoH264 > ();
+
+	VidevCodecInfoVideo* pInfo = NULL;
+	if (pCapabilities->GetVideoCodecType() == CODEC_VIDEO_H264){
+		pInfo = pCapabilities->GetVideoCodec<VideoCodecInfoH264 > ();
+	}
+	else if( pCapabilities->GetVideoCodecType() == CODEC_VIDEO_H265){
+		pInfo = pCapabilities->GetVideoCodec<VideoCodecInfoH265 > ();
+	}
 	if (pInfo == NULL)
 		return true;
 	IOBuffer &buffer = pInfo->GetRTMPRepresentation();

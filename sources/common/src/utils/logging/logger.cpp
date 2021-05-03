@@ -19,7 +19,7 @@
 
 #include "utils/logging/logger.h"
 #include "utils/logging/baseloglocation.h"
-#include "version.h"
+//#include "version.h"
 
 Logger *Logger::_pLogger = NULL;
 

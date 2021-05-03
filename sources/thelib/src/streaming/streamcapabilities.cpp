@@ -155,14 +155,18 @@ bool ReadSPSVUI(BitArray &ba, Variant &v) {
 }
 
 bool scaling_list(BitArray &ba, uint8_t sizeOfScalingList) {
-	uint32_t nextScale = 8;
-	uint32_t lastScale = 8;
-	uint64_t delta_scale = 0;
+	int64_t nextScale = 8;
+	int64_t lastScale = 8;
+	int64_t delta_scale = 0;
 	for (uint8_t j = 0; j < sizeOfScalingList; j++) {
 		if (nextScale != 0) {
-			if (!ba.ReadExpGolomb(delta_scale))
+			if (!ba.ReadSExpGolomb(delta_scale))
 				return false;
-			nextScale = (lastScale + delta_scale + 256) % 256;
+			nextScale = (lastScale + delta_scale) & 0xFF;
+		}
+		if (!j && !nextScale)
+		{
+			break;
 		}
 		lastScale = (nextScale == 0) ? lastScale : nextScale;
 	}
@@ -176,19 +180,29 @@ bool ReadSPS(BitArray &ba, Variant &v) {
 	READ_BOOL("constraint_set0_flag");
 	READ_BOOL("constraint_set1_flag");
 	READ_BOOL("constraint_set2_flag");
-	READ_INT("reserved_zero_5bits", uint8_t, 5);
+	READ_BOOL("constraint_set3_flag");
+	READ_BOOL("constraint_set4_flag");
+	READ_BOOL("constraint_set5_flag");
+	READ_INT("reserved_zero_2bits", uint8_t, 2);
 	READ_INT("level_idc", uint8_t, 8);
 	READ_EG("seq_parameter_set_id", uint64_t);
-	if ((uint64_t) v["profile_idc"] >= 100) {
+	uint64_t profile_idc = (uint64_t)v["profile_idc"];
+	if (profile_idc == 100 || profile_idc == 110 || profile_idc == 122
+		|| profile_idc == 244 || profile_idc == 44 || profile_idc == 83
+		|| profile_idc == 86 || profile_idc == 118 || profile_idc == 128
+		|| profile_idc == 138 || profile_idc == 144) {
 		READ_EG("chroma_format_idc", uint64_t);
-		if ((uint64_t) v["chroma_format_idc"] == 3)
+		uint8_t count = 8;
+		if ((uint64_t)v["chroma_format_idc"] == 3) {
 			READ_BOOL("residual_colour_transform_flag");
+			count = 12;
+		}
 		READ_EG("bit_depth_luma_minus8", uint64_t);
 		READ_EG("bit_depth_chroma_minus8", uint64_t);
 		READ_BOOL("qpprime_y_zero_transform_bypass_flag");
 		READ_BOOL("seq_scaling_matrix_present_flag");
 		if ((bool)v["seq_scaling_matrix_present_flag"]) {
-			for (uint8_t i = 0; i < 8; i++) {
+			for (uint8_t i = 0; i < count; i++) {
 				uint8_t flag = 0;
 				CHECK_BA_LIMITS("seq_scaling_list_present_flag", 1);
 				flag = ba.ReadBits<uint8_t > (1);
@@ -372,6 +386,13 @@ void CodecInfo::GetRTMPMetadata(Variant &destination) {
 				destination["videodatarate"] = _transferRate / 1024.0;
 			break;
 		}
+		case CODEC_VIDEO_H265:
+		{
+			destination["videocodecid"] = "hev1";
+			if (_transferRate > 1)
+				destination["videodatarate"] = _transferRate / 1024.0;
+			break;
+		}
 		case CODEC_AUDIO_MP3:
 		{
 			destination["audiocodecid"] = ".mp3";
@@ -511,7 +532,7 @@ void VideoCodecInfo::GetRTMPMetadata(Variant &destination) {
 }
 
 VideoCodecInfo::operator string() {
-	return format("%s %"PRIu32"x%"PRIu32" %.2f fps",
+	return format("%s %" PRIu32"x%" PRIu32" %.2f fps",
 			STR(CodecInfo::operator string()),
 			_width,
 			_height,
@@ -535,7 +556,7 @@ void VideoCodecInfoPassThrough::GetRTMPMetadata(Variant &destination) {
 }
 
 VideoCodecInfoH264::VideoCodecInfoH264()
-: VideoCodecInfo() {
+: VidevCodecInfoVideo() {
 	_level = 0;
 	_profile = 0;
 	_pSPS = NULL;
@@ -629,7 +650,7 @@ bool VideoCodecInfoH264::Deserialize(IOBuffer & buffer) {
 }
 
 VideoCodecInfoH264::operator string() {
-	return format("%s SPS/PPS: %"PRIu32"/%"PRIu32" L/P: %"PRIu8"/%"PRIu8,
+	return format("%s SPS/PPS: %" PRIu32"/%" PRIu32" L/P: %" PRIu8"/%" PRIu8,
 			STR(VideoCodecInfo::operator string()),
 			_spsLength,
 			_ppsLength,
@@ -670,7 +691,7 @@ bool VideoCodecInfoH264::Init(uint8_t *pSPS, uint32_t spsLength, uint8_t *pPPS,
 	_type = CODEC_VIDEO_H264;
 
 	BitArray spsBa;
-	//remove emulation_prevention_three_byte
+	//remove emulation_prevention_three_byte.(EBSP to RBSP)
 	for (uint32_t i = 1; i < _spsLength; i++) {
 		if (((i + 2)<(_spsLength - 1))
 				&& (_pSPS[i + 0] == 0)
@@ -788,6 +809,331 @@ bool VideoCodecInfoH264::Compare(uint8_t *pSPS, uint32_t spsLength, uint8_t *pPP
 			&&(memcmp(_pPPS, pPPS, ppsLength) == 0);
 }
 
+//H265
+VideoCodecInfoH265::VideoCodecInfoH265()
+: VidevCodecInfoVideo() {
+	_level = 0;
+	_profile = 0;
+	_pSPS = NULL;
+	_spsLength = 0;
+	_pPPS = NULL;
+	_ppsLength = 0;
+	_pVPS = NULL;
+	_vpsLength = 0;
+	_pData = NULL;
+	_dLength = 0;
+	_type = CODEC_VIDEO_H265;
+}
+
+VideoCodecInfoH265::~VideoCodecInfoH265() {
+	_level = 0;
+	_profile = 0;
+	if (_pSPS != NULL)
+		delete[] _pSPS;
+	_pSPS = NULL;
+	_spsLength = 0;
+
+	if (_pPPS != NULL)
+		delete[] _pPPS;
+	_pPPS = NULL;
+	_ppsLength = 0;
+
+	if (_pVPS != NULL)
+		delete[] _pVPS;
+	_pVPS = NULL;
+	_vpsLength = 0;
+
+	if (_pData != NULL)
+		delete[] _pData;
+	_pData = NULL;
+	_dLength = 0;
+}
+
+bool VideoCodecInfoH265::Serialize(IOBuffer & buffer) {
+	if (!VideoCodecInfo::Serialize(buffer)) {
+		FATAL("Unable to serialize VideoCodecInfo");
+		return false;
+	}
+
+	uint32_t temp32 = EHTONL(_dLength);
+	buffer.ReadFromBuffer((uint8_t *) & temp32, sizeof (temp32));
+	buffer.ReadFromBuffer(_pData, _dLength);
+#if 0
+	buffer.ReadFromByte(_level);
+
+	buffer.ReadFromByte(_profile);
+
+	uint32_t temp32 = EHTONL(_spsLength);
+	buffer.ReadFromBuffer((uint8_t *) & temp32, sizeof (temp32));
+
+	temp32 = EHTONL(_ppsLength);
+	buffer.ReadFromBuffer((uint8_t *) & temp32, sizeof (temp32));
+
+	temp32 = EHTONL(_vpsLength);
+	buffer.ReadFromBuffer((uint8_t *) & temp32, sizeof (temp32));
+
+	buffer.ReadFromBuffer(_pSPS, _spsLength);
+	buffer.ReadFromBuffer(_pPPS, _ppsLength);
+	buffer.ReadFromBuffer(_pVPS, _vpsLength);
+#endif
+	return true;
+}
+
+bool VideoCodecInfoH265::Deserialize(IOBuffer & buffer) {
+	if (!VideoCodecInfo::Deserialize(buffer)) {
+		FATAL("Unable to deserialize VideoCodecInfo");
+		return false;
+	}
+	uint8_t *pBuffer = GETIBPOINTER(buffer);
+	uint32_t length = GETAVAILABLEBYTESCOUNT(buffer);
+
+	if (length < (sizeof (_dLength))) {
+		FATAL("Not enough data to deserialize VideoCodecInfoH265");
+		return false;
+	}
+
+	_dLength = ENTOHLP(pBuffer);
+	if (!buffer.Ignore(sizeof (_dLength))) {
+		FATAL("Unable to deserialize VideoCodecInfoH265");
+		return false;
+	}
+	pBuffer = GETIBPOINTER(buffer);
+	length = GETAVAILABLEBYTESCOUNT(buffer);
+	if (length < _dLength) {
+		FATAL("Not enough data to deserialize VideoCodecInfoH265");
+		return false;
+	}
+	if (_pData != NULL) {
+		delete[] _pData;
+	}
+	_pData = new uint8_t[_dLength];
+	memcpy(_pData, pBuffer, _dLength);
+	return buffer.Ignore(_dLength);
+
+#if 0
+	if (length < (sizeof (_level) + sizeof (_profile))) {
+		FATAL("Not enough data to deserialize VideoCodecInfoH265");
+		return false;
+	}
+	_level = pBuffer[0];
+	_profile = pBuffer[1];
+	buffer.Ignore(sizeof (_level) + sizeof (_profile));
+	pBuffer = GETIBPOINTER(buffer);
+	length = GETAVAILABLEBYTESCOUNT(buffer);
+
+	if (length < (sizeof (_spsLength) + sizeof (_ppsLength) + sizeof (_vpsLength))) {
+		FATAL("Not enough data to deserialize VideoCodecInfoH265");
+		return false;
+	}
+	_spsLength = ENTOHLP(pBuffer);
+	_ppsLength = ENTOHLP(pBuffer + sizeof (_spsLength));
+	_vpsLength = ENTOHLP(pBuffer + sizeof (_spsLength) + sizeof (_ppsLength));
+	if (!buffer.Ignore(sizeof (_spsLength) + sizeof (_ppsLength)+ sizeof (_vpsLength))) {
+		FATAL("Unable to deserialize VideoCodecInfoH265");
+		return false;
+	}
+	pBuffer = GETIBPOINTER(buffer);
+	length = GETAVAILABLEBYTESCOUNT(buffer);
+	if (length < (_spsLength + _ppsLength + _vpsLength)) {
+		FATAL("Not enough data to deserialize VideoCodecInfoH265");
+		return false;
+	}
+	if (_pSPS != NULL) {
+		delete[] _pSPS;
+	}
+	_pSPS = new uint8_t[_spsLength];
+	memcpy(_pSPS, pBuffer, _spsLength);
+	if (_pPPS != NULL) {
+		delete[] _pPPS;
+	}
+	_pPPS = new uint8_t[_ppsLength];
+	memcpy(_pPPS, pBuffer + _spsLength, _ppsLength);
+	if (_pVPS != NULL) {
+		delete[] _pVPS;
+	}
+	_pVPS = new uint8_t[_vpsLength];
+	memcpy(_pVPS, pBuffer + _spsLength + _ppsLength, _vpsLength);
+	return buffer.Ignore(_spsLength + _ppsLength + _vpsLength);
+#endif
+}
+
+VideoCodecInfoH265::operator string() {
+	return format("%s Data: %" PRIu32" L/P: %" PRIu8"/%" PRIu8,
+			STR(VideoCodecInfo::operator string()),
+			_dLength,
+			_level,
+			_profile
+			);
+}
+
+bool VideoCodecInfoH265::Init(uint8_t *pData,
+		uint32_t dLength, uint32_t samplingRate) {
+	if ((dLength < 8)
+			|| (dLength > 65535)) {
+		FATAL("Invalid H265 lengths");
+		return false;
+	}
+
+	_dLength = dLength;
+	if (_pData != NULL) {
+		delete[] _pData;
+	}
+	_pData = new uint8_t[_dLength];
+	memcpy(_pData, pData, _dLength);
+	return true;
+#if 0
+	_spsLength = spsLength;
+	if (_pSPS != NULL) {
+		delete[] _pSPS;
+	}
+	_pSPS = new uint8_t[_spsLength];
+	memcpy(_pSPS, pSPS, _spsLength);
+
+	_ppsLength = (uint16_t) ppsLength;
+	if (_pPPS != NULL) {
+		delete[] _pPPS;
+	}
+	_pPPS = new uint8_t[_ppsLength];
+	memcpy(_pPPS, pPPS, _ppsLength);
+
+	_vpsLength = (uint16_t) vpsLength;
+	if (_pVPS != NULL) {
+		delete[] _pVPS;
+	}
+	_pVPS = new uint8_t[_vpsLength];
+	memcpy(_pVPS, pVPS, _vpsLength);
+
+	_width = 0;
+	_height = 0;
+	_transferRate = 0;
+	_samplingRate = samplingRate;
+	if (_samplingRate == 0)
+		_samplingRate = 90000;
+	_type = CODEC_VIDEO_H265;
+
+	BitArray spsBa;
+	//remove emulation_prevention_three_byte
+	for (uint32_t i = 1; i < _spsLength; i++) {
+		if (((i + 2)<(_spsLength - 1))
+				&& (_pSPS[i + 0] == 0)
+				&& (_pSPS[i + 1] == 0)
+				&& (_pSPS[i + 2] == 3)) {
+			spsBa.ReadFromRepeat(0, 2);
+			i += 2;
+		} else {
+			spsBa.ReadFromRepeat(_pSPS[i], 1);
+		}
+	}
+
+	Variant temp;
+	if (!ReadSPS(spsBa, temp)) {
+		FATAL("Unable to parse SPS");
+		return false;
+	} else {
+		temp.Compact();
+		bool frame_mbs_only_flag = (bool)temp["frame_mbs_only_flag"];
+		_width = ((uint32_t) temp["pic_width_in_mbs_minus1"] + 1)*16;
+		_height = ((uint32_t) temp["pic_height_in_map_units_minus1"] + 1)*16 * (frame_mbs_only_flag ? 1 : 2);
+		if ((bool)temp["frame_cropping_flag"]) {
+			_width -= 2 * (uint32_t) temp["frame_crop_left_offset"] + 2 * (uint32_t) temp["frame_crop_right_offset"];
+			_height -= 2 * (uint32_t) temp["frame_crop_top_offset"] + 2 * (uint32_t) temp["frame_crop_bottom_offset"];
+		}
+		_level = (uint8_t) temp["level_idc"];
+		_profile = (uint8_t) temp["profile_idc"];
+		if ((temp.HasKeyChain(_V_NUMERIC, true, 2, "vui_parameters", "num_units_in_tick"))
+				&& (temp.HasKeyChain(_V_NUMERIC, true, 2, "vui_parameters", "time_scale"))) {
+			_frameRateNominator = (uint32_t) temp["vui_parameters"]["time_scale"];
+			_frameRateDenominator = (uint32_t) temp["vui_parameters"]["num_units_in_tick"];
+		}
+	}
+
+	BitArray ppsBa;
+	//remove emulation_prevention_three_byte
+	for (uint32_t i = 1; i < _ppsLength; i++) {
+		if (((i + 2)<(_ppsLength - 1))
+				&& (_pPPS[i + 0] == 0)
+				&& (_pPPS[i + 1] == 0)
+				&& (_pPPS[i + 2] == 3)) {
+			ppsBa.ReadFromRepeat(0, 2);
+			i += 2;
+		} else {
+			ppsBa.ReadFromRepeat(_pPPS[i], 1);
+		}
+	}
+
+
+	temp.Reset();
+	if (!ReadPPS(ppsBa, temp)) {
+		FATAL("Unable to partse PPS");
+		return false;
+	}
+#endif
+	return true;
+}
+
+void VideoCodecInfoH265::GetRTMPMetadata(Variant &destination) {
+	VideoCodecInfo::GetRTMPMetadata(destination);
+	//destination["avclevel"] = _level;
+	//destination["avcprofile"] = _profile;
+	//<DOUBLE name="videokeyframe_frequency">5.000</DOUBLE>
+}
+
+IOBuffer & VideoCodecInfoH265::GetRTMPRepresentation() {
+	if (GETAVAILABLEBYTESCOUNT(_rtmpRepresentation) != 0)
+		return _rtmpRepresentation;
+#if 0
+	_rtmpRepresentation.ReadFromByte(0x1C); //0x10 - key frame; 0x0C - H265_CODEC_ID
+	_rtmpRepresentation.ReadFromByte(0); //0: AVC sequence header; 1: AVC NALU; 2: AVC end of sequence
+	_rtmpRepresentation.ReadFromByte(0); //CompositionTime
+	_rtmpRepresentation.ReadFromByte(0); //CompositionTime
+	_rtmpRepresentation.ReadFromByte(0); //CompositionTime
+
+	_rtmpRepresentation.ReadFromByte(1); //version
+	_rtmpRepresentation.ReadFromBuffer(_pSPS + 1, 3); //profile,profile compat,level
+	_rtmpRepresentation.ReadFromByte(0xff); //6 bits reserved (111111) + 2 bits nal size length - 1 (11)
+	_rtmpRepresentation.ReadFromByte(0xe1); //3 bits reserved (111) + 5 bits number of sps (00001)
+	uint16_t temp16 = EHTONS((uint16_t) _spsLength);
+	_rtmpRepresentation.ReadFromBuffer((uint8_t *) & temp16, 2); //SPS length
+	_rtmpRepresentation.ReadFromBuffer(_pSPS, _spsLength);
+
+
+	_rtmpRepresentation.ReadFromByte(1);
+	temp16 = EHTONS((uint16_t) _ppsLength);
+	_rtmpRepresentation.ReadFromBuffer((uint8_t *) & temp16, 2); //PPS length
+	_rtmpRepresentation.ReadFromBuffer(_pPPS, _ppsLength);
+#endif
+	_rtmpRepresentation.ReadFromBuffer(_pData, _dLength);
+	return _rtmpRepresentation;
+}
+
+IOBuffer & VideoCodecInfoH265::GetSPSBuffer() {
+	if (GETAVAILABLEBYTESCOUNT(_sps) != 0)
+		return _sps;
+	_sps.ReadFromBuffer(_pSPS, _spsLength);
+	return _sps;
+}
+
+IOBuffer & VideoCodecInfoH265::GetPPSBuffer() {
+	if (GETAVAILABLEBYTESCOUNT(_pps) != 0)
+		return _pps;
+	_pps.ReadFromBuffer(_pPPS, _ppsLength);
+	return _pps;
+}
+
+IOBuffer & VideoCodecInfoH265::GetVPSBuffer() {
+	if (GETAVAILABLEBYTESCOUNT(_vps) != 0)
+		return _vps;
+	_vps.ReadFromBuffer(_pVPS, _vpsLength);
+	return _vps;
+}
+
+bool VideoCodecInfoH265::Compare( uint8_t *pData, uint32_t dLength) {
+	return (_dLength == dLength)
+			&&(pData != NULL)
+			&&(_pData != NULL)
+			&&(memcmp(_pData, pData, dLength) == 0);
+}
+
 VideoCodecInfoSorensonH263::VideoCodecInfoSorensonH263()
 : VideoCodecInfo() {
 	_pHeaders = NULL;
@@ -844,7 +1190,7 @@ bool VideoCodecInfoSorensonH263::Deserialize(IOBuffer & buffer) {
 }
 
 VideoCodecInfoSorensonH263::operator string() {
-	return format("%s Headers: %"PRIu32,
+	return format("%s Headers: %" PRIu32,
 			STR(VideoCodecInfo::operator string()),
 			_length);
 }
@@ -883,19 +1229,19 @@ bool VideoCodecInfoSorensonH263::Init(uint8_t *pHeaders, uint32_t length) {
 
 	uint32_t marker = ba.ReadBits<uint32_t > (17);
 	if (marker != 0x01) {
-		FATAL("Invalid marker: %"PRIx32, marker);
+		FATAL("Invalid marker: %" PRIx32, marker);
 		return false;
 	}
 
 	uint8_t format1 = ba.ReadBits<uint8_t > (5);
 	if ((format1) != 0 && (format1 != 1)) {
-		FATAL("Invalid format1: %"PRIx8, format1);
+		FATAL("Invalid format1: %" PRIx8, format1);
 		return false;
 	}
 
 	/*uint8_t pictureNumber =*/ ba.ReadBits<uint8_t > (8);
 	//	if (pictureNumber != 0) {
-	//		WARN("This is not the first picture from a Sorenson H.263 stream: %"PRIx8, pictureNumber);
+	//		WARN("This is not the first picture from a Sorenson H.263 stream: %" PRIx8, pictureNumber);
 	//	}
 
 	uint8_t format2 = ba.ReadBits<uint8_t > (3);
@@ -939,7 +1285,7 @@ bool VideoCodecInfoSorensonH263::Init(uint8_t *pHeaders, uint32_t length) {
 			break;
 		default:
 		{
-			FATAL("Invalid format2: %"PRIx8, format2);
+			FATAL("Invalid format2: %" PRIx8, format2);
 			return false;
 		}
 	}
@@ -1008,7 +1354,7 @@ bool VideoCodecInfoVP6::Deserialize(IOBuffer & buffer) {
 }
 
 VideoCodecInfoVP6::operator string() {
-	return format("%s Headers: %"PRIu32,
+	return format("%s Headers: %" PRIu32,
 			STR(VideoCodecInfo::operator string()),
 			_length);
 }
@@ -1098,7 +1444,7 @@ void AudioCodecInfo::GetRTMPMetadata(Variant &destination) {
 }
 
 AudioCodecInfo::operator string() {
-	return format("%s %"PRIu8" channels, %"PRIu8" bits/sample",
+	return format("%s %" PRIu8" channels, %" PRIu8" bits/sample",
 			STR(CodecInfo::operator string()),
 			_channelsCount,
 			_bitsPerSample);
@@ -1214,7 +1560,7 @@ bool AudioCodecInfoAAC::Deserialize(IOBuffer & buffer) {
 }
 
 AudioCodecInfoAAC::operator string() {
-	return format("%s codec length: %"PRIu8,
+	return format("%s codec length: %" PRIu8,
 			STR(AudioCodecInfo::operator string()),
 			_codecBytesLength);
 }
@@ -1224,7 +1570,7 @@ bool AudioCodecInfoAAC::Init(uint8_t *pCodecBytes, uint8_t codecBytesLength,
 	//http://wiki.multimedia.cx/index.php?title=MP4A#Audio_Specific_Config
 
 	if (codecBytesLength < 2) {
-		FATAL("Invalid length: %"PRIu8, codecBytesLength);
+		FATAL("Invalid length: %" PRIu8, codecBytesLength);
 		return false;
 	}
 
@@ -1280,7 +1626,7 @@ bool AudioCodecInfoAAC::Init(uint8_t *pCodecBytes, uint8_t codecBytesLength,
 		case 13:
 		case 14: //we only have 13 values in the table.
 		{
-			FATAL("Invalid sample rate: %"PRIu8, _sampleRateIndex);
+			FATAL("Invalid sample rate: %" PRIu8, _sampleRateIndex);
 			return false;
 		}
 		case 15: //this is a special value telling us the freq directly
@@ -1311,7 +1657,7 @@ bool AudioCodecInfoAAC::Init(uint8_t *pCodecBytes, uint8_t codecBytesLength,
 	}
 	_channelsCount = ba.ReadBits<uint8_t > (4);
 	if ((_channelsCount == 0) || (_channelsCount >= 8)) {
-		FATAL("Invalid _channelConfigurationIndex: %"PRIu8, _channelsCount);
+		FATAL("Invalid _channelConfigurationIndex: %" PRIu8, _channelsCount);
 		return false;
 	}
 
@@ -1594,7 +1940,7 @@ bool StreamCapabilities::Deserialize(IOBuffer & buffer, BaseInStream *pInStream)
 				case CODEC_VIDEO_SCREENVIDEO2:
 				default:
 				{
-					FATAL("Invalid codec type: %016"PRIx64, type);
+					FATAL("Invalid codec type: %016" PRIx64, type);
 					return false;
 				}
 			}
@@ -1666,7 +2012,7 @@ bool StreamCapabilities::Deserialize(IOBuffer & buffer, BaseInStream *pInStream)
 				case CODEC_AUDIO_SPEEX:
 				default:
 				{
-					FATAL("Invalid codec type: %016"PRIx64, type);
+					FATAL("Invalid codec type: %016" PRIx64, type);
 					return false;
 				}
 			}
@@ -1799,6 +2145,29 @@ VideoCodecInfoH264* StreamCapabilities::AddTrackVideoH264(uint8_t *pSPS,
 	VideoCodecInfoH264 *pCodecInfo = new VideoCodecInfoH264();
 	if (!pCodecInfo->Init(pSPS, spsLength, pPPS, ppsLength, samplingRate)) {
 		FATAL("Unable to initialize VideoCodecInfoH264");
+		delete pCodecInfo;
+		return NULL;
+	}
+	VideoCodecInfo *pOld = _pVideoTrack;
+	_pVideoTrack = pCodecInfo;
+	if (pInStream != NULL)
+		pInStream->VideoStreamCapabilitiesChanged(this, pOld, pCodecInfo);
+	if (pOld != NULL)
+		delete pOld;
+	return pCodecInfo;
+}
+
+VideoCodecInfoH265 * StreamCapabilities::AddTrackVideoH265(uint8_t *pData, uint32_t dLength,uint32_t samplingRate,
+			BaseInStream *pInStream)
+{
+	if ((_pVideoTrack != NULL)
+			&&(_pVideoTrack->_type == CODEC_VIDEO_H265)
+			&&(((VideoCodecInfoH265*) _pVideoTrack)->Compare(pData, dLength))) {
+		return (VideoCodecInfoH265*) _pVideoTrack;
+	}
+	VideoCodecInfoH265 *pCodecInfo = new VideoCodecInfoH265();
+	if (!pCodecInfo->Init( pData, dLength, samplingRate)) {
+		FATAL("Unable to initialize VideoCodecInfoH265");
 		delete pCodecInfo;
 		return NULL;
 	}

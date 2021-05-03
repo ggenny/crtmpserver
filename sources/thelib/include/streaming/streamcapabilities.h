@@ -57,7 +57,11 @@ struct VideoCodecInfoPassThrough : VideoCodecInfo {
 	virtual void GetRTMPMetadata(Variant & destination);
 };
 
-struct VideoCodecInfoH264 : VideoCodecInfo {
+struct VidevCodecInfoVideo : VideoCodecInfo {
+	virtual IOBuffer & GetRTMPRepresentation() = 0;
+};
+
+struct VideoCodecInfoH264 : VidevCodecInfoVideo {
 	uint8_t _level;
 	uint8_t _profile;
 	uint8_t *_pSPS;
@@ -75,11 +79,41 @@ struct VideoCodecInfoH264 : VideoCodecInfo {
 	bool Init(uint8_t *pSPS, uint32_t spsLength, uint8_t *pPPS, uint32_t ppsLength,
 			uint32_t samplingRate);
 	virtual void GetRTMPMetadata(Variant & destination);
-	IOBuffer & GetRTMPRepresentation();
+	virtual IOBuffer & GetRTMPRepresentation();
 	IOBuffer & GetSPSBuffer();
 	IOBuffer & GetPPSBuffer();
 	bool Compare(uint8_t *pSPS, uint32_t spsLength, uint8_t *pPPS,
 			uint32_t ppsLength);
+};
+
+struct VideoCodecInfoH265 : VidevCodecInfoVideo {
+	uint8_t _level;
+	uint8_t _profile;
+	uint8_t *_pSPS;
+	uint32_t _spsLength;
+	uint8_t *_pPPS;
+	uint32_t _ppsLength;
+	uint8_t *_pVPS;
+	uint32_t _vpsLength;
+	uint8_t *_pData;
+	uint32_t _dLength;
+	IOBuffer _rtmpRepresentation;
+	IOBuffer _sps;
+	IOBuffer _pps;
+	IOBuffer _vps;
+	VideoCodecInfoH265();
+	virtual ~VideoCodecInfoH265();
+	virtual bool Serialize(IOBuffer & buffer);
+	virtual bool Deserialize(IOBuffer & buffer);
+	virtual operator string();
+	bool Init(uint8_t *pData, uint32_t dLength,
+			uint32_t samplingRate);
+	virtual void GetRTMPMetadata(Variant & destination);
+	virtual IOBuffer & GetRTMPRepresentation();
+	IOBuffer & GetSPSBuffer();
+	IOBuffer & GetPPSBuffer();
+	IOBuffer & GetVPSBuffer();
+	bool Compare(uint8_t *pData, uint32_t dLength);
 };
 
 struct VideoCodecInfoSorensonH263 : VideoCodecInfo {
@@ -158,7 +192,7 @@ struct AudioCodecInfoMP3 : AudioCodecInfo {
 	virtual void GetRTMPMetadata(Variant & destination);
 };
 
-class StreamCapabilities {
+class DLLEXP StreamCapabilities {
 private:
 	VideoCodecInfo *_pVideoTrack;
 	AudioCodecInfo *_pAudioTrack;
@@ -242,6 +276,8 @@ public:
 			BaseInStream *pInStream);
 	VideoCodecInfoH264 * AddTrackVideoH264(uint8_t *pSPS, uint32_t spsLength,
 			uint8_t *pPPS, uint32_t ppsLength, uint32_t samplingRate,
+			BaseInStream *pInStream);
+	VideoCodecInfoH265 * AddTrackVideoH265(uint8_t *pData, uint32_t dLength,uint32_t samplingRate,
 			BaseInStream *pInStream);
 	VideoCodecInfoSorensonH263 * AddTrackVideoSorensonH263(uint8_t *pData,
 			uint32_t length, BaseInStream *pInStream);

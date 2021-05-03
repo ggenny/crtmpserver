@@ -272,7 +272,7 @@ bool OutNetRTPUDPH264Stream::PushAudioData(IOBuffer &buffer, double pts, double 
 	uint32_t dataLength = GETAVAILABLEBYTESCOUNT(buffer);
 	uint8_t *pData = GETIBPOINTER(buffer);
 #ifdef MULTIPLE_AUS
-	//	FINEST("_auCount: %"PRIu32"; max: %"PRIu32"; have: %"PRIu32"; total: %"PRIu32,
+	//	FINEST("_auCount: %" PRIu32"; max: %" PRIu32"; have: %" PRIu32"; total: %" PRIu32,
 	//			_auCount,
 	//			MAX_AUS_COUNT,
 	//			12 //RTP header

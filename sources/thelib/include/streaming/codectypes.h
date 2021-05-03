@@ -35,6 +35,7 @@
 #define CODEC_VIDEO_VP6				MAKE_TAG4('V','V','P','6')
 #define CODEC_VIDEO_VP6ALPHA		MAKE_TAG5('V','V','P','6','A')
 #define CODEC_VIDEO_H264			MAKE_TAG5('V','H','2','6','4')
+#define CODEC_VIDEO_H265			MAKE_TAG5('V','H','2','6','5')
 
 #define CODEC_AUDIO					MAKE_TAG1('A')
 #define CODEC_AUDIO_UNKNOWN			MAKE_TAG4('A','U','N','K')

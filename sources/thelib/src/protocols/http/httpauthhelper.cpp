@@ -279,7 +279,7 @@ bool HTTPAuthHelper::ParseAuthLine(string challenge,
 			}
 			default:
 			{
-				FATAL("Invalid stage: %"PRIu32, stage);
+				FATAL("Invalid stage: %" PRIu32, stage);
 				return false;
 			}
 		}

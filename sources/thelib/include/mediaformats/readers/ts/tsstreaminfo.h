@@ -41,7 +41,7 @@ struct TSStreamInfo {
 	}
 
 	string toString(int32_t indent) {
-		string result = format("%sstreamType: 0x%02"PRIx8"; elementaryPID: %hu; esInfoLength: %hu; descriptors count: %"PRIz"u\n",
+		string result = format("%sstreamType: 0x%02" PRIx8"; elementaryPID: %hu; esInfoLength: %hu; descriptors count: %" PRIz"u\n",
 				STR(string(indent, '\t')),
 				streamType, elementaryPID, esInfoLength, esDescriptors.size());
 		for (uint32_t i = 0; i < esDescriptors.size(); i++) {

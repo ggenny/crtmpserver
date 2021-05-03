@@ -59,8 +59,8 @@ void CaptureBacktrace(){
 			found->second.first++;
 			if((found->second.first%1000)==0){
 				fprintf(stderr,"--------------------------\n");
-				fprintf(stderr,"%"PRIu32"\n",found->second.first);
-				fprintf(stderr,"%"PRIu32"\n%s\n",found->first,STR(found->second.second));
+				fprintf(stderr,"%" PRIu32"\n",found->second.first);
+				fprintf(stderr,"%" PRIu32"\n%s\n",found->first,STR(found->second.second));
 			}
 	} else {
 		string stack="";
@@ -75,7 +75,7 @@ void CaptureBacktrace(){
 			if ((SymFromAddr( ::GetCurrentProcess(), (DWORD64)gpTrace[ i ], &displacement1, info ))
 				&&(SymGetLineFromAddr64( ::GetCurrentProcess(), (DWORD64)gpTrace[ i ], &displacement2,&fileLine))){
 					stack+=string(info->Name,info->NameLen);
-					stack+=format(" %s:%"PRIu32"\n",fileLine.FileName,fileLine.LineNumber);
+					stack+=format(" %s:%" PRIu32"\n",fileLine.FileName,fileLine.LineNumber);
 			}
 		}
 		if(stack.find("le_ba.cpp")==string::npos){
@@ -102,7 +102,7 @@ uint64_t gSmartCopy = 0;
 uint64_t gNormalCopy = 0;
 #define DUMP_ALLOCATIONS_TRACKING(kind, pointer) \
 do { \
-	fprintf(stderr,"%p %s A/D Amounts (MB): %.2f/%.2f (%.2f); %"PRIu64"/%"PRIu64" (%"PRIu64"); %"PRIu64"/%"PRIu64" (%"PRIu64") A/D/M %"PRIu64"/%"PRIu64"/%"PRIu64" %.2f(%"PRIu64") %"PRIu64"/%"PRIu64"\n", \
+	fprintf(stderr,"%p %s A/D Amounts (MB): %.2f/%.2f (%.2f); %" PRIu64"/%" PRIu64" (%" PRIu64"); %" PRIu64"/%" PRIu64" (%" PRIu64") A/D/M %" PRIu64"/%" PRIu64"/%" PRIu64" %.2f(%" PRIu64") %" PRIu64"/%" PRIu64"\n", \
 		pointer, \
 		kind, \
 		(double)gAllocated/(1024.0*1024.0), \
@@ -476,7 +476,7 @@ bool IOBuffer::WriteToTCPFd(int32_t fd, uint32_t size, int32_t &sentAmount, int 
 	if (sentAmount < 0) {
 		err = LASTSOCKETERROR;
 		if ((err != SOCKERROR_EAGAIN)&&(err != SOCKERROR_EINPROGRESS)) {
-			FATAL("Unable to send %"PRIu32" bytes of data data. Size advertised by network layer was %"PRIu32". Permanent error (%d): %s",
+			FATAL("Unable to send %" PRIu32" bytes of data data. Size advertised by network layer was %" PRIu32". Permanent error (%d): %s",
 					_published - _consumed, size, err, strerror(err));
 			result = false;
 		}
@@ -501,7 +501,7 @@ bool IOBuffer::WriteToStdio(int32_t fd, uint32_t size, int32_t &sentAmount) {
 	int err = errno;
 
 	if (sentAmount < 0) {
-		FATAL("Unable to send %"PRIu32" bytes of data data. Size advertised by network layer was %"PRIu32". Permanent error: (%d) %s",
+		FATAL("Unable to send %" PRIu32" bytes of data data. Size advertised by network layer was %" PRIu32". Permanent error: (%d) %s",
 				_published - _consumed, size, err, strerror(err));
 		result = false;
 	} else {

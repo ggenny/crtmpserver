@@ -82,7 +82,7 @@ bool FLVDocument::BuildFrames() {
 				frame.type = MEDIAFRAME_TYPE_DATA;
 				break;
 			default:
-				WARN("Invalid tag type: %hhu at cursor %"PRIu64, tagType, _mediaFile.Cursor());
+				WARN("Invalid tag type: %hhu at cursor %" PRIu64, tagType, _mediaFile.Cursor());
 				mustBreak = true;
 				break;
 		}

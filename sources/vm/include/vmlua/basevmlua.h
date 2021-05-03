@@ -22,6 +22,10 @@
 #define	_BASEVMLUA_H
 
 #include "basevm.h"
+extern "C" {
+#include <lualib.h>
+#include <lauxlib.h>
+}
 
 class DLLEXP BaseVMLua
 : public BaseVM {

@@ -77,7 +77,7 @@ bool BaseMediaDocument::Process() {
 	if (framesCount == 0)
 		framesCount = (uint64_t) _frames.size();
 
-	INFO("%"PRIu64" frames computed in %.2f seconds at a speed of %.2f FPS",
+	INFO("%" PRIu64" frames computed in %.2f seconds at a speed of %.2f FPS",
 			framesCount,
 			(endTime - startTime) / (double) CLOCKS_PER_SECOND,
 			(double) framesCount / ((endTime - startTime) / (double) CLOCKS_PER_SECOND));
@@ -86,7 +86,7 @@ bool BaseMediaDocument::Process() {
 		uint32_t hours = totalSeconds / 3600;
 		uint32_t minutes = (totalSeconds - hours * 3600) / 60;
 		uint32_t seconds = (totalSeconds - hours * 3600 - minutes * 60);
-		INFO("File size: %"PRIu64" bytes; Duration: %u:%u:%u (%u sec); Optimal bandwidth: %.2f kB/s",
+		INFO("File size: %" PRIu64" bytes; Duration: %u:%u:%u (%u sec); Optimal bandwidth: %.2f kB/s",
 				_mediaFile.Size(),
 				hours, minutes, seconds,
 				totalSeconds,
@@ -163,7 +163,7 @@ bool BaseMediaDocument::SaveSeekFile() {
 	FOR_VECTOR(_frames, i) {
 		MediaFrame &frame = _frames[i];
 		if (maxFrameSize < frame.length) {
-			//WARN("maxFrameSize bumped up: %"PRIu64" -> %"PRIu64, maxFrameSize, frame.length);
+			//WARN("maxFrameSize bumped up: %" PRIu64" -> %" PRIu64, maxFrameSize, frame.length);
 			maxFrameSize = frame.length;
 		}
 		hasVideo |= (frame.type == MEDIAFRAME_TYPE_VIDEO);

@@ -88,7 +88,7 @@ bool InboundSSLProtocol::InitGlobalContext(Variant &parameters) {
 			cipherSuite = (string) parameters[CONF_SSL_CIPHERSUITE];
 		trim(cipherSuite);
 		if (cipherSuite != "") {
-			INFO("Apply cipher suite `%s` on %s %s:%"PRIu16,
+			INFO("Apply cipher suite `%s` on %s %s:%" PRIu16,
 					STR(cipherSuite),
 					STR(parameters[CONF_PROTOCOL]),
 					STR(parameters[CONF_IP]),

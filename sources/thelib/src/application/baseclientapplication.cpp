@@ -477,7 +477,7 @@ string BaseClientApplication::GetStreamNameByAlias(string &streamName, bool remo
 	}
 
 	if (_aliases.size() > 200) {
-		WARN("Auto flush aliases: %"PRIu32, (uint32_t) _aliases.size());
+		WARN("Auto flush aliases: %" PRIu32, (uint32_t) _aliases.size());
 		_aliases.clear();
 	}
 

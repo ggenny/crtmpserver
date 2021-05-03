@@ -71,7 +71,7 @@ UDPSenderProtocol *UDPSenderProtocol::GetInstance(string bindIp, uint16_t bindPo
 	_destAddress.sin_addr.s_addr = inet_addr(STR(targetIp));
 	_destAddress.sin_port = EHTONS(targetPort);
 	if (_destAddress.sin_addr.s_addr == INADDR_NONE) {
-		FATAL("Unable to compute destination address %s:%"PRIu16, STR(targetIp),
+		FATAL("Unable to compute destination address %s:%" PRIu16, STR(targetIp),
 				targetPort);
 		pResult->EnqueueForDelete();
 		return NULL;

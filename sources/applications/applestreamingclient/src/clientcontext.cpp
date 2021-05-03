@@ -30,6 +30,7 @@
 #include "protocols/timer/scheduletimerprotocol.h"
 #include "protocols/ts/inboundtsprotocol.h"
 #include "streaming/basestream.h"
+#include "streaming/codectypes.h"
 #include "streaming/streamsmanager.h"
 #include "protocols/ts/innettsstream.h"
 #include "applestreamingclientapplication.h"
@@ -350,11 +351,13 @@ bool ClientContext::ConsumeAVBuffer() {
 	}
 
 	//5. Continue feeding until we have stream capabilities
-	if ((pStream->GetCapabilities()->videoCodecId != CODEC_VIDEO_AVC)
-			|| (pStream->GetCapabilities()->audioCodecId != CODEC_AUDIO_AAC)) {
+	if ((pStream->GetCapabilities()->GetVideoCodecType() != CODEC_VIDEO_H264)
+		|| (pStream->GetCapabilities()->GetVideoCodecType() != CODEC_VIDEO_H265)
+		|| (pStream->GetCapabilities()->GetAudioCodecType() != CODEC_AUDIO_AAC)) {
 		while (GETAVAILABLEBYTESCOUNT(_avData) > 8192) {
-			if ((pStream->GetCapabilities()->videoCodecId == CODEC_VIDEO_AVC)
-					&& (pStream->GetCapabilities()->audioCodecId == CODEC_AUDIO_AAC)) {
+			if ((pStream->GetCapabilities()->GetVideoCodecType() != CODEC_VIDEO_H264)
+					&& (pStream->GetCapabilities()->GetVideoCodecType() != CODEC_VIDEO_H265)
+					&& (pStream->GetCapabilities()->GetAudioCodecType() == CODEC_AUDIO_AAC)) {
 				_pEventSink->SignalStreamRegistered(_streamName);
 				break;
 			}
@@ -363,8 +366,9 @@ bool ClientContext::ConsumeAVBuffer() {
 				return false;
 			}
 		}
-		if ((pStream->GetCapabilities()->videoCodecId != CODEC_VIDEO_AVC)
-				|| (pStream->GetCapabilities()->audioCodecId != CODEC_AUDIO_AAC)) {
+		if ((pStream->GetCapabilities()->GetVideoCodecType() != CODEC_VIDEO_H264)
+			|| (pStream->GetCapabilities()->GetVideoCodecType() != CODEC_VIDEO_H265)
+				|| (pStream->GetCapabilities()->GetAudioCodecType() != CODEC_AUDIO_AAC)) {
 			FINEST("SPS/PPS not yet available");
 			return true;
 		}

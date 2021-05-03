@@ -435,7 +435,9 @@ void BaseOutStream::GenericStreamCapabilitiesChanged() {
 	_genericProcessDataSetup._hasVideo = IsCodecSupported(_genericProcessDataSetup._videoCodec);
 	//TODO: THIS IS IMPOSED BY THE CURRENT IMPL. NEEDS TO BE REMOVED/APPENDED
 	//IN THE FUTURE
-	_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264);
+	_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264 
+		|| _genericProcessDataSetup._videoCodec == CODEC_VIDEO_H265);
+
 	if (!_genericProcessDataSetup._hasVideo) {
 		WARN("Video codec %s not supported by stream type %s",
 				STR(tagToString(_genericProcessDataSetup._videoCodec)),
@@ -509,7 +511,8 @@ bool BaseOutStream::ValidateCodecs(double dts) {
 		_genericProcessDataSetup._hasVideo = IsCodecSupported(_genericProcessDataSetup._videoCodec);
 		//TODO: THIS IS IMPOSED BY THE CURRENT IMPL. NEEDS TO BE REMOVED/APPENDED
 		//IN THE FUTURE
-		_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264);
+		_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264 
+			|| _genericProcessDataSetup._videoCodec == CODEC_VIDEO_H265);
 		if (!_genericProcessDataSetup._hasVideo) {
 			WARN("Video codec %s not supported by stream type %s",
 					STR(tagToString(_genericProcessDataSetup._videoCodec)),
@@ -760,7 +763,7 @@ bool BaseOutStream::ProcessH264FromTS(uint8_t *pBuffer, uint32_t length,
 	//6. make sure the packet doesn't grow too big
 	if (_genericProcessDataSetup._maxFrameSize != 0) {
 		if (GETAVAILABLEBYTESCOUNT(_videoFrame) >= _genericProcessDataSetup._maxFrameSize) {
-			WARN("Frame bigger than %"PRIu32" bytes. Discard it",
+			WARN("Frame bigger than %" PRIu32" bytes. Discard it",
 					_genericProcessDataSetup._maxFrameSize);
 			_videoFrame.IgnoreAll();
 			_isKeyFrame = false;

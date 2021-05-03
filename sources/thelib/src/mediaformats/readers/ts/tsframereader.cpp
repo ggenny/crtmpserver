@@ -92,7 +92,7 @@ bool TSFrameReader::ReadFrame() {
 		}
 		_chunkBuffer.MoveData();
 		if (!_chunkBuffer.ReadFromFs(*_pFile, (uint32_t) available)) {
-			FATAL("Unable to read %"PRIu8" bytes from file", _chunkSize);
+			FATAL("Unable to read %" PRIu8" bytes from file", _chunkSize);
 			return false;
 		}
 	}
@@ -168,7 +168,7 @@ bool TSFrameReader::DetermineChunkSize() {
 			return false;
 		}
 
-		//FINEST("Check for %"PRIu8" at %"PRIu8, (uint8_t) TS_CHUNK_188, _chunkSizeDetectionCount);
+		//FINEST("Check for %" PRIu8" at %" PRIu8, (uint8_t) TS_CHUNK_188, _chunkSizeDetectionCount);
 		if (!TestChunkSize(TS_CHUNK_188)) {
 			FATAL("I give up. I'm unable to detect the ts chunk size");
 			return false;
@@ -176,7 +176,7 @@ bool TSFrameReader::DetermineChunkSize() {
 		if (_chunkSize != 0)
 			return true;
 
-		//FINEST("Check for %"PRIu8" at %"PRIu8, (uint8_t) TS_CHUNK_204, _chunkSizeDetectionCount);
+		//FINEST("Check for %" PRIu8" at %" PRIu8, (uint8_t) TS_CHUNK_204, _chunkSizeDetectionCount);
 		if (!TestChunkSize(TS_CHUNK_204)) {
 			FATAL("I give up. I'm unable to detect the ts chunk size");
 			return false;
@@ -184,7 +184,7 @@ bool TSFrameReader::DetermineChunkSize() {
 		if (_chunkSize != 0)
 			return true;
 
-		//FINEST("Check for %"PRIu8" at %"PRIu8, (uint8_t) TS_CHUNK_208, _chunkSizeDetectionCount);
+		//FINEST("Check for %" PRIu8" at %" PRIu8, (uint8_t) TS_CHUNK_208, _chunkSizeDetectionCount);
 		if (!TestChunkSize(TS_CHUNK_208)) {
 			FATAL("I give up. I'm unable to detect the ts chunk size");
 			return false;
@@ -203,7 +203,7 @@ bool TSFrameReader::TestChunkSize(uint8_t chunkSize) {
 		return true;
 
 	if (!GetByteAt(_chunkSizeDetectionCount, byte)) {
-		FATAL("Unable to read byte at offset %"PRIu32, _chunkSizeDetectionCount);
+		FATAL("Unable to read byte at offset %" PRIu32, _chunkSizeDetectionCount);
 		return false;
 	}
 
@@ -211,7 +211,7 @@ bool TSFrameReader::TestChunkSize(uint8_t chunkSize) {
 		return true;
 
 	if (!GetByteAt(_chunkSizeDetectionCount + chunkSize, byte)) {
-		FATAL("Unable to read byte at offset %"PRIu32, _chunkSizeDetectionCount + chunkSize);
+		FATAL("Unable to read byte at offset %" PRIu32, _chunkSizeDetectionCount + chunkSize);
 		return false;
 	}
 
@@ -219,7 +219,7 @@ bool TSFrameReader::TestChunkSize(uint8_t chunkSize) {
 		return true;
 
 	if (!GetByteAt(_chunkSizeDetectionCount + 2 * chunkSize, byte)) {
-		FATAL("Unable to read byte at offset %"PRIu32, _chunkSizeDetectionCount + 2 * chunkSize);
+		FATAL("Unable to read byte at offset %" PRIu32, _chunkSizeDetectionCount + 2 * chunkSize);
 		return false;
 	}
 
@@ -233,17 +233,17 @@ bool TSFrameReader::TestChunkSize(uint8_t chunkSize) {
 bool TSFrameReader::GetByteAt(uint64_t offset, uint8_t &byte) {
 	uint64_t backup = _pFile->Cursor();
 	if (!_pFile->SeekTo(offset)) {
-		FATAL("Unable to seek to offset %"PRIu64, offset);
+		FATAL("Unable to seek to offset %" PRIu64, offset);
 		return false;
 	}
 
 	if (!_pFile->ReadUI8(&byte)) {
-		FATAL("Unable to read byte at offset %"PRIu64, offset);
+		FATAL("Unable to read byte at offset %" PRIu64, offset);
 		return false;
 	}
 
 	if (!_pFile->SeekTo(backup)) {
-		FATAL("Unable to seek to offset %"PRIu64, backup);
+		FATAL("Unable to seek to offset %" PRIu64, backup);
 		return false;
 	}
 

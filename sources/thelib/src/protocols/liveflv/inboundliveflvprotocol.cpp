@@ -138,7 +138,7 @@ bool InboundLiveFLVProtocol::SignalInputData(IOBuffer &buffer) {
 				if (_pStream != NULL) {
 					uint32_t pts = dts + (ENTOHLP(GETIBPOINTER(buffer) + 2) >> 8);
 #ifdef LIVEFLV_DUMP_PTSDTS
-					FINEST("pts: %8.2f\tdts: %8.2f\tcts: %4"PRIu32"\tptsd: %+"PRId32"\tdtsd: %+"PRId32"\t%s",
+					FINEST("pts: %8.2f\tdts: %8.2f\tcts: %4" PRIu32"\tptsd: %+"PRId32"\tdtsd: %+"PRId32"\t%s",
 							(double) pts, (double) dts,
 							pts - dts,
 							pts - lastPts, dts - lastDts,

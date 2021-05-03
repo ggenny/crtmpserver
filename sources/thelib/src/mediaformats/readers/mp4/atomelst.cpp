@@ -73,7 +73,7 @@ bool AtomELST::ReadData() {
 			FATAL("Unable to read elst atom");
 			return false;
 		}
-		//		FINEST("version: %"PRIu8"; segmentDuration: %"PRIu32"; mediaTime: %"PRIu32"; mediaRateInteger: %"PRIu16"; mediaRateFraction: %"PRIu16,
+		//		FINEST("version: %" PRIu8"; segmentDuration: %" PRIu32"; mediaTime: %" PRIu32"; mediaRateInteger: %" PRIu16"; mediaRateFraction: %" PRIu16,
 		//				_version,
 		//				entry.value._32.segmentDuration,
 		//				entry.value._32.mediaTime,

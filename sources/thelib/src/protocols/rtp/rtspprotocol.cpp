@@ -190,7 +190,7 @@ bool RTSPProtocol::OpenHTTPTunnel() {
 		FATAL("URI not found");
 		return false;
 	}
-	_httpTunnelHostPort = format("%s:%"PRIu16, STR(params["uri"]["host"]), (uint16_t) params["uri"]["port"]);
+	_httpTunnelHostPort = format("%s:%" PRIu16, STR(params["uri"]["host"]), (uint16_t) params["uri"]["port"]);
 	_httpTunnelUri = format("http://%s%s",
 			STR(_httpTunnelHostPort),
 			STR(params["uri"]["fullDocumentPathWithParameters"]));
@@ -377,7 +377,7 @@ bool RTSPProtocol::SendRequestMessage() {
 			FATAL("Maximum number of requests reached");
 			return false;
 		}
-		_requestHeaders[RTSP_HEADERS][RTSP_HEADERS_CSEQ] = format("%"PRIu32, ++_requestSequence);
+		_requestHeaders[RTSP_HEADERS][RTSP_HEADERS_CSEQ] = format("%" PRIu32, ++_requestSequence);
 
 		//3. Put authentication if necessary
 		Variant &auth = _authentication["rtsp"];
@@ -556,7 +556,7 @@ void RTSPProtocol::CloseInboundConnectivity() {
 bool RTSPProtocol::SendRaw(uint8_t *pBuffer, uint32_t length, bool allowDrop) {
 	if ((allowDrop)&&(length > 0)) {
 		if (GETAVAILABLEBYTESCOUNT(_outputBuffer) > _maxBufferSize) {
-			//			WARN("%"PRIu32" bytes dropped on connection %s. Max: %"PRIu32"; Current: %"PRIu32,
+			//			WARN("%" PRIu32" bytes dropped on connection %s. Max: %" PRIu32"; Current: %" PRIu32,
 			//					length, STR(*this), _maxBufferSize, GETAVAILABLEBYTESCOUNT(_outputBuffer));
 			return true;
 		}
@@ -569,7 +569,7 @@ bool RTSPProtocol::SendRaw(MSGHDR *pMessage, uint16_t length, RTPClient *pClient
 		bool isAudio, bool isData, bool allowDrop) {
 	if ((allowDrop)&&(length > 0)) {
 		if (GETAVAILABLEBYTESCOUNT(_outputBuffer) > _maxBufferSize) {
-			//			WARN("%"PRIu32" bytes dropped on connection %s. Max: %"PRIu32"; Current: %"PRIu32,
+			//			WARN("%" PRIu32" bytes dropped on connection %s. Max: %" PRIu32"; Current: %" PRIu32,
 			//					length, STR(*this), _maxBufferSize, GETAVAILABLEBYTESCOUNT(_outputBuffer));
 			return true;
 		}
@@ -652,7 +652,7 @@ bool RTSPProtocol::SendMessage(string &firstLine, Variant &headers, string &cont
 
 	//2. Add the content length if required
 	if (content.size() > 0) {
-		headers[RTSP_HEADERS][RTSP_HEADERS_CONTENT_LENGTH] = format("%"PRIz"u", content.size());
+		headers[RTSP_HEADERS][RTSP_HEADERS_CONTENT_LENGTH] = format("%" PRIz"u", content.size());
 	}
 
 	//3. Add the session id if necessary
@@ -684,8 +684,8 @@ bool RTSPProtocol::SendMessage(string &firstLine, Variant &headers, string &cont
 		PassThroughProtocol *pProtocol =
 				(PassThroughProtocol *) ProtocolManager::GetProtocol(_passThroughProtocolId);
 		if (pProtocol == NULL) {
-			string headers = HTTP_METHOD_POST" " + _httpTunnelUri + " "HTTP_VERSION_1_0"\r\n";
-			headers += RTSP_HEADERS_X_POWERED_BY": "RTSP_HEADERS_X_POWERED_BY_US"\r\n";
+			string headers = HTTP_METHOD_POST" " + _httpTunnelUri + " " HTTP_VERSION_1_0"\r\n";
+			headers += RTSP_HEADERS_X_POWERED_BY": " RTSP_HEADERS_X_POWERED_BY_US"\r\n";
 			headers += "x-sessioncookie: " + _xSessionCookie + "\r\n";
 			headers += "Content-Type: application/x-rtsp-tunnelled\r\n";
 			headers += "Pragma: no-cache\r\n";
@@ -727,7 +727,7 @@ bool RTSPProtocol::SendMessage(string &firstLine, Variant &headers, string &cont
 
 			if (!TCPConnector<RTSPProtocol>::Connect(ip, port, chain,
 					customParameters)) {
-				FATAL("Unable to connect to %s:%"PRIu16, STR(ip), port);
+				FATAL("Unable to connect to %s:%" PRIu16, STR(ip), port);
 				return false;
 			}
 
@@ -1009,7 +1009,7 @@ bool RTSPProtocol::HandleRTSPMessage(IOBuffer &buffer) {
 		buffer.Ignore(chunkLength);
 		if (!((bool)_inboundHeaders["isHttp"])) {
 			if (_inboundContent.size() < _contentLength) {
-				FINEST("Not enough data. Wanted: %u; got: %"PRIz"u", _contentLength, _inboundContent.size());
+				FINEST("Not enough data. Wanted: %u; got: %" PRIz"u", _contentLength, _inboundContent.size());
 				return true;
 			}
 		}

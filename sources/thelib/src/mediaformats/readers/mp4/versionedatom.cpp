@@ -35,13 +35,13 @@ bool VersionedAtom::Read() {
 		FATAL("Unable to read version");
 		return false;
 	}
-	//FINEST("_version: %"PRIu8, _version);
+	//FINEST("_version: %" PRIu8, _version);
 
 	if (!ReadArray(_flags, 3)) {
 		FATAL("Unable to read flags");
 		return false;
 	}
-	//FINEST("_flags: %"PRIx8"%"PRIx8"%"PRIx8, _flags[0], _flags[1], _flags[2]);
+	//FINEST("_flags: %" PRIx8"%" PRIx8"%" PRIx8, _flags[0], _flags[1], _flags[2]);
 
 	return ReadData();
 }
