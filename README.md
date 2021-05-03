@@ -6,13 +6,25 @@ An attempt to keep an up-to-date repo with different functional and security fix
 
 Gennaro Gallo - ggenny - https://github.com/ggenny
 
-## Reasons
+## Docker Usage
 
-Why don't I use SRS? 
+Start a new server container:
 
-SRS is an exceptional product designed for realtime streaming of content, however ... i need a product aimed at on-demand streams with routing and sharing of non-live streams and the ability to control them.
+```bash
+docker run -p 1935:1935 -d ggenny/crtmpserver:1.1-rc1
+```
 
-This is the exact opposite of how SRS works
+Push a live or recordere stream:
+
+```bash
+ffmpeg -re -i demo.flv -c copy -f flv -y rtmp://localhost/live/livestream
+```
+
+Play the stream with ffplay:
+
+```bash
+ffplay -probesize 2048 rtmp://localhost/live/livestream
+```
 
 ## 1.x Version - Target Tasks
 
