@@ -1,3 +1,53 @@
+# C++ RTMP Server (crtmpserver)
+
+C++ RTMP Server (crtmpserver) - Based on last Gavriloaie Eugen-Andrei good git commit ( d2af6198341a )
+
+An attempt to keep an up-to-date repo with different functional and security fixes (align to SRS distribution capabilities)
+
+Gennaro Gallo - ggenny - https://github.com/ggenny
+
+## Reasons
+
+Why don't I use SRS? 
+
+SRS is an exceptional product designed for realtime streaming of content, however ... i need a product aimed at on-demand streams with routing and sharing of non-live streams and the ability to control them.
+
+This is the exact opposite of how SRS works
+
+## 1.x Version - Target Tasks
+
+- [] Align to 4b094dfaa132
+- [] Advaced geographical architecture (routing and control)
+- [] Autotest the code
+- [] Create a Docker
+- [] Add new audio codec to RTSP
+- [] Add RTSP h265 support
+- [] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
+- [] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
+ 
+## 1.1-rc1 Version
+
+aligned to ( -- ported netio )  Gavriloaie Eugen-Andrei commit.
+
+## Features
+
+crtmpserver - is a high performance streaming platform written on C++
+
+crtmpserver it is a high performance streaming server able to stream (live or recorded) in the following technologies: 
+
+- To and from Flash (RTMP, RTMPE, RTMPS, RTMPT, RTMPTE) 
+- To and from embedded devices: iPhone, Android 
+- From surveillance cameras 
+- IP-TV using MPEG-TS and RTSP/RTCP/RTP protocols
+
+Also, crtmpserver can be used as a high performance rendes-vous server. For example, it enables you to do: 
+- Audio/Video conferencing 
+- Online gaming 
+- Online collaboration 
+- Simple/complex chat applications
+
+## Compile
+
 Instructions how to compile and use C++ RTMP Server (a.k.a crtmpserver)
 
 Requirements:
