@@ -14,7 +14,7 @@ Start a new server container:
 docker run -p 1935:1935 -d ggenny/crtmpserver:1.1-rc1
 ```
 
-Push a live or recordere stream:
+Push a stream:
 
 ```bash
 ffmpeg -re -i demo.flv -c copy -f flv -y rtmp://localhost/live/livestream
@@ -31,15 +31,15 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 - [] Align to 4b094dfaa132
 - [] Advaced geographical architecture (routing and control)
 - [] Autotest the code
-- [] Create a Docker
+- [*] Create a Docker
 - [] Add new audio codec to RTSP
 - [] Add RTSP h265 support
-- [] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
-- [] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
+- [*] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
+- [*] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
  
 ## 1.1-rc1 Version
 
-aligned to ( -- ported netio )  Gavriloaie Eugen-Andrei commit.
+aligned to ( d2af6198341a ) Gavriloaie Eugen-Andrei commit with minor build fix
 
 ## Features
 
