@@ -14,7 +14,7 @@ Start a new server container:
 docker run -p 1935:1935 -d ggenny/crtmpserver:1.1-rc1
 ```
 
-Push a live or recordere stream:
+Push a stream:
 
 ```bash
 ffmpeg -re -i demo.flv -c copy -f flv -y rtmp://localhost/live/livestream
