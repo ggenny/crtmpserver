@@ -28,7 +28,7 @@
 
 #define CHECK_BA_LIMITS(name,length) \
 if(ba.AvailableBits()<length) { \
-	FATAL("Unable to read `"name"` value. Not enough bits. Wanted: %u; Have: %u", \
+	FATAL("Unable to read " name " value. Not enough bits. Wanted: %u; Have: %u", \
 		(uint32_t)length, ba.AvailableBits()); \
 	return false; \
 }
@@ -43,7 +43,7 @@ if(ba.AvailableBits()<length) { \
 { \
 	uint64_t ___value___=0; \
 	if(!ba.ReadExpGolomb(___value___)) { \
-		FATAL("Unable to read `"name"` value"); \
+		FATAL("Unable to read " name " value"); \
 		return false; \
 	} \
 	v[name]=(type)___value___; \
