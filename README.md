@@ -107,6 +107,23 @@ Also look into builders/packing directory. There are several OS specific builder
 
 * All crtmpserver settings are located in a detailed file calle: crtmpserver.lua
 
+## Examples
+
+## Webcam push stream using ffmpeg
+
+push stream:
+```bash
+liveflv: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f flv -metadatastreamName=tcpchan5 "tcp://localhost:6666"
+mpegts: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f mpegts tcp://localhost:9999/
+rtmp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f mpegts tcp://localhost:9999/
+rtsp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f rtsp -y rtsp://localhost:5544/tcpchan5
+```
+play:
+```bash
+rtsp: rtsp://localhost:5544/tcpchan5
+rtmp: rtmp://localhost/live/tcpchan5 
+```
+
 ## Support/Help:
 
 If you're lookingo for assistance with crtmpserver, feel free to join us at:
