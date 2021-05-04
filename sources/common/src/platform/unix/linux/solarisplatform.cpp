@@ -17,14 +17,41 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifdef SOLARIS
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#include "platform/solaris/solarisplatform.h"
+#include "common.h"
+
+class SolarisPlatform {
+public:
+
+	SolarisPlatform() {
+		//Ignore all SIGPIPE signals
+		struct sigaction act;
+		act.sa_handler = SIG_IGN;
+		sigaction(SIGPIPE, &act, NULL);
+	}
+
+	virtual ~SolarisPlatform() {
+
+	}
+};
+static SolarisPlatform _platform;
+
+time_t timegm(struct tm *tm) {
+	time_t ret;
+	char *tz;
+
+	tz = getenv("TZ");
+	setenv("TZ", "", 1);
+	TzSet();
+	ret = mktime(tm);
+	if (tz)
+		setenv("TZ", tz, 1);
+	else
+		unsetenv("TZ");
+	TzSet();
+	return ret;
+}
+
+#endif /* SOLARIS */

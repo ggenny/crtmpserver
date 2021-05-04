@@ -19,12 +19,20 @@
 
 #pragma once
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#if defined ANDROID || defined LINUX || defined SOLARIS
+
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif /* _GNU_SOURCE */
+#define _FILE_OFFSET_BITS 64
+#define HAS_clock_gettime
+#include "platform/unix/baseunixplatform.h"
+
+#define LIBRARY_NAME_PATTERN "lib%s.so"
+#define MSGHDR_MSG_IOVLEN_TYPE size_t
+#define FD_COPY(src,dst) memcpy(dst,src,sizeof(fd_set));
+#ifndef OPEN_MAX
+#define OPEN_MAX 100000
+#endif /* OPEN_MAX */
+
+#endif /* defined ANDROID || defined LINUX || defined SOLARIS */

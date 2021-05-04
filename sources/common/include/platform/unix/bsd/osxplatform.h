@@ -19,12 +19,13 @@
 
 #pragma once
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#ifdef OSX
+#include "platform/unix/bsd/basebsdplatform.h"
+
+//platform defines
+#define MSG_NOSIGNAL 0
+#define LIBRARY_NAME_PATTERN "lib%s.dylib"
+#define KQUEUE_TIMER_MULTIPLIER 1000000
+#define lseek64 lseek
+
+#endif /* OSX */

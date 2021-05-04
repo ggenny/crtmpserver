@@ -17,14 +17,24 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#if defined ANDROID || defined LINUX || defined SOLARIS
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#include "common.h"
+
+double getFileModificationDate(const string &path) {
+	struct stat s;
+	if (stat(path.c_str(), &s) != 0) {
+		FATAL("Unable to stat file %s", STR(path));
+		return 0;
+	}
+
+	return (double) s.st_mtim.tv_sec + (double) s.st_mtim.tv_nsec / 1000000000.0;
+}
+
+bool setFdNoSIGPIPE(SOCKET_TYPE fd) {
+	//on linux/android, we use MSG_NOSIGNAL when using send/write functions
+	//on solaris, we ignore SIGPIPE using sigaction
+	return true;
+}
+
+#endif /* defined ANDROID || defined LINUX || defined SOLARIS */

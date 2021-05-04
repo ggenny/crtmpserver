@@ -19,12 +19,13 @@
 
 #pragma once
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#if defined FREEBSD || defined OSX
+#include "platform/unix/baseunixplatform.h"
+
+#include <sys/event.h>
+#include <net/if_dl.h>
+
+#define HAS_KQUEUE_TIMERS
+#define MSGHDR_MSG_IOVLEN_TYPE int
+#define SOCKADDR_HAS_LENGTH_FIELD
+#endif /* defined FREEBSD || defined OSX */

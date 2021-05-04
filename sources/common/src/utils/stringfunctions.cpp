@@ -67,29 +67,29 @@ bool EMSStringEqual(const char *EMS_RESTRICT pStr1,
 			(strncasecmp(pStr1, pStr2, length) == 0)));
 }
 
-//string & replace(string &target, const string &search, const string &replacement) {
-//	if ((search.size() == 0)
-//			|| ((search.size() == replacement.size()) && (search == replacement))
-//			)
-//		return target;
-//	string::size_type i = string::npos;
-//	string::size_type lastPos = 0;
-//	while ((i = target.find(search, lastPos)) != string::npos) {
-//		target.replace(i, search.length(), replacement);
-//		lastPos = i + replacement.length();
-//	}
-//	return target;
-//}
-//
-//string &lowerCase(string &value) {
-//	std::transform(value.begin(), value.end(), value.begin(), ::tolower);
-//	return value;
-//}
-//
-//string &upperCase(string &value) {
-//	std::transform(value.begin(), value.end(), value.begin(), ::toupper);
-//	return value;
-//}
+string replace(string target, const string search, const string replacement) {
+	if ((search.size() == 0)
+			|| ((search.size() == replacement.size()) && (search == replacement))
+			)
+		return target;
+	string::size_type i = string::npos;
+	string::size_type lastPos = 0;
+	while ((i = target.find(search, lastPos)) != string::npos) {
+		target.replace(i, search.length(), replacement);
+		lastPos = i + replacement.length();
+	}
+	return target;
+}
+
+string lowerCase(string value) {
+	std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+	return value;
+}
+
+string upperCase(string value) {
+	std::transform(value.begin(), value.end(), value.begin(), ::toupper);
+	return value;
+}
 
 DLLEXP bool isInteger(const string &str, int64_t &value) {
 	return isInteger(str.c_str(), str.length(), value);
@@ -224,142 +224,173 @@ bool isInteger(const char *pBuffer, size_t length, int64_t &value) {
 
 	return true;
 }
-//
-//string format(const char *pFormat, ...) {
-//	char *pBuffer = NULL;
-//	va_list arguments;
-//	va_start(arguments, pFormat);
-//#ifdef __clang__
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wformat-nonliteral"
-//#endif /* __clang__ */
-//	if (vasprintf(&pBuffer, pFormat, arguments) == -1) {
-//		va_end(arguments);
-//		o_assert(false);
-//		return "";
-//	}
-//#ifdef __clang__
-//#pragma clang diagnostic pop
-//#endif /* __clang__ */
-//	va_end(arguments);
-//	string result;
-//	if (pBuffer != NULL) {
-//		result = pBuffer;
-//		free(pBuffer);
-//	}
-//	return result;
-//}
-//
-//string vFormat(const char *pFormat, va_list args) {
-//	char *pBuffer = NULL;
-//#ifdef __clang__
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wformat-nonliteral"
-//#endif /* __clang__ */
-//	if (vasprintf(&pBuffer, pFormat, args) == -1) {
-//		o_assert(false);
-//		return "";
-//	}
-//#ifdef __clang__
-//#pragma clang diagnostic pop
-//#endif /* __clang__ */
-//	string result;
-//	if (pBuffer != NULL) {
-//		result = pBuffer;
-//		free(pBuffer);
-//	}
-//	return result;
-//}
-//
-//string tagToString(uint64_t tag) {
-//	string result;
-//	for (uint32_t i = 0; i < 8; i++) {
-//		uint8_t v = (tag >> ((7 - i)*8)&0xff);
-//		if (v == 0)
-//			break;
-//		result += (char) v;
-//	}
-//	return result;
-//}
-//
-//void lTrim(string &value) {
-//	string::size_type i = 0;
-//	for (i = 0; i < value.length(); i++) {
-//		if (value[i] != ' ' &&
-//				value[i] != '\t' &&
-//				value[i] != '\n' &&
-//				value[i] != '\r')
-//			break;
-//	}
-//	value = value.substr(i);
-//}
-//
-//void rTrim(string &value) {
-//	int32_t i = 0;
-//	for (i = (int32_t) value.length() - 1; i >= 0; i--) {
-//		if (value[i] != ' ' &&
-//				value[i] != '\t' &&
-//				value[i] != '\n' &&
-//				value[i] != '\r')
-//			break;
-//	}
-//	value = value.substr(0, i + 1);
-//}
-//
-//void trim(string &value) {
-//	lTrim(value);
-//	rTrim(value);
-//}
-//
-//void split(const string &str, const string &separator, vector<string> &result) {
-//	result.clear();
-//	string::size_type position = str.find(separator);
-//	string::size_type lastPosition = 0;
-//	size_t separatorLength = separator.length();
-//
-//	while (position != str.npos) {
-//		ADD_VECTOR_END(result, str.substr(lastPosition, position - lastPosition));
-//		lastPosition = position + separatorLength;
-//		position = str.find(separator, lastPosition);
-//	}
-//	ADD_VECTOR_END(result, str.substr(lastPosition, string::npos));
-//}
-//
-//map<string, string> &mapping(map<string, string> &result,
-//		const string &str, const string &separator1, const string &separator2,
-//		bool trimStrings) {
-//	vector<string> pairs;
-//	split(str, separator1, pairs);
-//
-//	FOR_VECTOR_ITERATOR(string, pairs, i) {
-//		if (VECTOR_VAL(i) != "") {
-//			if (VECTOR_VAL(i).find(separator2) != string::npos) {
-//				string key = VECTOR_VAL(i).substr(0, VECTOR_VAL(i).find(separator2));
-//				string value = VECTOR_VAL(i).substr(VECTOR_VAL(i).find(separator2) + 1);
-//				if (trimStrings) {
-//					trim(key);
-//					trim(value);
-//				}
-//				result[key] = value;
-//			} else {
-//				if (trimStrings) {
-//					trim(VECTOR_VAL(i));
-//				}
-//				result[VECTOR_VAL(i)] = "";
-//			}
-//		}
-//	}
-//	return result;
-//}
-//
-//static const char *pkAlowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//static const size_t kAlowedCharactersSize = 62;
-//static uint8_t randBytes[16];
-//
-//string generateRandomString(uint32_t length) {
-//	RAND_bytes(randBytes, sizeof (randBytes));
-//	string result = "";
-//	for (uint32_t i = 0; i < length; i++)
-//		result += pkAlowedCharacters[randBytes[i % sizeof (randBytes)] % kAlowedCharactersSize];
-//	return result;
-//}
+
+bool isNumeric(string value) {
+        return value == format("%d", atoi(STR(value)));
+}
+
+string format(const char *pFormat, ...) {
+	char *pBuffer = NULL;
+	va_list arguments;
+	va_start(arguments, pFormat);
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif /* __clang__ */
+	if (vasprintf(&pBuffer, pFormat, arguments) == -1) {
+		va_end(arguments);
+		o_assert(false);
+		return "";
+	}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif /* __clang__ */
+	va_end(arguments);
+	string result;
+	if (pBuffer != NULL) {
+		result = pBuffer;
+		free(pBuffer);
+	}
+	return result;
+}
+
+string vFormat(const char *pFormat, va_list args) {
+	char *pBuffer = NULL;
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif /* __clang__ */
+	if (vasprintf(&pBuffer, pFormat, args) == -1) {
+		o_assert(false);
+		return "";
+	}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif /* __clang__ */
+	string result;
+	if (pBuffer != NULL) {
+		result = pBuffer;
+		free(pBuffer);
+	}
+	return result;
+}
+
+string tagToString(uint64_t tag) {
+	string result;
+	for (uint32_t i = 0; i < 8; i++) {
+		uint8_t v = (tag >> ((7 - i)*8)&0xff);
+		if (v == 0)
+			break;
+		result += (char) v;
+	}
+	return result;
+}
+
+void lTrim(string &value) {
+	string::size_type i = 0;
+	for (i = 0; i < value.length(); i++) {
+		if (value[i] != ' ' &&
+				value[i] != '\t' &&
+				value[i] != '\n' &&
+				value[i] != '\r')
+			break;
+	}
+	value = value.substr(i);
+}
+
+void rTrim(string &value) {
+	int32_t i = 0;
+	for (i = (int32_t) value.length() - 1; i >= 0; i--) {
+		if (value[i] != ' ' &&
+				value[i] != '\t' &&
+				value[i] != '\n' &&
+				value[i] != '\r')
+			break;
+	}
+	value = value.substr(0, i + 1);
+}
+
+void trim(string &value) {
+	lTrim(value);
+	rTrim(value);
+}
+
+void split(const string &str, const string &separator, vector<string> &result) {
+	result.clear();
+	string::size_type position = str.find(separator);
+	string::size_type lastPosition = 0;
+	size_t separatorLength = separator.length();
+
+	while (position != str.npos) {
+		ADD_VECTOR_END(result, str.substr(lastPosition, position - lastPosition));
+		lastPosition = position + separatorLength;
+		position = str.find(separator, lastPosition);
+	}
+	ADD_VECTOR_END(result, str.substr(lastPosition, string::npos));
+}
+
+map<string, string> &mapping(map<string, string> &result,
+		const string &str, const string &separator1, const string &separator2,
+		bool trimStrings) {
+	vector<string> pairs;
+	split(str, separator1, pairs);
+
+	FOR_VECTOR_ITERATOR(string, pairs, i) {
+		if (VECTOR_VAL(i) != "") {
+			if (VECTOR_VAL(i).find(separator2) != string::npos) {
+				string key = VECTOR_VAL(i).substr(0, VECTOR_VAL(i).find(separator2));
+				string value = VECTOR_VAL(i).substr(VECTOR_VAL(i).find(separator2) + 1);
+				if (trimStrings) {
+					trim(key);
+					trim(value);
+				}
+				result[key] = value;
+			} else {
+				if (trimStrings) {
+					trim(VECTOR_VAL(i));
+				}
+				result[VECTOR_VAL(i)] = "";
+			}
+		}
+	}
+	return result;
+}
+
+map<string, string> mapping(string str, string separator1, string separator2, bool trimStrings) {
+        map<string, string> result;
+
+        vector<string> pairs;
+        split(str, separator1, pairs);
+
+        FOR_VECTOR_ITERATOR(string, pairs, i) {
+                if (VECTOR_VAL(i) != "") {
+                        if (VECTOR_VAL(i).find(separator2) != string::npos) {
+                                string key = VECTOR_VAL(i).substr(0, VECTOR_VAL(i).find(separator2));
+                                string value = VECTOR_VAL(i).substr(VECTOR_VAL(i).find(separator2) + 1);
+                                if (trimStrings) {
+                                        trim(key);
+                                        trim(value);
+                                }
+                                result[key] = value;
+                        } else {
+                                if (trimStrings) {
+                                        trim(VECTOR_VAL(i));
+                                }
+                                result[VECTOR_VAL(i)] = "";
+                        }
+                }
+        }
+        return result;
+}
+
+static const char *pkAlowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+static const size_t kAlowedCharactersSize = 62;
+static uint8_t randBytes[16];
+
+string generateRandomString(uint32_t length) {
+	RAND_bytes(randBytes, sizeof (randBytes));
+	string result = "";
+	for (uint32_t i = 0; i < length; i++)
+		result += pkAlowedCharacters[randBytes[i % sizeof (randBytes)] % kAlowedCharactersSize];
+	return result;
+}

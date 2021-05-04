@@ -17,14 +17,18 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifdef ANDROID
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#include "common.h"
+
+time_t timegm(struct tm * const t) {
+	// time_t is signed on Android.
+	static const time_t kTimeMax = ~(1 << (sizeof (time_t) * CHAR_BIT - 1));
+	static const time_t kTimeMin = (1 << (sizeof (time_t) * CHAR_BIT - 1));
+	time64_t result = timegm64(t);
+	if (result < kTimeMin || result > kTimeMax)
+		return -1;
+	return result;
+}
+
+#endif /* ANDROID */

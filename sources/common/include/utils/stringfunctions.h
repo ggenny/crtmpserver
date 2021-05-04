@@ -27,19 +27,22 @@ DLLEXP bool EMSStringEqual(const std::string &str1, const char *pStr2,
 		size_t str2length, bool caseSensitive);
 DLLEXP bool EMSStringEqual(const char *EMS_RESTRICT pStr1,
 		const char *EMS_RESTRICT pStr2, const size_t length, bool caseSensitive);
-//DLLEXP string & replace(string &target, const string &search, const string &replacement);
-//DLLEXP string &lowerCase(string &value);
-//DLLEXP string &upperCase(string &value);
+DLLEXP string replace(string target, const string search, const string replacement);
+DLLEXP string lowerCase(string value);
+DLLEXP string upperCase(string value);
 DLLEXP bool isInteger(const string &str, int64_t &value);
 DLLEXP bool isInteger(const char *pBuffer, size_t length, int64_t &value);
-//DLLEXP string format(const char *pFormat, ...);
-//DLLEXP string vFormat(const char *pFormat, va_list args);
-//DLLEXP string tagToString(uint64_t tag);
-//DLLEXP void lTrim(string &value);
-//DLLEXP void rTrim(string &value);
-//DLLEXP void trim(string &value);
-//DLLEXP void split(const string &str, const string &separator, vector<string> &result);
-//DLLEXP map<string, string> &mapping(map<string, string> &result,
-//		const string &str, const string &separator1, const string &separator2,
-//		bool trimStrings);
-//DLLEXP string generateRandomString(uint32_t length);
+DLLEXP bool isNumeric(string value);
+DLLEXP string format(const char *pFormat, ...);
+DLLEXP string vFormat(const char *pFormat, va_list args);
+DLLEXP string tagToString(uint64_t tag);
+DLLEXP void lTrim(string &value);
+DLLEXP void rTrim(string &value);
+DLLEXP void trim(string &value);
+DLLEXP void split(const string &str, const string &separator, vector<string> &result);
+DLLEXP map<string, string> &mapping(map<string, string> &result,
+		const string &str, const string &separator1, const string &separator2,
+		bool trimStrings);
+DLLEXP map<string, string> mapping(string str, string separator1, string separator2, 
+                bool trimStrings);
+DLLEXP string generateRandomString(uint32_t length);

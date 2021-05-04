@@ -17,12 +17,26 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FORMAT_H
-#define	_FORMAT_H
+#pragma once
 
-#include "platform/platform.h"
+#ifdef FREEBSD
 
-DLLEXP string format(const char *pFormat, ...);
-DLLEXP string vFormat(const char *pFormat, va_list args);
+#define FILE_OFFSET_BITS 64
+#define HAS_clock_gettime
+#include "platform/unix/bsd/basebsdplatform.h"
 
-#endif	/* _FORMAT_H */
+
+//platform includes
+
+
+//platform defines
+#define LIBRARY_NAME_PATTERN "lib%s.so"
+#define KQUEUE_TIMER_MULTIPLIER 1000
+#ifndef OPEN_MAX
+#define OPEN_MAX 100000
+#endif /* OPEN_MAX */
+#define MAP_NOCACHE 0
+#define MAP_NOEXTEND 0
+#define NOTE_USECONDS 0
+
+#endif /* FREEBSD */

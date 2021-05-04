@@ -19,12 +19,16 @@
 
 #pragma once
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+bool setFdJoinMulticast(SOCKET_TYPE sock, string bindIp, uint16_t bindPort, const string &ssmIp);
+bool setFdCloseOnExec(SOCKET_TYPE fd);
+bool setFdNonBlock(SOCKET_TYPE fd);
+bool setFdNoSIGPIPE(SOCKET_TYPE fd);
+bool setFdKeepAlive(SOCKET_TYPE fd, bool isUdp);
+bool setFdNoNagle(SOCKET_TYPE fd, bool isUdp);
+bool setFdReuseAddress(SOCKET_TYPE fd);
+bool setFdTTL(SOCKET_TYPE fd, uint8_t ttl);
+bool setFdMulticastTTL(SOCKET_TYPE fd, uint8_t ttl);
+bool setFdTOS(SOCKET_TYPE fd, uint8_t tos);
+bool setFdLinger(SOCKET_TYPE fd);
+bool setFdMaxSndRcvBuff(SOCKET_TYPE fd, bool isUdp);
+bool setFdOptions(SOCKET_TYPE fd, bool isUdp);

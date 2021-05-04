@@ -19,12 +19,20 @@
 
 #pragma once
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/process.h"
-#include "utils/misc/locker.h"
+#ifdef ANDROID
+#include "platform/unix/linux/baselinuxplatform.h"
+
+//platform includes
+#include <sys/epoll.h>
+#include <time64.h>
+
+//platform defines
+#define NO_SSL_ENGINE_CLEANUP
+#define MAP_NOCACHE 0
+#define MAP_NOEXTEND 0
+#define SO_NOSIGPIPE 0
+
+//platform functions
+time_t timegm(struct tm *tm);
+
+#endif /* ANDROID */
