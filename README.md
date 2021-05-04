@@ -28,7 +28,7 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 
 ## 1.x Version - Target Tasks
 
-- [ ] Align to 4b094dfaa132
+- [x] Align to 4b094dfaa132
 - [x] Create a Docker
 - [x] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
 - [x] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
@@ -113,7 +113,7 @@ Also look into builders/packing directory. There are several OS specific builder
 
 push stream:
 ```bash
-liveflv: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f flv -metadatastreamName=tcpchan5 "tcp://localhost:6666"
+liveflv: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f flv -metadata streamName=tcpchan5 "tcp://localhost:6666"
 mpegts: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f mpegts tcp://localhost:9999/
 rtmp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f mpegts tcp://localhost:9999/
 rtsp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f rtsp -y rtsp://localhost:5544/tcpchan5
