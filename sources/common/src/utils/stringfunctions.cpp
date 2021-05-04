@@ -18,6 +18,7 @@
  */
 
 #include "common.h"
+#include "utils/logging/logging.h"
 
 bool EMSStringEqual(const std::string &str1, const std::string &str2,
 		bool caseSensitive) {
@@ -316,7 +317,9 @@ void trim(string &value) {
 }
 
 void split(const string &str, const string &separator, vector<string> &result) {
-	result.clear();
+        o_assert(result.empty()); // Avoid crash when str is internal to result
+	//result.clear();
+
 	string::size_type position = str.find(separator);
 	string::size_type lastPosition = 0;
 	size_t separatorLength = separator.length();

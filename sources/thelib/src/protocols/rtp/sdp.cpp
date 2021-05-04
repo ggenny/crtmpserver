@@ -434,12 +434,13 @@ bool SDP::ParseSDPLineA(string &attributeName, Variant &value, string line) {
 		return true;
 	} else if (attributeName == "rtpmap") {
 		//rtpmap:<payload type> <encoding name>/<clock rate>[/<encoding parameters>]
-		vector<string> parts;
-		split(rawValue, " ", parts);
-		if (parts.size() != 2)
+		vector<string> mapParts;
+		split(rawValue, " ", mapParts);
+		if (mapParts.size() != 2)
 			return false;
-		value["payloadType"] = (uint8_t) atoi(STR(parts[0]));
-		split(parts[1], "/", parts);
+		value["payloadType"] = (uint8_t) atoi(STR(mapParts[0]));
+		vector<string> parts;
+		split(mapParts[1], "/", parts);
 		if ((parts.size() != 2) && (parts.size() != 3))
 			return false;
 		value["encodingName"] = parts[0];
