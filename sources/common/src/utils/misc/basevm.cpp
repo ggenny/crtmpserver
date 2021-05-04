@@ -18,21 +18,10 @@
  */
 
 
-#pragma once
+#include "utils/misc/basevm.h"
 
-//LITTLE ENDIAN SYSTEMS
-#ifdef LITTLE_ENDIAN_BYTE_ALIGNED
-#include "platform/endianess/little_endian_byte_aligned.h"
-#endif
+BaseVM::BaseVM() {
+}
 
-#ifdef LITTLE_ENDIAN_SHORT_ALIGNED
-#include "platform/endianess/little_endian_short_aligned.h"
-#endif
-
-#ifdef BIG_ENDIAN_BYTE_ALIGNED
-#include "platform/endianess/big_endian_byte_aligned.h"
-#endif
-
-#ifdef BIG_ENDIAN_SHORT_ALIGNED
-#include "platform/endianess/big_endian_short_aligned.h"
-#endif
+BaseVM::~BaseVM() {
+}

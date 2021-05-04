@@ -23,6 +23,7 @@
 #include "utils/buffering/buffering.h"
 #include "utils/logging/logging.h"
 #include "utils/lua/luautils.h"
+#include "utils/lua/basevmlua.h"
 #include "utils/mempool/mempool.h"
 #include "utils/misc/misc.h"
 
