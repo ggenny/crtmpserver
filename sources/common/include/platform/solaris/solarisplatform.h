@@ -60,6 +60,7 @@
 #include <limits.h>
 #include <spawn.h>
 #include <time.h>
+#include <syslog.h>
 using namespace std;
 
 
@@ -78,12 +79,30 @@ using namespace std;
 #define SET_CONSOLE_TEXT_COLOR(color) fprintf(stdout,"%s",color)
 #define READ_FD read
 #define WRITE_FD write
+
+//threading: mutex
+#define THREADING_PTHREAD
+#define MUTEX_TYPE pthread_mutex_t
+#define MUTEX_INIT pthread_mutex_init
+#define MUTEX_STATIC_INIT PTHREAD_MUTEX_INITIALIZER
+#define MUTEX_DESTROY pthread_mutex_destroy
+#define MUTEX_LOCK pthread_mutex_lock
+#define MUTEX_UNLOCK pthread_mutex_unlock
+
 #define SOCKET int32_t
+#define SOCKET_TYPE SOCKET
 #define LASTSOCKETERROR					errno
 #define SOCKERROR_EINPROGRESS			EINPROGRESS
 #define SOCKERROR_EAGAIN				EAGAIN
+#define SOCKERROR_EWOULDBLOCK			EWOULDBLOCK
 #define SOCKERROR_ECONNRESET			ECONNRESET
 #define SOCKERROR_ENOBUFS				ENOBUFS
+#define SOCKET_LAST_ERROR			LASTSOCKETERROR
+#define SOCKET_ERROR_EINPROGRESS			SOCKERROR_EINPROGRESS
+#define SOCKET_ERROR_EAGAIN				SOCKERROR_EAGAIN
+#define SOCKET_ERROR_EWOULDBLOCK			SOCKERROR_EWOULDBLOCK
+#define SOCKET_ERROR_ECONNRESET			SOCKERROR_ECONNRESET
+#define SOCKET_ERROR_ENOBUFS				SOCKERROR_ENOBUFS
 #define LIB_HANDLER void *
 #define FREE_LIBRARY(libHandler) dlclose((libHandler))
 #define LOAD_LIBRARY(file,flags) dlopen((file), (flags))
@@ -228,6 +247,9 @@ time_t getlocaltime();
 time_t gettimeoffset();
 void GetFinishedProcesses(vector<pid_t> &pids, bool &noMorePids);
 bool LaunchProcess(string fullBinaryPath, vector<string> &arguments, vector<string> &envVars, pid_t &pid);
+bool OpenSysLog(const string name);
+void Syslog(int32_t level, const char *message, ...);
+void CloseSysLog();
 #endif /* _SOLARISPLATFORM_H */
 #endif /* SOLARIS */
 

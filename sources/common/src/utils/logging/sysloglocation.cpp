@@ -17,40 +17,36 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef ANDROID
 #include "common.h"
-#include <android/log.h>
 
-int LogCatLogLocation::_levelsMap[] = {
-	ANDROID_LOG_FATAL,
-	ANDROID_LOG_ERROR,
-	ANDROID_LOG_WARN,
-	ANDROID_LOG_INFO,
-	ANDROID_LOG_DEBUG,
-	ANDROID_LOG_VERBOSE,
-	ANDROID_LOG_VERBOSE
-};
-
-LogCatLogLocation::LogCatLogLocation(Variant &configuration)
+SysLogLocation::SysLogLocation(Variant &configuration)
 : BaseLogLocation(configuration) {
-
 }
 
-LogCatLogLocation::~LogCatLogLocation() {
+SysLogLocation::~SysLogLocation() {
+	CloseSysLog();
 }
 
-void LogCatLogLocation::Log(int32_t level, const char *pFileName,
-		uint32_t lineNumber, const char *pFunctionName, string &message) {
-	if (_level < 0 || level > _level) {
-		return;
+bool SysLogLocation::Init() {
+	if (!BaseLogLocation::Init()) {
+		return false;
 	}
-
-	__android_log_write(_levelsMap[level], "evostream",
-			STR(format("%s:%u %s", pFileName, lineNumber, STR(message))));
+	if (_configuration.HasKeyChain(V_STRING, false, 1, "name"))
+		_loggerName = (string) _configuration.GetValue("name", false);
+	trim(_loggerName);
+	if (_loggerName == "")
+		_loggerName = "ems";
+	return OpenSysLog(_loggerName);
 }
 
-void LogCatLogLocation::SignalFork(uint32_t forkId) {
-
+void SysLogLocation::Log(int32_t level, const char *pFileName,
+		uint32_t lineNumber, const char *pFunctionName, string &message) {
+	if (_singleLine) {
+		replace(message, "\r", "\\r");
+		replace(message, "\n", "\\n");
+	}
+	Syslog(level, "%s [%s:%" PRIu32"]", STR(message), pFileName, lineNumber);
 }
 
-#endif /* ANDROID */
+void SysLogLocation::SignalFork(uint32_t forkId) {
+}

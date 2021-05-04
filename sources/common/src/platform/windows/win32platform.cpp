@@ -946,4 +946,15 @@ bool LaunchProcess(string fullBinaryPath, vector<string> &arguments, vector<stri
 	CloseHandle(pi.hThread);
 	return true;
 }
+
+bool OpenSysLog(const string name) {
+	return true;
+}
+
+void Syslog(int32_t level, const char *message, ...) {
+}
+
+void CloseSysLog() {
+}
+
 #endif /* WIN32 */

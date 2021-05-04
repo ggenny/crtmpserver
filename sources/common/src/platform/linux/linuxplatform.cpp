@@ -729,4 +729,39 @@ time_t gettimeoffset() {
 	return _gUTCOffset;
 }
 
+bool OpenSysLog(const string name) {
+	openlog(STR(name), LOG_PID, 0);
+	return true;
+}
+
+static const int syslogLevels[] = {
+	LOG_ERR, //FATAL
+	LOG_ERR, //ERROR
+	LOG_WARNING, //WARNING
+	LOG_INFO, //INFO
+	LOG_DEBUG, //DEBUG
+	LOG_DEBUG, //FINE
+	LOG_DEBUG //FINEST
+};
+static const int32_t syslogLevelsCount = sizeof (syslogLevels) / sizeof (int);
+
+void Syslog(int32_t level, const char *message, ...) {
+	level = ((level >= 0)&&(level < syslogLevelsCount)) ? syslogLevels[level] : LOG_ERR;
+	va_list arguments;
+	va_start(arguments, message);
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif /* __clang__ */
+	vsyslog(level, message, arguments);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif /* __clang__ */
+	va_end(arguments);
+}
+
+void CloseSysLog() {
+	closelog();
+}
+
 #endif /* LINUX */

@@ -17,17 +17,24 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MISC_H
-#define	_MISC_H
+#include "common.h"
 
-#include "utils/misc/crypto.h"
-#include "utils/misc/file.h"
-#include "utils/misc/linkedlist.h"
-#include "utils/misc/mmapfile.h"
-#include "utils/misc/timersmanager.h"
-#include "utils/misc/variant.h"
-#include "utils/misc/uri.h"
-#include "utils/misc/format.h"
-#include "utils/misc/locker.h"
-#endif	/* _MISC_H */
+std::string message_t::ToString() const {
+	IOBuffer b;
+	for (size_t i = 0; i < _count; i++)
+		b.ReadFromBuffer((const uint8_t *) _pBuffers[i].iov_base, (uint32_t) _pBuffers[i].iov_len);
+	return format("iovec count: %" PRIz"u\niovec total size: %" PRIz"u\n", _count, _totalSize) + b.ToString();
+}
 
+bool message_t::StoreToIOBuffer(IOBuffer *pBuffer) const{
+	if (pBuffer == NULL) {
+		FATAL("Invalid destination buffer provided");
+		return false;
+	}
+
+	for (size_t i = 0; i < _count; i++)
+		if (!pBuffer->ReadFromBuffer((const uint8_t *) _pBuffers[i].iov_base, (uint32_t) _pBuffers[i].iov_len))
+			return false;
+
+	return true;
+}

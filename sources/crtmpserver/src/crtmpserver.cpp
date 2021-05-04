@@ -203,7 +203,7 @@ bool Initialize() {
 
 			gRs.daemon = true;
 
-			Logger::SignalFork();
+			Logger::SignalFork(pid);
 		}
 	}
 #endif /* WIN32 */

@@ -141,12 +141,29 @@ typedef long long int int64_t;*/
 #define MSG_NOSIGNAL 0
 #define READ_FD _read
 #define WRITE_FD _write
+
+//threading: mutex
+#define THREADING_WINTHREAD
+#define MUTEX_TYPE CSW
+#define MUTEX_INIT(p1,p2) 0
+#define MUTEX_STATIC_INIT CSW()
+#define MUTEX_DESTROY(p1)
+#define MUTEX_LOCK(pCSW) (pCSW)->EnterCriticalSection()
+#define MUTEX_UNLOCK(pCSW) (pCSW)->LeaveCriticalSection()
+
+#define SOCKET_TYPE SOCKET
 #define CLOSE_SOCKET(fd) do{ if(((int)fd)>=0) closesocket(fd);fd=(SOCKET)-1;}while(0)
 #define LASTSOCKETERROR WSAGetLastError()
 #define SOCKERROR_EINPROGRESS			WSAEINPROGRESS
 #define SOCKERROR_EAGAIN				WSAEWOULDBLOCK
 #define SOCKERROR_ECONNRESET			WSAECONNRESET
 #define SOCKERROR_ENOBUFS				WSAENOBUFS
+#define SOCKET_LAST_ERROR			LASTSOCKETERROR
+#define SOCKET_ERROR_EINPROGRESS			SOCKERROR_EINPROGRESS
+#define SOCKET_ERROR_EAGAIN				SOCKERROR_EAGAIN
+#define SOCKET_ERROR_EWOULDBLOCK			SOCKERROR_EAGAIN
+#define SOCKET_ERROR_ECONNRESET			SOCKERROR_ECONNRESET
+#define SOCKET_ERROR_ENOBUFS				SOCKERROR_ENOBUFS
 #define SET_UNKNOWN 0
 #define SET_READ 1
 #define SET_WRITE 2
@@ -292,5 +309,8 @@ DLLEXP time_t getlocaltime();
 DLLEXP time_t gettimeoffset();
 DLLEXP void GetFinishedProcesses(vector<pid_t> &pids, bool &noMorePids);
 DLLEXP bool LaunchProcess(string fullBinaryPath, vector<string> &arguments, vector<string> &envVars, pid_t &pid);
+DLLEXP bool OpenSysLog(const string name);
+DLLEXP void Syslog(int32_t level, const char *message, ...);
+DLLEXP void CloseSysLog();
 #endif /* _WIN32PLATFORM_H */
 #endif /* WIN32 */

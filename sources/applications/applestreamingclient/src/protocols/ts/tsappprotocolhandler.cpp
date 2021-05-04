@@ -50,6 +50,7 @@ void TSAppProtocolHandler::RegisterProtocol(BaseProtocol *pProtocol) {
 	pProtocol->GetFarProtocol()->DeleteNearProtocol(false);
 
 	//4. This is a step-by-step feed process
+	// TODO: why is commented by Fred-cn ?
 	//((InboundTSProtocol *) pProtocol)->SetStepByStep(true);
 
 	//5. Tell the context about this new TS protocol
