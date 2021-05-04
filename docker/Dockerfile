@@ -4,7 +4,7 @@ RUN apt update && apt install -y \
 	build-essential \
 	git \
 	cmake \
-	libssl1.0-dev \
+	libssl-dev \
 	checkinstall
 
 RUN git clone https://github.com/ggenny/crtmpserver
@@ -18,12 +18,12 @@ RUN cd /crtmpserver/builders/cmake && \
 FROM ubuntu:18.04
 
 RUN apt update && apt install -y \
-        libssl1.0 
+        libssl1.1
 
 MAINTAINER Gennaro Gallo <https://github.com/ggenny/crtmpserver>
 
 LABEL Description="crtmpserver - is a high performance streaming platform written on C++" \
-      Version="1.1-rc1"
+      Version="1.2"
 
 COPY --from=build /tmp/crtmpserver .
 
