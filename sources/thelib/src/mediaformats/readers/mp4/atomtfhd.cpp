@@ -71,41 +71,41 @@ bool AtomTFHD::ReadData() {
 		FATAL("Unable to read track ID");
 		return false;
 	}
-	//FINEST("_trackID: %"PRIi32, _trackID);
+	//FINEST("_trackID: %" PRIi32, _trackID);
 	if (HasBaseDataOffset()) {
 		if (!ReadInt64(_baseDataOffset)) {
 			FATAL("Unable to read base data offset");
 			return false;
 		}
-		//FINEST("_baseDataOffset: %"PRIi64, _baseDataOffset);
+		//FINEST("_baseDataOffset: %" PRIi64, _baseDataOffset);
 	}
 	if (HasSampleDescriptionIndex()) {
 		if (!ReadInt32(_sampleDescriptionIndex)) {
 			FATAL("Unable to read sample description index");
 			return false;
 		}
-		//FINEST("_sampleDescriptionIndex: %"PRIi32, _sampleDescriptionIndex);
+		//FINEST("_sampleDescriptionIndex: %" PRIi32, _sampleDescriptionIndex);
 	}
 	if (HasDefaultSampleDuration()) {
 		if (!ReadInt32(_defaultSampleDuration)) {
 			FATAL("Unable to read default sample duration");
 			return false;
 		}
-		//FINEST("_defaultSampleDuration: %"PRIi32, _defaultSampleDuration);
+		//FINEST("_defaultSampleDuration: %" PRIi32, _defaultSampleDuration);
 	}
 	if (HasDefaultSampleSize()) {
 		if (!ReadInt32(_defaultSampleSize)) {
 			FATAL("Unable to read default sample size");
 			return false;
 		}
-		//FINEST("_defaultSampleSize: %"PRIi32, _defaultSampleSize);
+		//FINEST("_defaultSampleSize: %" PRIi32, _defaultSampleSize);
 	}
 	if (HasDefaultSampleFlags()) {
 		if (!ReadInt32(_defaultSampleFlags)) {
 			FATAL("Unable to read default sample flags");
 			return false;
 		}
-		//FINEST("_defaultSampleFlags: %"PRIi32, _defaultSampleFlags);
+		//FINEST("_defaultSampleFlags: %" PRIi32, _defaultSampleFlags);
 	}
 	return true;
 }

@@ -260,7 +260,7 @@ bool BaseInFileStream::Initialize(Metadata &metadata, TimerType timerType,
 
 bool BaseInFileStream::InitializeTimer(int32_t clientSideBufferLength, TimerType timerType,
 		uint32_t granularity) {
-	//	FINEST("clientSideBufferLength: %"PRId32"; timerType: %s; granularity: %" PRIu32,
+	//	FINEST("clientSideBufferLength: %" PRId32"; timerType: %s; granularity: %" PRIu32,
 	//			clientSideBufferLength,
 	//			(timerType == TIMER_TYPE_HIGH_GRANULARITY) ?
 	//			"highGranularity"

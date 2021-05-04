@@ -305,7 +305,7 @@ bool InNetRTPStream::FeedAudioDataAU(uint8_t *pData, uint32_t dataLength,
 	//1. Compute chunks count
 	uint16_t chunksCount = ENTOHSP(pData);
 	if ((chunksCount % 16) != 0) {
-		FATAL("Invalid AU headers length: %"PRIx16, chunksCount);
+		FATAL("Invalid AU headers length: %" PRIx16, chunksCount);
 		return false;
 	}
 	chunksCount = chunksCount / 16;

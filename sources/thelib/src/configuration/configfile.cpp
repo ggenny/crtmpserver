@@ -83,7 +83,7 @@ bool ConfigFile::LoadLuaFile(string path, bool forceDaemon) {
 	}
 	if (forceDaemon)
 		_configuration[CONF_DAEMON] = (bool)true;
- 	return Normalize();
+	return Normalize();
 }
 
 bool ConfigFile::LoadXmlFile(string path, bool forceDaemon) {
@@ -512,7 +512,7 @@ bool ConfigFile::NormalizeApplicationAcceptor(Variant &node, string baseFolder) 
 	if (node.HasKeyChain(_V_NUMERIC, false, 1, CONF_PORT))
 		port = (int32_t) node.GetValue(CONF_PORT, false);
 	if (port <= 0 || port >= 65536) {
-		FATAL("Invalid port: %"PRId32, port);
+		FATAL("Invalid port: %" PRId32, port);
 		return false;
 	}
 	node[CONF_PORT] = (uint16_t) port;
