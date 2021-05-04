@@ -478,6 +478,34 @@ string unhex(const uint8_t *pBuffer, uint32_t length) {
 	return result;
 }
 
+string urlDecode(const string &source) {
+	return urlDecode((const uint8_t *) source.data(), source.length());
+}
+
+string urlDecode(const uint8_t *pBuffer, size_t length) {
+	string result;
+	size_t before;
+	for (size_t i = 0; i < length;) {
+		if (pBuffer[i] == '%') {
+			if ((i + 3) > length) {
+				FATAL("Invalid input for url decode: `%s`", string((const char *) pBuffer, length).c_str());
+				return "";
+			}
+			before = result.size();
+			result += unhex(pBuffer + i + 1, 2);
+			if (before == result.size()) {
+				FATAL("Invalid input for url decode: `%s`", string((const char *) pBuffer, length).c_str());
+				return "";
+			}
+			i += 3;
+		} else {
+			result += pBuffer[i];
+			i++;
+		}
+	}
+	return result;
+}
+
 void CleanupSSL() {
 #ifndef NO_SSL_ENGINE_CLEANUP
 	ERR_remove_state(0);

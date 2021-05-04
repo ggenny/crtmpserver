@@ -71,6 +71,7 @@ using namespace std;
 
 //platform defines
 #define DLLEXP
+#define EMS_RESTRICT __restrict__
 #define HAS_MMAP 1
 #define COLOR_TYPE const char *
 #define FATAL_COLOR "\033[01;31m"

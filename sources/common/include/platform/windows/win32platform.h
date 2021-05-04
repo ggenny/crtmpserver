@@ -120,6 +120,8 @@ typedef long int int32_t;
 typedef long long int int64_t;*/
 #define atoll atol
 
+#define EMS_RESTRICT
+
 #ifdef COMPILE_STATIC
 #define DLLEXP /*COMPILE_STATIC*/
 #else

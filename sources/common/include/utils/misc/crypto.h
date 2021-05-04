@@ -103,6 +103,8 @@ DLLEXP string bits(string source);
 DLLEXP string bits(const uint8_t *pBuffer, uint32_t length);
 DLLEXP string unhex(string source);
 DLLEXP string unhex(const uint8_t *pBuffer, uint32_t length);
+DLLEXP string urlDecode(const string &source);
+DLLEXP string urlDecode(const uint8_t *pBuffer, size_t length);
 DLLEXP void CleanupSSL();
 
 #endif /* _CRYPTO_H */

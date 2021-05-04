@@ -67,6 +67,7 @@ using namespace std;
 
 //platform defines
 #define DLLEXP
+#define EMS_RESTRICT __restrict__
 #define HAS_MMAP 1
 #define NO_SSL_ENGINE_CLEANUP
 #define COLOR_TYPE const char *

@@ -28,6 +28,7 @@
 #include "utils/misc/variant.h"
 #include "utils/misc/uri.h"
 #include "utils/misc/format.h"
+#include "utils/misc/process.h"
 #include "utils/misc/locker.h"
 #endif	/* _MISC_H */
 

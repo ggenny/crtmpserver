@@ -17,35 +17,13 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 
 #include "platform/platform.h"
+#include "utils/misc/variant.h"
 
-struct TimerEvent {
-	uint32_t period;
-	uint64_t triggerTime;
-	uint32_t id;
-	void *pUserData;
-	operator string();
-};
-
-typedef bool (*ProcessTimerEvent)(TimerEvent &event);
-
-class DLLEXP TimersManager {
-private:
-	ProcessTimerEvent _processTimerEvent;
-	map<uint64_t, map<uint32_t, TimerEvent *> > _timers;
-	uint64_t _lastTime;
-	uint64_t _currentTime;
-	bool _processResult;
-	bool _processing;
+class Process {
 public:
-	TimersManager(ProcessTimerEvent processTimerEvent);
-	virtual ~TimersManager();
-	void AddTimer(TimerEvent &timerEvent);
-	void RemoveTimer(uint32_t eventTimerId);
-	int32_t TimeElapsed();
-private:
-	string DumpTimers();
+	static void GetFinished(vector<pid_t> &pids, bool &noMorePids);
+	static bool Launch(Variant &settings, pid_t &pid);
 };
