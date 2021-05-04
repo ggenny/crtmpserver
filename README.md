@@ -1,8 +1,8 @@
 # C++ RTMP Server (crtmpserver)
 
-C++ RTMP Server (crtmpserver) - Based on last Gavriloaie Eugen-Andrei good git commit ( d2af6198341a )
+C++ RTMP Server (crtmpserver) - Based on last Gavriloaie Eugen-Andrei commit ( shiretu )
 
-An attempt to keep an up-to-date repo with different functional and security fixes (align to SRS distribution capabilities)
+An attempt to keep an up-to-date repo with different functional and security fixes
 
 Gennaro Gallo - ggenny - https://github.com/ggenny
 
@@ -26,16 +26,23 @@ Play the stream with ffplay:
 ffplay -probesize 2048 rtmp://localhost/live/livestream
 ```
 
-## 1.x Version - Target Tasks
+## 1.3 Version
 
-- [x] Align to 4b094dfaa132
+- [] Align to others github repository
+- [] Add pull rtsp capabilities with restart on disconnect
+- [] Add time to logging
+
+## 1.2 Version
+
+- [x] Align to 4b094dfaa132 ( shiretu )
 - [x] Create a Docker
 - [x] Add RTMP h265 support (https://github.com/Fred-cn/crtmpserver)
 - [x] Test/Align to openssl 1.1.1 (https://github.com/Fred-cn/crtmpserver)
  
 ## 1.1-rc1 Version
 
-aligned to ( d2af6198341a ) Gavriloaie Eugen-Andrei commit with minor build fix
+- [x] Align to ( d2af6198341a ) Gavriloaie Eugen-Andrei commit 
+- [x] minor build fix
 
 ## Features
 
@@ -66,8 +73,7 @@ Requirements:
 
 In order to get the source code, issue the following command:
 
-svn co --username anonymous https://svn.rtmpd.com/crtmpserver/trunk crtmpserver
-When it asks for password, hit Enter key
+git clone https://github.com/ggenny/crtmpserver.git
 
 Compile the package. Do the following steps:
 
