@@ -28,9 +28,9 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 
 ## 1.3 Version
 
-- [] Align to others github repository
-- [] Add pull rtsp capabilities with restart on disconnect
-- [] Add time to logging
+- [ ] Align to others github repository
+- [ ] Add pull rtsp capabilities with restart on disconnect
+- [ ] Add time to logging
 
 ## 1.2 Version
 
