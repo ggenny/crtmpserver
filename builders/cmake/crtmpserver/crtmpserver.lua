@@ -125,7 +125,8 @@ configuration=
 				{
 					ip="0.0.0.0",
 					port=9999,
-					protocol="inboundTcpTs"
+					protocol="inboundTcpTs",
+					localStreamName="tcpchan5"
 				},
 				--[[{
 					ip="0.0.0.0",
