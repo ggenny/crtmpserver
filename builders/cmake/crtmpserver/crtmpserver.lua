@@ -144,7 +144,7 @@ configuration=
 			{
 				--[[
 				{
-					uri="rtsp://fms20.mediadirect.ro/live2/realitatea/realitatea",
+					uri="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov",
 					localStreamName="rtsp_test",
 					forceTcp=true
 				},
@@ -302,7 +302,7 @@ configuration=
 			externalStreams = 
 			{
 				--[[{
-					uri="rtsp://fms20.mediadirect.ro/live2/realitatea/realitatea",
+					uri="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov",
 					localStreamName="stream1",
 					forceTcp=true,
 					keepAlive=true
