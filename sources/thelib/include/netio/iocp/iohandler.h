@@ -19,16 +19,16 @@
 
 #pragma once
 
-#ifdef NET_EPOLL
+#ifdef NET_IOCP
 
 #include "common.h"
-#include "netio/epoll/iohandlermanagertoken.h"
 #include "netio/iohandlertype.h"
+#include "netio/iocp/iocpevent.h"
 
 class BaseProtocol;
 //class EventLogger;
 
-class IOHandler {
+class DLLEXP IOHandler {
 protected:
 	static uint32_t _idGenerator;
 	uint32_t _id;
@@ -36,23 +36,22 @@ protected:
 	SOCKET_TYPE _outboundFd;
 	BaseProtocol *_pProtocol;
 	IOHandlerType _type;
-private:
-	IOHandlerManagerToken *_pToken;
+//	EventLogger *_pEvtLog;
 public:
 	IOHandler(SOCKET_TYPE inboundFd, SOCKET_TYPE outboundFd, IOHandlerType type);
 	virtual ~IOHandler();
-	void SetIOHandlerManagerToken(IOHandlerManagerToken *pToken);
-	IOHandlerManagerToken * GetIOHandlerManagerToken();
 	uint32_t GetId();
 	SOCKET_TYPE GetInboundFd();
 	SOCKET_TYPE GetOutboundFd();
 	IOHandlerType GetType();
 	void SetProtocol(BaseProtocol *pPotocol);
 	BaseProtocol *GetProtocol();
+//	void SetEventLogger(EventLogger *pEvtLogger);
 	virtual bool SignalOutputData() = 0;
-	virtual bool OnEvent(struct epoll_event &event) = 0;
+	virtual bool OnEvent(iocp_event &event) = 0;
 	static string IOHTToString(IOHandlerType type);
 	virtual void GetStats(Variant &info, uint32_t namespaceId = 0) = 0;
+	virtual void CancelIO() = 0;
 };
 
-#endif /* NET_EPOLL */
+#endif /* NET_IOCP */

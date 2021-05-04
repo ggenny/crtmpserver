@@ -439,6 +439,10 @@ void BaseProtocol::GetStats(Variant &info, uint32_t namespaceId) {
 		info["applicationId"] = (((uint64_t) namespaceId) << 32);
 }
 
+void BaseProtocol::SetWitnessFile(const string &path) {
+    // TODO: To implement
+}
+
 string BaseProtocol::ToString(uint32_t currentId) {
 	string result = "";
 	if (_id == currentId)

@@ -17,30 +17,43 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
 
-#ifdef NET_SELECT
-#ifndef _STDIOCARRIER_H
-#define	_STDIOCARRIER_H
+#ifdef NET_IOCP
 
-#include "netio/select/iohandler.h"
+#include "netio/iocp/iohandler.h"
 
-class DLLEXP StdioCarrier
+class IOTimer
 : public IOHandler {
 private:
-	static StdioCarrier *_pInstance;
-	bool _writeDataEnabled;
-	int32_t _ioAmount;
-private:
-	StdioCarrier();
+	static int32_t _idGenerator;
+#ifdef HAS_IOCP_TIMER
+	iocp_event_timer_elapsed * _pTimerEvent;
+	PTP_TIMER _pTimer;
+
+#ifdef TIMER_PERFORMANCE_TEST
+	LARGE_INTEGER startCounter;
+	int32_t _tick;
+#endif /* TIMER_PERFORMANCE_TEST */
+
+#endif /* HAS_IOCP_TIMER */
 public:
-	static StdioCarrier *GetInstance(BaseProtocol *pProtocol);
-	virtual ~StdioCarrier();
-	virtual bool OnEvent(select_event &event);
+	IOTimer();
+	virtual ~IOTimer();
+	virtual void CancelIO();
 	virtual bool SignalOutputData();
-	virtual operator string();
+	virtual bool OnEvent(iocp_event &event);
+	bool EnqueueForTimeEvent(uint32_t seconds);
+	bool EnqueueForHighGranularityTimeEvent(uint32_t milliseconds);
 	virtual void GetStats(Variant &info, uint32_t namespaceId = 0);
+#ifdef HAS_IOCP_TIMER
+	iocp_event_timer_elapsed * GetTimerEvent();
+	PTP_TIMER GetPTTimer();
+#endif /* HAS_IOCP_TIMER */
 };
+#ifdef HAS_IOCP_TIMER
+void CALLBACK TimerCallback(PTP_CALLBACK_INSTANCE Instance,
+		PVOID Context, PTP_TIMER Timer);
+#endif /* HAS_IOCP_TIMER */
 
-#endif	/* _STDIOCARRIER_H */
-#endif /* NET_SELECT */
-
+#endif /* NET_IOCP */

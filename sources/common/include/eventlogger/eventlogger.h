@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) 2010,
- *  Gavriloaie Eugen-Andrei (shiretu@gmail.com)
+ *  Copyright (c) 2021,
+ *  Gennaro Gallo (https://github.com/ggenny/crtmpserver)
  *
  *  This file is part of crtmpserver.
  *  crtmpserver is free software: you can redistribute it and/or modify
@@ -19,23 +19,15 @@
 
 #pragma once
 
-#ifdef NET_KQUEUE
-
-#include "netio/kqueue/iohandler.h"
-
-class IOTimer
-: public IOHandler {
-private:
-	static int32_t _idGenerator;
+class DLLEXP EventLogger {
 public:
-	IOTimer();
-	virtual ~IOTimer();
-
-	virtual bool SignalOutputData();
-	virtual bool OnEvent(struct kevent &event);
-	bool EnqueueForTimeEvent(uint32_t seconds);
-	bool EnqueueForHighGranularityTimeEvent(uint32_t milliseconds);
-	virtual void GetStats(Variant &info, uint32_t namespaceId = 0);
+	EventLogger();
+        
+        void LogCarrierCreated(Variant &stats);
+        void LogCarrierClosed(Variant &stats);        
+        
+        static EventLogger* GetDefaultLogger();
+        
+private:        
+        static EventLogger* _instance;
 };
-
-#endif /* NET_KQUEUE */

@@ -116,7 +116,7 @@ void IOHandlerManager::RegisterIOHandler(IOHandler* pIOHandler) {
 	size_t before = _activeIOHandlers.size();
 	_activeIOHandlers[pIOHandler->GetId()] = pIOHandler;
 	_fdStats.RegisterManaged(pIOHandler->GetType());
-	DEBUG("Handlers count changed: %"PRIz"u->%"PRIz"u %s", before, before + 1,
+	DEBUG("Handlers count changed: %" PRIz"u->%" PRIz"u %s", before, before + 1,
 			STR(IOHandler::IOHTToString(pIOHandler->GetType())));
 }
 
@@ -126,28 +126,9 @@ void IOHandlerManager::UnRegisterIOHandler(IOHandler *pIOHandler) {
 		FreeToken(pIOHandler);
 		size_t before = _activeIOHandlers.size();
 		_activeIOHandlers.erase(pIOHandler->GetId());
-		DEBUG("Handlers count changed: %"PRIz"u->%"PRIz"u %s", before, before - 1,
+		DEBUG("Handlers count changed: %" PRIz"u->%" PRIz"u %s", before, before - 1,
 				STR(IOHandler::IOHTToString(pIOHandler->GetType())));
 	}
-}
-
-int IOHandlerManager::CreateRawUDPSocket() {
-	int result = socket(AF_INET, SOCK_DGRAM, 0);
-	if ((result >= 0)&&(setFdCloseOnExec(result))) {
-		_fdStats.RegisterRawUdp();
-	} else {
-		int err = errno;
-		FATAL("Unable to create raw udp socket. Error code was: (%d) %s",
-				err, strerror(err));
-	}
-	return result;
-}
-
-void IOHandlerManager::CloseRawUDPSocket(int socket) {
-	if (socket > 0) {
-		_fdStats.UnRegisterRawUdp();
-	}
-	CLOSE_SOCKET(socket);
 }
 
 #ifdef GLOBALLY_ACCOUNT_BYTES
@@ -302,7 +283,7 @@ bool IOHandlerManager::EnableTimer(IOHandler *pIOHandler, uint32_t seconds) {
 #ifdef HAS_EPOLL_TIMERS
 
 string dumpTimerStruct(itimerspec &ts) {
-	return format("it_interval\n\ttv_sec: %"PRIz"u\n\ttv_nsec: %ld\nit_value\n\ttv_sec: %"PRIz"u\n\ttv_nsec: %ld",
+	return format("it_interval\n\ttv_sec: %" PRIz"u\n\ttv_nsec: %ld\nit_value\n\ttv_sec: %" PRIz"u\n\ttv_nsec: %ld",
 			ts.it_interval.tv_sec,
 			ts.it_interval.tv_nsec,
 			ts.it_value.tv_sec,
@@ -319,7 +300,7 @@ bool IOHandlerManager::EnableHighGranularityTimer(IOHandler *pIOHandler, uint32_
 	tmp.it_interval.tv_sec = milliseconds / 1000;
 	tmp.it_value.tv_nsec = (milliseconds % 1000)*1000000;
 	tmp.it_value.tv_sec = milliseconds / 1000;
-	//	ASSERT("milliseconds: %"PRIu32"\n%s",
+	//	ASSERT("milliseconds: %" PRIu32"\n%s",
 	//			milliseconds,
 	//			STR(dumpTimerStruct(tmp)));
 	if (timerfd_settime(pIOHandler->GetInboundFd(), 0, &tmp, &dummy) != 0) {

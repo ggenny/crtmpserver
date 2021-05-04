@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) 2010,
- *  Gavriloaie Eugen-Andrei (shiretu@gmail.com)
+ *  Copyright (c) 2021,
+ *  Gennaro Gallo (https://github.com/ggenny/crtmpserver)
  *
  *  This file is part of crtmpserver.
  *  crtmpserver is free software: you can redistribute it and/or modify
@@ -17,30 +17,22 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "eventlogger/eventlogger.h"
 
-#ifdef NET_KQUEUE
-#ifndef _STDIOCARRIER_H
-#define	_STDIOCARRIER_H
+EventLogger* EventLogger::_instance = new EventLogger();
 
-#include "netio/kqueue/iohandler.h"
+EventLogger::EventLogger() {
+    
+}
+        
+void EventLogger::LogCarrierCreated(Variant &stats) {
+    // TODO : To implement   
+}
 
-class StdioCarrier
-: public IOHandler {
-private:
-	static StdioCarrier *_pInstance;
-	bool _writeDataEnabled;
-	int32_t _ioAmount;
-private:
-	StdioCarrier();
-public:
-	static StdioCarrier *GetInstance(BaseProtocol *pProtocol);
-	virtual ~StdioCarrier();
-	virtual bool OnEvent(struct kevent &event);
-	virtual bool SignalOutputData();
-	virtual operator string();
-	virtual void GetStats(Variant &info, uint32_t namespaceId = 0);
-};
-
-#endif	/* _STDIOCARRIER_H */
-#endif /* NET_KQUEUE */
-
+void EventLogger::LogCarrierClosed(Variant &stats) {
+    // TODO : To implement
+}    
+        
+EventLogger* EventLogger::GetDefaultLogger() {
+    return _instance;
+}

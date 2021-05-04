@@ -266,6 +266,12 @@ public:
 		@param info
 	 */
 	virtual void GetStats(Variant &info, uint32_t namespaceId = 0);
+        
+        /*!
+                @brief Sets up an witness file for storring the traffic
+                @param path - the full path for the witness file
+        */
+        virtual void SetWitnessFile(const string &path);
 
 	//
 	//must be implemented by the class that inherits this class

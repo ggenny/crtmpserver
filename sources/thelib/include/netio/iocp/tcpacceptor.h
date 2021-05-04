@@ -19,15 +19,16 @@
 
 #pragma once
 
-#ifdef NET_EPOLL
+#ifdef NET_IOCP
 
-#include "netio/epoll/iohandler.h"
+#include "netio/iocp/iohandler.h"
 
 class BaseClientApplication;
 
-class TCPAcceptor
+class DLLEXP TCPAcceptor
 : public IOHandler {
 private:
+	iocp_event_accept *_pEvent;
 	sockaddr_in _address;
 	vector<uint64_t> _protocolChain;
 	BaseClientApplication *_pApplication;
@@ -41,12 +42,14 @@ public:
 	TCPAcceptor(string ipAddress, uint16_t port, Variant parameters,
 			vector<uint64_t>/*&*/ protocolChain);
 	virtual ~TCPAcceptor();
+	virtual void CancelIO();
+	iocp_event_accept *GetEvent();
 	bool Bind();
 	void SetApplication(BaseClientApplication *pApplication);
 	bool StartAccept();
 	virtual bool SignalOutputData();
-	virtual bool OnEvent(struct epoll_event &event);
-	virtual bool OnConnectionAvailable(struct epoll_event &event);
+	virtual bool OnEvent(iocp_event &event);
+	virtual bool OnConnectionAvailable(iocp_event &event);
 	bool Accept();
 	bool Drop();
 	Variant & GetParameters();
@@ -55,8 +58,6 @@ public:
 	virtual void GetStats(Variant &info, uint32_t namespaceId = 0);
 	bool Enable();
 	void Enable(bool enabled);
-private:
-	bool IsAlive();
 };
 
-#endif /* NET_EPOLL */
+#endif /* NET_IOCP */

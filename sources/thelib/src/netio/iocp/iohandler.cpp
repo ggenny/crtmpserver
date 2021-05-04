@@ -1,4 +1,4 @@
-/*
+/* 
  *  Copyright (c) 2010,
  *  Gavriloaie Eugen-Andrei (shiretu@gmail.com)
  *
@@ -17,9 +17,9 @@
  *  along with crtmpserver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef NET_SELECT
-#include "netio/select/iohandler.h"
-#include "netio/select/iohandlermanager.h"
+#ifdef NET_IOCP
+#include "netio/iocp/iohandler.h"
+#include "netio/iocp/iohandlermanager.h"
 #include "protocols/baseprotocol.h"
 
 uint32_t IOHandler::_idGenerator = 0;
@@ -31,6 +31,7 @@ IOHandler::IOHandler(SOCKET_TYPE inboundFd, SOCKET_TYPE outboundFd, IOHandlerTyp
 	_inboundFd = inboundFd;
 	_outboundFd = outboundFd;
 	IOHandlerManager::RegisterIOHandler(this);
+//	_pEvtLog = NULL;
 }
 
 IOHandler::~IOHandler() {
@@ -86,6 +87,8 @@ string IOHandler::IOHTToString(IOHandlerType type) {
 			return format("#unknown: %hhu#", type);
 	}
 }
-#endif /* NET_SELECT */
 
-
+//void IOHandler::SetEventLogger(EventLogger *pEvtLogger) {
+//	_pEvtLog = pEvtLogger;
+//}
+#endif /* NET_IOCP */
