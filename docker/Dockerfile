@@ -9,6 +9,9 @@ RUN apt update && apt install -y \
 
 RUN git clone https://github.com/ggenny/crtmpserver
 
+RUN cd /crtmpserver/builders/cmake/applications/appselector \
+	openssl req -x509 -nodes -days 10950 -newkey rsa:2048 -batch -keyout server.key -out server.crt
+
 RUN cd /crtmpserver/builders/cmake && \
 	cmake -DCMAKE_BUILD_TYPE=RelWithDebugInfo . && make install && \
 	cp /crtmpserver/builders/cmake/applications/appselector/server.key /tmp/crtmpserver/lib/crtmpserver/applications/appselector/server.key && \
