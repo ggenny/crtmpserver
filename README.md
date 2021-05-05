@@ -28,6 +28,7 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 
 ## 1.3 Version
 
+- [x] Overwrite stream already exists ( partial align eb07454c02d6b )
 - [x] Add streaming status ( align to 3672def269fe )
 - [ ] Align to others github repository
 - [ ] Add pull rtsp capabilities with restart on disconnect
