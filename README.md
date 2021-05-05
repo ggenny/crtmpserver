@@ -11,7 +11,7 @@ Gennaro Gallo - ggenny - https://github.com/ggenny
 Start a new server container:
 
 ```bash
-docker run -p 1935:1935 -d ggenny/crtmpserver:1.1-rc1
+docker run -p 1935:1935 -d ggenny/crtmpserver:1.3
 ```
 
 Push a stream:
