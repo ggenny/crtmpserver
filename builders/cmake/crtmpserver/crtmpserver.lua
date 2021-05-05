@@ -334,6 +334,24 @@ configuration=
 			numberOfConnections=10,
 			randomAccessStreams=false
 		},
+		{
+			name="streamingstatus",
+			description="Show Streaming Status",
+			protocol="dynamiclinklibrary",
+			aliases=
+			{
+				"stats",
+			},
+			validateHandshake=false,
+			acceptors =
+			{
+				{
+					ip="0.0.0.0",
+					port=8082,
+					protocol="streamingStatusProtocol",
+				},
+			}
+		},
 		--[[{
 			name="vmapp",
 			description="An application demonstrating the use of virtual machines",
