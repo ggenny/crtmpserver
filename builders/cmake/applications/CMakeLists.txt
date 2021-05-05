@@ -11,6 +11,7 @@ ADD_SUBDIRECTORY(vptests vptests)
 ADD_SUBDIRECTORY(admin admin)
 ADD_SUBDIRECTORY(proxypublish proxypublish)
 ADD_SUBDIRECTORY(stresstest stresstest)
+ADD_SUBDIRECTORY(streamingstatus streamingstatus)
 #ADD_SUBDIRECTORY(applestreamingclient applestreamingclient)
 #ADD_SUBDIRECTORY(vmapp vmapp)
 

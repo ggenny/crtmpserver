@@ -443,6 +443,10 @@ extern "C" BaseClientApplication *GetApplication_vptests(Variant configuration);
 #ifdef HAS_APP_VMAPP
 extern "C" BaseClientApplication *GetApplication_vmapp(Variant configuration);
 #endif
+#ifdef HAS_APP_STREAMINGSTATUS
+extern "C" BaseClientApplication *GetApplication_streamingstatus(Variant configuration);
+extern "C" BaseProtocolFactory *GetFactory_streamingstatus(Variant configuration);
+#endif
 
 BaseClientApplication *SpawnApplication(Variant configuration) {
 	if (false) {
@@ -493,6 +497,11 @@ BaseClientApplication *SpawnApplication(Variant configuration) {
 		return GetApplication_vmapp(configuration);
 	}
 #endif
+#ifdef HAS_APP_STREAMINGSTATUS
+	else if (configuration[CONF_APPLICATION_NAME] == "streamingstatus") {
+		return GetApplication_streamingstatus(configuration);
+	}
+#endif
 	else {
 		return NULL;
 	}
@@ -505,6 +514,11 @@ BaseProtocolFactory *SpawnFactory(Variant configuration) {
 #ifdef HAS_APP_SAMPLEFACTORY
 	else if (configuration[CONF_APPLICATION_NAME] == "samplefactory") {
 		return GetFactory_samplefactory(configuration);
+	}
+#endif
+#ifdef HAS_APP_STREAMINGSTATUS
+	else if (configuration[CONF_APPLICATION_NAME] == "streamingstatus") {
+		return GetFactory_streamingstatus(configuration);
 	}
 #endif
 	else {
