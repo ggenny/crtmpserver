@@ -917,9 +917,30 @@ bool BaseRTSPAppProtocolHandler::HandleRTSPRequestAnnounce(RTSPProtocol *pFrom,
 
 	//7. Save the streamName
 	string streamName = sdp.GetStreamName();
+
 	if (streamName == "") {
-		streamName = format("rtsp_stream_%u", pFrom->GetId());
-	}
+            //streamName = format("rtsp_stream_%u", pFrom->GetId());
+            // if stream name is missing in SDP use last url part as stream name
+            // @t-kobayashi b496f5630174f8164749262dfa68baaf5c053403
+            URI uri;
+
+            if (!URI::FromString(requestHeaders[RTSP_FIRST_LINE][RTSP_URL], false, uri)) {
+                streamName = format("rtsp_stream_%u", pFrom->GetId());
+                INFO("Use streamName from StreamID: %s", STR(streamName));
+
+                //FATAL("Invalid URI: %s", STR(requestHeaders[RTSP_FIRST_LINE][RTSP_URL]));
+                //return false;
+            } else {
+                string fullDocumentPathCaseSensitive = uri.fullDocumentPath();
+                std::size_t found = fullDocumentPathCaseSensitive.find_last_of("/");
+                streamName = fullDocumentPathCaseSensitive.substr(found + 1);
+
+                INFO("Use streamName from URL: %s", STR(streamName));
+            }
+	} else {
+            INFO("Use streamName from SDP: %s", STR(streamName));
+        }
+
 	pFrom->GetCustomParameters()["sdpStreamName"] = streamName;
 
 	//8. Save the bandwidth hint
