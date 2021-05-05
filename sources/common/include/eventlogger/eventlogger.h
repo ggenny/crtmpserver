@@ -19,15 +19,17 @@
 
 #pragma once
 
+#include "utils/misc/variant.h"
+
 class DLLEXP EventLogger {
 public:
 	EventLogger();
-        
+
         void LogCarrierCreated(Variant &stats);
-        void LogCarrierClosed(Variant &stats);        
-        
+        void LogCarrierClosed(Variant &stats);
+
         static EventLogger* GetDefaultLogger();
-        
-private:        
+
+private:
         static EventLogger* _instance;
 };
