@@ -78,6 +78,14 @@ void StreamsManager::UnRegisterStreams(uint32_t protocolId) {
 	}
 }
 
+void StreamsManager::UnRegisterStreams(string streamName, uint32_t protocolId) {
+	map<uint32_t, BaseStream *> streams = FindByProtocolIdByTypeByName(protocolId, ST_IN_NET, streamName, true, false);
+
+	FOR_MAP(streams, uint32_t, BaseStream *, i) {
+		UnRegisterStream(MAP_VAL(i));
+	}
+}
+
 bool StreamsManager::StreamNameAvailable(string streamName) {
 	return FindByTypeByName(ST_IN_NET, streamName, true, false).size() == 0;
 }

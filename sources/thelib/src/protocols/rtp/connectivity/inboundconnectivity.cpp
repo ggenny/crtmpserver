@@ -210,6 +210,10 @@ bool InboundConnectivity::Initialize() {
 	if (_streamName == "")
 		_streamName = format("rtsp_%u", _pRTSP->GetId());
 	if (!pApplication->StreamNameAvailable(_streamName, _pRTSP)) {
+                // TODO: eb07454c02d6b - why unregister the allocated stream ?
+		//INFO("Stream name %s already taken", STR(_streamName));
+		//pApplication->GetStreamsManager()->UnRegisterStreams(_streamName, _pRTSP->GetId());
+            
 		FATAL("Stream name %s already taken", STR(_streamName));
 		return false;
 	}

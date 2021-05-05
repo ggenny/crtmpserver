@@ -65,6 +65,13 @@ public:
 		@param protocolId
 	 */
 	void UnRegisterStreams(uint32_t protocolId);
+        
+        /*!
+		@brief Erases the stream to the streams manager using the stream name and protocol ID.
+		@param streamName
+		@param protocolId
+	 */
+	void UnRegisterStreams(string streamName, uint32_t protocolId);       
 
 	/*!
 		@brief Checks and see if the duplicate inbound network streams are available. Always returns true if allowDuplicateNetworkStreams is set to true inside the config file
