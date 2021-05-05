@@ -27,7 +27,7 @@ DLLEXP bool EMSStringEqual(const std::string &str1, const char *pStr2,
 		size_t str2length, bool caseSensitive);
 DLLEXP bool EMSStringEqual(const char *EMS_RESTRICT pStr1,
 		const char *EMS_RESTRICT pStr2, const size_t length, bool caseSensitive);
-DLLEXP string replace(string target, const string search, const string replacement);
+DLLEXP void replace(string &target, const string search, const string replacement);
 DLLEXP string lowerCase(string value);
 DLLEXP string upperCase(string value);
 DLLEXP bool isInteger(const string &str, int64_t &value);
