@@ -51,8 +51,9 @@ bool StreamingStatusApplication::Initialize() {
 
     //2. Use your custom values inside your app config node
     //I'll just print the config for now... Watch the logs
-    FINEST("%s app config node:\n%s",
-            STR(GetName()), STR(_configuration.ToString()));
+    //FINEST("%s app config node:\n%s",
+    //        STR(GetName()), STR(_configuration.ToString()));
+
     return true;
 }
 
