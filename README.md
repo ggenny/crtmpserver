@@ -26,13 +26,16 @@ Play the stream with ffplay:
 ffplay -probesize 2048 rtmp://localhost/live/livestream
 ```
 
+## 1.4 Version
+
+- [ ] Add pull rtsp capabilities with restart on disconnect
+
 ## 1.3 Version
 
 - [x] Overwrite stream already exists ( partial align eb07454c02d6b )
 - [x] Add streaming status ( align to 3672def269fe )
-- [ ] Align to others github repository
-- [ ] Add pull rtsp capabilities with restart on disconnect
-- [ ] Add time to logging
+- [x] Align to others github repository
+- [x] Add time to logging
 
 ## 1.2 Version
 
