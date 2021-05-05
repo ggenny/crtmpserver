@@ -28,6 +28,7 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 
 ## 1.3 Version
 
+- [x] Add streaming status ( align to 3672def269fe )
 - [ ] Align to others github repository
 - [ ] Add pull rtsp capabilities with restart on disconnect
 - [ ] Add time to logging
@@ -114,6 +115,18 @@ Also look into builders/packing directory. There are several OS specific builder
 * All crtmpserver settings are located in a detailed file calle: crtmpserver.lua
 
 ## Examples
+
+## Get the streaming status
+
+```bash
+wget -nv -O - http://localhost:8082/status
+```
+
+Example result:
+
+```bash
+{"streamings":[{"creationTimestamp":1620222607293.6899,"name":"BigBuckBunny_115k.mov","protocol":"RTSP","type":"INP","upTime":56140.049072265625},{"creationTimestamp":1620222658643.7791,"name":"BigBuckBunny_115k.mov","protocol":"RTSP","type":"ONP","upTime":4790.159912109375}]}
+```
 
 ## Webcam push stream using ffmpeg
 
