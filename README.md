@@ -32,7 +32,7 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 
 ## 1.4 Version
 
-- [ ] Add pull rtsp capabilities with restart on disconnect
+- [x] Align to my history
 
 ## 1.3 Version
 
