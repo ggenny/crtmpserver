@@ -44,6 +44,7 @@ public:
 	bool IsOrigin();
 	string GetServicesInfo();
 	Variant &GetApplicationsConfigurations();
+        Variant &GetConfigurations();
 
 	bool LoadLuaFile(string path, bool forceDaemon);
 	bool LoadXmlFile(string path, bool forceDaemon);

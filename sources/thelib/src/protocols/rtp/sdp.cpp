@@ -253,7 +253,11 @@ bool SDP::ParseTransportLinePart(string raw, Variant &result) {
 		if (parts.size() == 2) {
 			data = (uint16_t) atoi(STR(parts[0]));
 			rtcp = (uint16_t) atoi(STR(parts[1]));
-			if (((data % 2) != 0) || ((data + 1) != rtcp)) {
+                        /* 7-7-19 Assunzione sulla porta in ingresso pari, non trovata
+                        * nella specifica SDP per RTSP
+                        * Wrong expectation on port
+                        */
+                        if (/*((data % 2) != 0) || */((data + 1) != rtcp)) {
 				FATAL("Invalid transport line: %s", STR(raw));
 				return false;
 			}

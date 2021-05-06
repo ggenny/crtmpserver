@@ -99,6 +99,7 @@ bool BaseOutNetRTPUDPStream::IsCompatibleWithType(uint64_t type) {
 			|| type == ST_IN_NET_RTP
 			|| type == ST_IN_NET_LIVEFLV
 			|| type == ST_IN_FILE_RTMP
+                        || type == ST_IN
 			;
 }
 

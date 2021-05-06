@@ -68,6 +68,7 @@ struct VideoCodecInfoH264 : VidevCodecInfoVideo {
 	uint32_t _spsLength;
 	uint8_t *_pPPS;
 	uint32_t _ppsLength;
+        uint32_t _nalLength;
 	IOBuffer _rtmpRepresentation;
 	IOBuffer _sps;
 	IOBuffer _pps;
@@ -259,6 +260,10 @@ public:
 		return NULL;
 	}
 
+        void SetAudioCodec(AudioCodecInfo *codec) {
+                _pAudioTrack = codec;
+        }
+
 	/*!
 	 * @brief Returns the generic audio codec
 	 */
@@ -289,6 +294,8 @@ public:
 			uint8_t codecBytesLength, bool simple, BaseInStream *pInStream);
 	AudioCodecInfoNellymoser * AddTrackAudioNellymoser(uint32_t samplingRate,
 			uint8_t channelsCount, uint8_t bitsPerSample, BaseInStream *pInStream);
+	AudioCodecInfo * AddTrackAudio(uint32_t samplingRate,
+		uint8_t channelsCount, uint8_t bitsPerSample, uint64_t type, BaseInStream *pInStream);
 	AudioCodecInfoMP3 * AddTrackAudioMP3(uint32_t samplingRate,
 			uint8_t channelsCount, uint8_t bitsPerSample, BaseInStream *pInStream);
 };

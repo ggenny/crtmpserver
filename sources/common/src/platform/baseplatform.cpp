@@ -202,7 +202,14 @@ bool setFdTOS(SOCKET_TYPE fd, uint8_t tos) {
 bool setFdLinger(SOCKET_TYPE fd) {
 	struct linger temp;
 	temp.l_onoff = 1;
+
+// On http streaming ( without content lenght ) wait queue data to be sent
+#ifdef THREAD_BASED_SO_LINGER
+        temp.l_linger=21600; // 6H timeout
+#else
 	temp.l_linger = 1;
+#endif
+
 	if (setsockopt(fd, SOL_SOCKET, SO_LINGER, (const char*) &temp, sizeof (temp)) != 0) {
 		int err = SOCKET_LAST_ERROR;
 #ifdef WIN32

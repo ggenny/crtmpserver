@@ -387,6 +387,23 @@ bool BaseOutStream::GenericProcessData(uint8_t *pData, uint32_t dataLength,
 				return ProcessH264FromTS(pData, dataLength, pts, dts);
 			}
 		}
+		case ST_IN:
+		{
+			//14. Generic data from input source, ready to send, a complete
+                        //    video or audio frame
+			if (isAudio) {
+				if (!_genericProcessDataSetup._hasAudio)
+					return true;
+
+                                return ProcessGenericAudio(pData, dataLength, pts, dts);
+
+			} else {
+				if (!_genericProcessDataSetup._hasVideo)
+					return true;
+
+				return ProcessGenericVideo(pData, dataLength, pts, dts);
+			}
+		}
 		default:
 		{
 			//15. Somehow, we ended up here. Fail
@@ -425,6 +442,7 @@ void BaseOutStream::GenericStreamCapabilitiesChanged() {
 	//IN THE FUTURE
 	_genericProcessDataSetup._hasAudio &= (
 			(_genericProcessDataSetup._audioCodec == CODEC_AUDIO_AAC)
+			|| (_genericProcessDataSetup._audioCodec == CODEC_AUDIO_G711U)
 			|| (_genericProcessDataSetup._audioCodec == CODEC_AUDIO_MP3));
 	if (!_genericProcessDataSetup._hasAudio) {
 		WARN("Audio codec %s not supported by stream type %s",
@@ -435,7 +453,7 @@ void BaseOutStream::GenericStreamCapabilitiesChanged() {
 	_genericProcessDataSetup._hasVideo = IsCodecSupported(_genericProcessDataSetup._videoCodec);
 	//TODO: THIS IS IMPOSED BY THE CURRENT IMPL. NEEDS TO BE REMOVED/APPENDED
 	//IN THE FUTURE
-	_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264 
+	_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264
 		|| _genericProcessDataSetup._videoCodec == CODEC_VIDEO_H265);
 
 	if (!_genericProcessDataSetup._hasVideo) {
@@ -511,7 +529,7 @@ bool BaseOutStream::ValidateCodecs(double dts) {
 		_genericProcessDataSetup._hasVideo = IsCodecSupported(_genericProcessDataSetup._videoCodec);
 		//TODO: THIS IS IMPOSED BY THE CURRENT IMPL. NEEDS TO BE REMOVED/APPENDED
 		//IN THE FUTURE
-		_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264 
+		_genericProcessDataSetup._hasVideo &= (_genericProcessDataSetup._videoCodec == CODEC_VIDEO_H264
 			|| _genericProcessDataSetup._videoCodec == CODEC_VIDEO_H265);
 		if (!_genericProcessDataSetup._hasVideo) {
 			WARN("Video codec %s not supported by stream type %s",
@@ -707,6 +725,42 @@ bool BaseOutStream::ProcessH264FromRTMP(uint8_t *pBuffer,
 	return true;
 }
 
+bool BaseOutStream::ProcessGenericVideo(uint8_t* pBuffer, uint32_t length, double pts, double dts) {
+
+        if (_lastVideoPts < 0) {
+            _lastVideoPts = pts;
+            _lastVideoDts = dts;
+        }
+
+        _isKeyFrame = false;
+
+        //3. get the nal type
+        uint8_t nalType = NALU_TYPE(pBuffer[0]);
+
+        //3. Insert SPS/PPS just before the IDR
+        if (nalType == NALU_TYPE_IDR) {
+            _isKeyFrame = true;
+        }
+
+        _videoFrame.ReadFromBuffer(pBuffer, length);
+
+        if (!PushVideoData(_videoFrame, pts, dts, _isKeyFrame)) {
+            FATAL("Unable to push video data");
+            _videoFrame.IgnoreAll();
+            _isKeyFrame = false;
+            return false;
+        }
+
+        _videoFrame.IgnoreAll();
+        _isKeyFrame = false;
+
+        _lastVideoPts = pts;
+        _lastVideoDts = dts;
+
+	return true;
+
+}
+
 bool BaseOutStream::ProcessH264FromTS(uint8_t *pBuffer, uint32_t length,
 		double pts, double dts) {
 	//1. Create timestamp reference
@@ -820,6 +874,17 @@ bool BaseOutStream::ProcessAACFromRTMP(uint8_t *pBuffer,
 
 bool BaseOutStream::ProcessMP3FromRTMP(uint8_t *pBuffer, uint32_t length, double pts, double dts) {
 	NYIR;
+}
+
+bool BaseOutStream::ProcessGenericAudio(uint8_t *pBuffer, uint32_t length, double pts, double dts) {
+	//NYIR;
+
+	_audioFrame.IgnoreAll();
+
+	_audioFrame.ReadFromBuffer(pBuffer, length);
+
+	return PushAudioData(_audioFrame, dts, dts);
+
 }
 
 bool BaseOutStream::ProcessAACFromTS(uint8_t *pBuffer, uint32_t length,

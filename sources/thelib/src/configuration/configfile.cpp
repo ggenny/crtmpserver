@@ -76,6 +76,10 @@ Variant &ConfigFile::GetApplicationsConfigurations() {
 	return _applications;
 }
 
+Variant &ConfigFile::GetConfigurations() {
+	return _configuration;
+}
+
 bool ConfigFile::LoadLuaFile(string path, bool forceDaemon) {
 	if (!ReadLuaFile(path, CONF_CONFIGURATION, _configuration)) {
 		FATAL("Unable to read configuration file: %s", STR(path));
@@ -338,6 +342,20 @@ bool ConfigFile::NormalizeApplications() {
 			FATAL("Invalid application:\n%s", STR(MAP_VAL(i).ToString()));
 			return false;
 		}
+
+                // TODO: TO REMOVE GLOBAL PARAMS
+                // FIXME: add global params shared between application
+                Variant &applicationConfig = MAP_VAL(i);
+
+                if (_configuration.HasKeyChain(V_MAP, false, 1, "globalParams")) {
+                    Variant temp2 = _configuration.GetValue("globalParams", false);
+
+                    FOR_MAP(temp2, string, Variant, k) {
+                        applicationConfig[MAP_KEY(k)] = MAP_VAL(k);
+                    }
+
+                }
+
 		_applications.PushToArray(MAP_VAL(i));
 	}
 	return true;

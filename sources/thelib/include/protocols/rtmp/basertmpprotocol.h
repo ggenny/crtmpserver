@@ -118,6 +118,7 @@ public:
 	InNetRTMPStream * CreateINS(uint32_t channelId, uint32_t streamId, string streamName);
 	BaseOutNetRTMPStream * CreateONS(uint32_t streamId, string streamName,
 			uint64_t inStreamType, uint32_t &clientSideBuffer);
+        void AddStream(uint32_t streamId, BaseStream *stream);
 	void SignalONS(BaseOutNetRTMPStream *pONS);
 	InFileRTMPStream * CreateIFS(Metadata &metadata, bool hasTimer);
 	void RemoveIFS(InFileRTMPStream *pIFS);

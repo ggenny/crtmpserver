@@ -72,7 +72,12 @@ TCPCarrier::~TCPCarrier() {
 	Variant stats;
 	GetStats(stats);
 	EventLogger::GetDefaultLogger()->LogCarrierClosed(stats);
+
+#ifdef THREAD_BASED_SO_LINGER
+        IOHandlerManager::CloseTCPSocket(_inboundFd);
+#else
 	SOCKET_CLOSE(_inboundFd);
+#endif
 }
 
 bool TCPCarrier::OnEvent(struct epoll_event &event) {

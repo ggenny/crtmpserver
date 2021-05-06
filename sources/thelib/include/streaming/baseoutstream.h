@@ -404,6 +404,11 @@ private:
 	void InsertAudioRTMPPayloadHeader();
 
 	/*
+	 * Will process generic content coming from an input source and call PushVideoData
+	 */
+	bool ProcessGenericVideo(uint8_t *pBuffer, uint32_t length, double pts, double dts);
+
+	/*
 	 * Will process H264 content coming from an RTMP source and call PushVideoData
 	 */
 	bool ProcessH264FromRTMP(uint8_t *pBuffer, uint32_t length, double pts, double dts);
@@ -422,6 +427,11 @@ private:
 	 * Will process MP3 content coming from an RTMP source and call PushAudioData
 	 */
 	bool ProcessMP3FromRTMP(uint8_t *pBuffer, uint32_t length, double pts, double dts);
+
+        /*
+	 * Will process generic content coming from an input source and call PushAudioData
+	 */
+	bool ProcessGenericAudio(uint8_t *pBuffer, uint32_t length, double pts, double dts);
 
 	/*
 	 * Will process AAC content coming from a TS or RTP source and call PushAudioData

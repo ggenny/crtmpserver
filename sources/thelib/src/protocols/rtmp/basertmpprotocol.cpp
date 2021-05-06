@@ -621,6 +621,10 @@ InNetRTMPStream * BaseRTMPProtocol::CreateINS(uint32_t channelId,
 	return pStream;
 }
 
+void BaseRTMPProtocol::AddStream(uint32_t streamId, BaseStream *stream) {
+      _streams[streamId] = stream;
+}
+
 BaseOutNetRTMPStream * BaseRTMPProtocol::CreateONS(uint32_t streamId,
 		string streamName, uint64_t inStreamType, uint32_t &clientSideBuffer) {
 	clientSideBuffer = 0;

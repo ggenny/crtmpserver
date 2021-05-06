@@ -70,9 +70,19 @@ void FileLogLocation::Log(int32_t level, const char *pFileName,
 		if (!OpenFile())
 			return;
 	}
-	string logEntry = format("%" PRIu64":%d:%s:%u:%s:%s",
-			(uint64_t) time(NULL), level, pFileName, lineNumber, pFunctionName,
-			STR(message));
+
+	time_t now = time(NULL);
+	struct tm *tminfo;
+	char buf[sizeof "YYYY-MM-DD HH:MM:SS"];
+	tminfo = localtime(&now);
+	strftime(buf, sizeof(buf), "%F %T", tminfo);
+#ifdef LINUX
+	string logEntry = format("%s [%s]%d[%lu] %s:%" PRIu32" %s", STR(buf), STR(Logger::LevelToString(level)),
+                getpid(), pthread_self(), pFileName, lineNumber, STR(message));
+#else
+	string logEntry = format("%s %s:%" PRIu32" %s\n", STR(buf), pFileName, lineNumber, STR(message));
+#endif
+
 	if (_singleLine) {
 		replace(logEntry, "\r", "\\r");
 		replace(logEntry, "\n", "\\n");
@@ -97,11 +107,14 @@ bool FileLogLocation::OpenFile() {
 	CloseFile();
 
 	//default the file name to the specified value
+#ifdef FILE_LOG_LOCATION_NO_FORMAT_NAME
+        string filename = format("%s", STR(_fileName));
+#else
 	string fileName = format("%s.%02" PRIu32".log",
 					_fileName.c_str(),
 					_forkId
 					);
-
+#endif
 	//roll the files if needed
 	if ((_fileMaxLength > 0)&&(_fileMaxHistorySize > 0)) {
 		for (ssize_t i = (_fileMaxHistorySize - 1); i >= 0; i--) {
@@ -125,8 +138,13 @@ bool FileLogLocation::OpenFile() {
 
 	//create and initialize the file
 	_pFile = new File();
+
+#ifdef FILE_LOG_LOCATION_APPEND
+        if (!_pFile->Initialize(fileName, FILE_OPEN_MODE_APPEND)) {
+#else
 	if (!_pFile->Initialize(fileName, FILE_OPEN_MODE_TRUNCATE)) {
-		CloseFile();
+#endif
+                CloseFile();
 		return false;
 	}
 

@@ -148,6 +148,9 @@ protected:
 			Variant &requestHeaders, string &requestContent);
 	virtual string GetAuthenticationRealm(RTSPProtocol *pFrom,
 			Variant &requestHeaders, string &requestContent);
+        BaseInStream *GetInboundStream(string streamName, RTSPProtocol *pFrom);
+	string ComputeSDP(RTSPProtocol *pFrom, string localStreamName,
+			string targetStreamName, bool isAnnounce);
 private:
 	void ComputeRTPInfoHeader(RTSPProtocol *pFrom,
 			OutboundConnectivity *pOutboundConnectivity, double start);
@@ -156,7 +159,6 @@ private:
 	bool AnalyzeUri(RTSPProtocol *pFrom, string rawUri);
 	string GetStreamName(RTSPProtocol *pFrom);
 	OutboundConnectivity *GetOutboundConnectivity(RTSPProtocol *pFrom, bool forceTcp);
-	BaseInStream *GetInboundStream(string streamName, RTSPProtocol *pFrom);
 	StreamCapabilities *GetInboundStreamCapabilities(string streamName, RTSPProtocol *pFrom);
 	string GetAudioTrack(RTSPProtocol *pFrom,
 			StreamCapabilities *pCapabilities);
@@ -165,8 +167,6 @@ private:
 	bool SendSetupTrackMessages(RTSPProtocol *pFrom);
 	bool ParseUsersFile();
 	bool SendAuthenticationChallenge(RTSPProtocol *pFrom, Variant &realm);
-	string ComputeSDP(RTSPProtocol *pFrom, string localStreamName,
-			string targetStreamName, bool isAnnounce);
 	void EnableDisableOutput(RTSPProtocol *pFrom, bool value);
 };
 

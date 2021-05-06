@@ -759,6 +759,8 @@ bool BaseRTMPAppProtocolHandler::ProcessInvoke(BaseRTMPProtocol *pFrom,
 		return ProcessInvokeOnBWDone(pFrom, request);
 	} else if (functionName == RM_INVOKE_FUNCTION_CHECKBANDWIDTH) {
 		return ProcessInvokeCheckBandwidth(pFrom, request);
+	} else if (functionName == RM_INVOKE_FUNCTION_CHECKBANDWIDTH2) {
+		return ProcessInvokeCheckBandwidth(pFrom, request);
 	} else if (functionName == RM_INVOKE_FUNCTION_ONFCPUBLISH) {
 		return ProcessInvokeOnFCPublish(pFrom, request);
 	} else if (functionName == RM_INVOKE_FUNCTION_FCPUNUBLISH) {
@@ -1460,6 +1462,8 @@ bool BaseRTMPAppProtocolHandler::ProcessInvokeGeneric(BaseRTMPProtocol *pFrom,
 		Variant & request) {
 	WARN("Default implementation of ProcessInvokeGeneric: Request: %s",
 			STR(M_INVOKE_FUNCTION(request)));
+	WARN("Default implementation of ProcessInvokeGeneric: Full Request: %s",
+			STR(request.ToString()));
 	if ((uint32_t) M_INVOKE_ID(request) != 0) {
 		Variant response = GenericMessageFactory::GetInvokeCallFailedError(request);
 		return SendRTMPMessage(pFrom, response);

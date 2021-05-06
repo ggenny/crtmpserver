@@ -400,7 +400,8 @@ bool OutNetRTPUDPH264Stream::PushAudioData(IOBuffer &buffer, double pts, double 
 
 bool OutNetRTPUDPH264Stream::IsCodecSupported(uint64_t codec) {
 	return (codec == CODEC_VIDEO_H264)
-			|| (codec == CODEC_AUDIO_AAC)
+                    || (codec == CODEC_AUDIO_AAC)
+                    || (codec == CODEC_AUDIO_G711U)
 			;
 }
 

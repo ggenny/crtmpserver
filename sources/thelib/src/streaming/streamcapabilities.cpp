@@ -564,6 +564,7 @@ VideoCodecInfoH264::VideoCodecInfoH264()
 	_pPPS = NULL;
 	_ppsLength = 0;
 	_type = CODEC_VIDEO_H264;
+	_nalLength = 0;
 }
 
 VideoCodecInfoH264::~VideoCodecInfoH264() {
@@ -661,12 +662,19 @@ VideoCodecInfoH264::operator string() {
 
 bool VideoCodecInfoH264::Init(uint8_t *pSPS, uint32_t spsLength, uint8_t *pPPS,
 		uint32_t ppsLength, uint32_t samplingRate) {
+//	if ((spsLength < 8)
+//			|| (spsLength > 65535)
+//			|| (ppsLength == 0)
+//			|| (ppsLength > 65535)) {
+//		FATAL("Invalid SPS/PPS lengths");
+//		return false;
+//	}
+
+	// Its safe to omit sps !
 	if ((spsLength < 8)
-			|| (spsLength > 65535)
-			|| (ppsLength == 0)
-			|| (ppsLength > 65535)) {
-		FATAL("Invalid SPS/PPS lengths");
-		return false;
+		|| (spsLength > 65535)) {
+	    FATAL("Invalid SPS lengths");
+	    return false;
 	}
 
 	_spsLength = spsLength;
@@ -742,9 +750,13 @@ bool VideoCodecInfoH264::Init(uint8_t *pSPS, uint32_t spsLength, uint8_t *pPPS,
 
 
 	temp.Reset();
-	if (!ReadPPS(ppsBa, temp)) {
-		FATAL("Unable to partse PPS");
+
+	// Only if pps is specified !
+	if (ppsLength > 0) {
+	    if (!ReadPPS(ppsBa, temp)) {
+		FATAL("Unable to parse PPS");
 		return false;
+	    }
 	}
 
 	return true;
@@ -1750,7 +1762,7 @@ void AudioCodecInfoAAC::GetADTSRepresentation(uint8_t *pDest, uint32_t length) {
 void AudioCodecInfoAAC::UpdateADTSRepresentation(uint8_t *pDest, uint32_t length) {
 	//00000000 11111111 22222222 33333333 44444444 55555555 66666666
 	//xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxYY YYYYYYYY YYYxxxxx xxxxxxxx
-	//                              ---** ******** ***
+	//			        ---** ******** ***
 	uint16_t adtsLength = (uint16_t) ((length + 7)&0x1fff);
 	pDest[3] = ((pDest[3]&0xfc) | ((uint8_t) (adtsLength >> 11)));
 	pDest[4] = ((uint8_t) ((adtsLength >> 3)&0x00ff));
@@ -2283,6 +2295,32 @@ AudioCodecInfoNellymoser * StreamCapabilities::AddTrackAudioNellymoser(uint32_t 
 		pInStream->AudioStreamCapabilitiesChanged(this, pOld, pCodecInfo);
 	if (pOld != NULL)
 		delete pOld;
+	return pCodecInfo;
+}
+
+AudioCodecInfo * StreamCapabilities::AddTrackAudio(uint32_t samplingRate,
+	uint8_t channelsCount, uint8_t bitsPerSample, uint64_t type, BaseInStream *pInStream) {
+
+	if ((_pAudioTrack != NULL)
+		&&(_pAudioTrack->_type == type)) {
+	    return (AudioCodecInfo*) _pAudioTrack;
+	}
+
+	AudioCodecInfo *pCodecInfo = new AudioCodecInfo();
+
+	pCodecInfo->_bitsPerSample = bitsPerSample;
+	pCodecInfo->_channelsCount = channelsCount;
+	pCodecInfo->_samplesPerPacket = samplingRate;
+	pCodecInfo->_samplingRate = samplingRate;
+	pCodecInfo->_type = type;
+
+	AudioCodecInfo *pOld = _pAudioTrack;
+	_pAudioTrack = pCodecInfo;
+
+	if (pInStream != NULL)
+	    pInStream->AudioStreamCapabilitiesChanged(this, pOld, pCodecInfo);
+	if (pOld != NULL)
+	    delete pOld;
 	return pCodecInfo;
 }
 

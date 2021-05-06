@@ -56,6 +56,10 @@ public:
 	static void Shutdown();
 	static void RegisterIOHandler(IOHandler *pIOHandler);
 	static void UnRegisterIOHandler(IOHandler *pIOHandler);
+#ifdef THREAD_BASED_SO_LINGER
+        static void CloseTCPSocket(int socket);
+        static void _CloseTCPSocket(int socket);
+#endif
 #ifdef GLOBALLY_ACCOUNT_BYTES
 	static void AddInBytesManaged(IOHandlerType type, uint64_t bytes);
 	static void AddOutBytesManaged(IOHandlerType type, uint64_t bytes);

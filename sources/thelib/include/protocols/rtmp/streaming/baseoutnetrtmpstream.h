@@ -77,6 +77,7 @@ public:
 
 	uint32_t GetRTMPStreamId();
 	uint32_t GetCommandsChannelId();
+	uint32_t GetCommandsChannelId2();
 	void SetChunkSize(uint32_t chunkSize);
 	uint32_t GetChunkSize();
 	void SetFeederChunkSize(uint32_t feederChunkSize);
@@ -85,6 +86,7 @@ public:
 	void SetSendOnStatusPlayMessages(bool value);
 	virtual void GetStats(Variant &info, uint32_t namespaceId = 0);
 
+	virtual bool SendStreamMessage2(Variant &message, double dts);
 	virtual bool SendStreamMessage(Variant &message);
 	virtual void SignalAttachedToInStream();
 	virtual void SignalDetachedFromInStream();

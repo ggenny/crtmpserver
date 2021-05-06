@@ -399,7 +399,7 @@ bool OutboundConnectivity::FeedData(MSGHDR &message, double pts, double dts,
 			StreamCapabilities *pCapabilities = _pOutStream->GetCapabilities();
 			AudioCodecInfo *pInfo = NULL;
 			if ((pCapabilities != NULL)
-					&& (pCapabilities->GetAudioCodecType() == CODEC_AUDIO_AAC)
+					&& (pCapabilities->GetAudioCodecType() == CODEC_AUDIO_AAC  || pCapabilities->GetAudioCodecType() == CODEC_AUDIO_G711U)
 					&& ((pInfo = pCapabilities->GetAudioCodec<AudioCodecInfo > ()) != NULL)) {
 				rate = pInfo->_samplingRate;
 			} else {

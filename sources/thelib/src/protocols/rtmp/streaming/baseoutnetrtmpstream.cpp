@@ -149,6 +149,11 @@ uint32_t BaseOutNetRTMPStream::GetCommandsChannelId() {
 	return 3;
 }
 
+// TODO: To remove and fix with correct channel
+uint32_t BaseOutNetRTMPStream::GetCommandsChannelId2() {
+	return _pChannelCommands->id;
+}
+
 void BaseOutNetRTMPStream::SetChunkSize(uint32_t chunkSize) {
 	_chunkSize = chunkSize;
 }
@@ -176,6 +181,23 @@ void BaseOutNetRTMPStream::SetSendOnStatusPlayMessages(bool value) {
 void BaseOutNetRTMPStream::GetStats(Variant &info, uint32_t namespaceId) {
 	BaseOutNetStream::GetStats(info, namespaceId);
 	info["canDropFrames"] = (bool)_canDropFrames;
+}
+
+// TODO: To remove and fix with correct value
+bool BaseOutNetRTMPStream::SendStreamMessage2(Variant &message, double dts) {
+	//1. Set the channel id
+	VH_CI(message) = (uint32_t) 3;
+
+	H_TS(_videoHeader) = (uint32_t) ((dts + _seekTime) - _pChannelVideo->lastOutAbsTs);
+
+	//3. Set as absolute ts
+	VH_IA(message) = true;
+
+	//4. Set the stream id
+	VH_SI(message) = _rtmpStreamId;
+
+	//5. Send it
+	return _pRTMPProtocol->SendMessage(message);
 }
 
 bool BaseOutNetRTMPStream::SendStreamMessage(Variant &message) {
@@ -923,6 +945,10 @@ void BaseOutNetRTMPStream::GetMetadata() {
 
 bool BaseOutNetRTMPStream::SendOnMetadata() {
 	GetMetadata();
+
+        // TODO: To remove dummy resolution
+        _metadata["width"] = 320;
+        _metadata["height"] = 240;
 
 	Variant message = StreamMessageFactory::GetNotifyOnMetaData(_pChannelAudio->id,
 			_rtmpStreamId, 0, false, _metadata,

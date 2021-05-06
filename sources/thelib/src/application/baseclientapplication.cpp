@@ -293,6 +293,15 @@ bool BaseClientApplication::PullExternalStreams() {
 
 	FOR_MAP(streamConfigs, string, Variant, i) {
 		Variant &streamConfig = MAP_VAL(i);
+
+//                // Check if stream name Alreay exists
+//                string streamName = streamConfig["localStreamName"];
+//
+//                if (!_streamsManager.StreamNameAvailable(streamName)) {
+//			DEBUG("External stream name is already present: %s", STR(streamName));
+//                        continue;
+//                }
+
 		if (!PullExternalStream(streamConfig)) {
 			WARN("External stream configuration is invalid:\n%s",
 					STR(streamConfig.ToString()));

@@ -177,6 +177,32 @@ void Logger::Free(bool freeAppenders) {
 	}
 }
 
+//void Logger::Log(int32_t level, const char *pFileName, uint32_t lineNumber,
+//		const char *pFunctionName, const char *pFormatString, ...) {
+//	{
+//		LOCK(&_lock);
+//		if (_pLogger == NULL)
+//			return;
+//	}
+//
+//	va_list arguments;
+//	va_start(arguments, pFormatString);
+//	string message = vFormat(pFormatString, arguments);
+//	va_end(arguments);
+//
+//	{
+//		LOCK(&_lock);
+//
+//		FOR_VECTOR(_pLogger->_logLocations, i) {
+//			if (_pLogger->_logLocations[i]->EvalLogLevel(level, pFileName, lineNumber,
+//					pFunctionName))
+//				_pLogger->_logLocations[i]->Log(level, pFileName,
+//					lineNumber, pFunctionName, message);
+//		}
+//	}
+//}
+
+// TODO: This new version need refactoring...
 void Logger::Log(int32_t level, const char *pFileName, uint32_t lineNumber,
 		const char *pFunctionName, const char *pFormatString, ...) {
 	{
@@ -190,15 +216,25 @@ void Logger::Log(int32_t level, const char *pFileName, uint32_t lineNumber,
 	string message = vFormat(pFormatString, arguments);
 	va_end(arguments);
 
-	{
-		LOCK(&_lock);
+	// Add separator
 
-		FOR_VECTOR(_pLogger->_logLocations, i) {
-			if (_pLogger->_logLocations[i]->EvalLogLevel(level, pFileName, lineNumber,
-					pFunctionName))
-				_pLogger->_logLocations[i]->Log(level, pFileName,
-					lineNumber, pFunctionName, message);
-		}
+	message = "- " + message;
+
+	// FIX
+	int fLen = strlen(pFileName);
+
+	for (int i = fLen - 1 ; i >= 0 ; i--) {
+	    if (pFileName[i] == '/') {
+		pFileName = pFileName + i + 1;
+		break;
+	    }
+	}
+
+	FOR_VECTOR(_pLogger->_logLocations, i) {
+		if (_pLogger->_logLocations[i]->EvalLogLevel(level, pFileName, lineNumber,
+				pFunctionName))
+			_pLogger->_logLocations[i]->Log(level, pFileName,
+				lineNumber, pFunctionName, message);
 	}
 }
 
@@ -230,4 +266,36 @@ void Logger::SetLevel(int32_t level) {
 	FOR_VECTOR(_pLogger->_logLocations, i) {
 		_pLogger->_logLocations[i]->SetLevel(level);
 	}
+}
+
+string Logger::LevelToString(int32_t level) {
+    string result;
+
+    switch (level) {
+	case _DEBUG_:
+	    result = "DEBUG";
+	    break;
+	case _ERROR_:
+	    result = "ERROR";
+	    break;
+	case _FATAL_:
+	    result = "FATAL";
+	    break;
+	case _FINEST_:
+	    result = "FINEST";
+	    break;
+	case _FINE_:
+	    result = "FINE";
+	    break;
+	case _INFO_:
+	    result = "INFO";
+	    break;
+	case _WARNING_:
+	    result = "WARN";
+	    break;
+	default:
+	    result = "UNKNOWN";
+    }
+
+    return result;
 }

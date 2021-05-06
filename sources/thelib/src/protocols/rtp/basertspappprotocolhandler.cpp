@@ -2075,7 +2075,8 @@ BaseInStream *BaseRTSPAppProtocolHandler::GetInboundStream(string streamName,
 		RTSPProtocol *pFrom) {
 	//1. get all the inbound network streams which begins with streamName
 	map<uint32_t, BaseStream *> streams = GetApplication()->GetStreamsManager()
-			->FindByTypeByName(ST_IN_NET, streamName, true, false);
+//			->FindByTypeByName(ST_IN_NET, streamName, true, false);
+			->FindByTypeByName(ST_IN, streamName, true, false);
 	if (streams.size() == 0) {
 		return NULL;
 	}
@@ -2110,6 +2111,14 @@ string BaseRTSPAppProtocolHandler::GetAudioTrack(RTSPProtocol *pFrom,
 	if ((pCapabilities != NULL)
 			&& (pCapabilities->GetAudioCodecType() == CODEC_AUDIO_AAC)
 			&& ((pInfo = pCapabilities->GetAudioCodec<AudioCodecInfoAAC > ()) != NULL)) {
+                /*
+                    m=audio 0 RTP/AVP 97
+                    c=IN IP4 0.0.0.0
+                    b=AS:32
+                    a=control:rtsp://192.168.0.100/axis-media/media.amp/trackID=2?fps=30&resolution=1024x768
+                    a=rtpmap:97 mpeg4-generic/16000/1
+                    a=fmtp:97 streamtype=5; profile-level-id=15; mode=AAC-hbr; config=1408; sizeLength=13; indexLength=3; indexDeltaLength=3; profile=1; bitrate=32000;
+                */
 		if (pFrom->GetCustomParameters().HasKey("videoTrackId")) {
 			pFrom->GetCustomParameters()["audioTrackId"] = "2";
 		} else {
@@ -2126,10 +2135,43 @@ string BaseRTSPAppProtocolHandler::GetAudioTrack(RTSPProtocol *pFrom,
 		//rfc3640-fmtp-explained.txt Chapter 4.1
 		result += format("a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config=%s; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n",
 				STR(hex(pInfo->_pCodecBytes, (uint32_t) pInfo->_codecBytesLength)));
+	} else if ((pCapabilities != NULL)
+			&& (pCapabilities->GetAudioCodecType() == CODEC_AUDIO_PCMLE)) {
+                /*
+                    m=audio 0 RTP/AVP 97
+                    c=IN IP4 0.0.0.0
+                    b=AS:24
+                    a=control:rtsp://192.168.0.100/axis-media/media.amp/trackID=2?fps=30&resolution=1024x768
+                    a=rtpmap:97 G726-24/8000
+                */
+	} else if ((pCapabilities != NULL)
+			&& (pCapabilities->GetAudioCodecType() == CODEC_AUDIO_G711U)) {
+                /*
+                    m=audio 0 RTP/AVP 0
+                    c=IN IP4 0.0.0.0
+                    b=AS:64
+                    a=control:rtsp://192.168.0.100/axis-media/media.amp/trackID=2?fps=30&resolution=1024x768
+                */
+		if (pFrom->GetCustomParameters().HasKey("videoTrackId")) {
+			pFrom->GetCustomParameters()["audioTrackId"] = "2";
+		} else {
+			pFrom->GetCustomParameters()["audioTrackId"] = "1";
+		}
+
+                AudioCodecInfo *pInfo = pCapabilities->GetAudioCodec();
+
+		result += "m=audio 0 RTP/AVP 0\r\n";
+		result += "a=recvonly\r\n";
+		result += "b=AS:64\r\n";
+		pFrom->GetCustomParameters()["rtpInfo"]["audio"]["frequency"] = (uint32_t) pInfo->_samplingRate;
+		//FINEST("result: %s", STR(result));
+		result += "a=control:trackID="+ (string) pFrom->GetCustomParameters()["audioTrackId"] + "\r\n";
+
 	} else {
 		pFrom->GetCustomParameters().RemoveKey("audioTrackId");
 		WARN("Unsupported audio codec for RTSP output");
 	}
+
 	return result;
 }
 
@@ -2153,11 +2195,30 @@ string BaseRTSPAppProtocolHandler::GetVideoTrack(RTSPProtocol *pFrom,
 		result += "a=fmtp:97 profile-level-id=";
 		result += hex(pInfo->_pSPS + 1, 3);
 		result += "; packetization-mode=1; sprop-parameter-sets=";
-		result += b64(pInfo->_pSPS, pInfo->_spsLength) + ",";
-		result += b64(pInfo->_pPPS, pInfo->_ppsLength) + "\r\n";
+                //result += b64(pInfo->_pSPS, pInfo->_spsLength) + ",";
+		//result += b64(pInfo->_pPPS, pInfo->_ppsLength) + "\r\n";
+
+		if (pInfo->_ppsLength > 0) { // PPS Specified
+			result += b64(pInfo->_pSPS, pInfo->_spsLength) + ",";
+			result += b64(pInfo->_pPPS, pInfo->_ppsLength) + "\r\n";
+		} else { // PPS not specified
+			result += b64(pInfo->_pSPS, pInfo->_spsLength) + ",\r\n";
+		}
 	} else {
-		pFrom->GetCustomParameters().RemoveKey("videoTrackId");
-		WARN("Unsupported video codec for RTSP output");
+		//pFrom->GetCustomParameters().RemoveKey("videoTrackId");
+		//WARN("Unsupported video codec for RTSP output");
+
+		if (pFrom->GetCustomParameters().HasKey("audioTrackId"))
+			pFrom->GetCustomParameters()["videoTrackId"] = "2"; //md5(format("V%u%s",pFrom->GetId(), STR(generateRandomString(4))), true);
+		else
+			pFrom->GetCustomParameters()["videoTrackId"] = "1"; //md5(format("V%u%s",pFrom->GetId(), STR(generateRandomString(4))), true);
+		result += "m=video 0 RTP/AVP 97\r\n";
+		result += "a=recvonly\r\n";
+		result += "a=control:trackID="
+				+ (string) pFrom->GetCustomParameters()["videoTrackId"] + "\r\n";
+		result += format("a=rtpmap:97 H264/%"PRIu32"\r\n", 90000);
+		pFrom->GetCustomParameters()["rtpInfo"]["video"]["frequency"] = (uint32_t) 90000;
+		result += "a=fmtp:97; packetization-mode=1\r\n";
 	}
 	return result;
 }

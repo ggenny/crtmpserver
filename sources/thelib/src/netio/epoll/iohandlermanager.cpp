@@ -23,6 +23,9 @@
 #ifdef HAS_EPOLL_TIMERS
 #include <sys/timerfd.h>
 #endif /* HAS_EPOLL_TIMERS */
+#ifdef THREAD_BASED_SO_LINGER
+#include <thread>
+#endif
 
 int32_t IOHandlerManager::_eq = 0;
 map<uint32_t, IOHandler *> IOHandlerManager::_activeIOHandlers;
@@ -130,6 +133,32 @@ void IOHandlerManager::UnRegisterIOHandler(IOHandler *pIOHandler) {
 				STR(IOHandler::IOHTToString(pIOHandler->GetType())));
 	}
 }
+
+#ifdef THREAD_BASED_SO_LINGER
+void IOHandlerManager::CloseTCPSocket(int socket) {
+
+    // Invalid socket
+    if (socket < 0) {
+        return;
+    }
+
+    try {
+        std::thread th = std::thread(&IOHandlerManager::_CloseTCPSocket, socket);
+        th.detach();
+    } catch (std::exception const&) {
+        FATAL("Unable to create close thread, use blocking method");
+        CLOSE_SOCKET(socket);
+        return;
+    }
+
+}
+
+void IOHandlerManager::_CloseTCPSocket(int socket){
+    DEBUG("Start close Handler ID : %d", socket);
+    close(socket);
+    DEBUG("Handler %d closed... i die ...",  socket);
+}
+#endif
 
 #ifdef GLOBALLY_ACCOUNT_BYTES
 

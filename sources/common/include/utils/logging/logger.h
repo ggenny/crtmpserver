@@ -60,4 +60,6 @@ public:
 	static bool AddLogLocation(BaseLogLocation *pLogLocation);
 	static void SignalFork(uint32_t forkId);
 	static void SetLevel(int32_t level);
+        static string LevelToString(int32_t level);
+
 };
