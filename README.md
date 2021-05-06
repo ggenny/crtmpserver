@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="media/icon2.png" />
+</p>
+
 # C++ RTMP Server (crtmpserver)
 
 C++ RTMP Server (crtmpserver) - Based on last Gavriloaie Eugen-Andrei commit ( shiretu )
@@ -48,6 +52,10 @@ ffplay -probesize 2048 rtmp://localhost/live/livestream
 
 - [x] Align to ( d2af6198341a ) Gavriloaie Eugen-Andrei commit 
 - [x] minor build fix
+
+## Target Architecture
+
+![alt text](media/architecture.png)
 
 ## Features
 
