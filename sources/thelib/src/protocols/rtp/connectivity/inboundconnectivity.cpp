@@ -186,6 +186,73 @@ bool InboundConnectivity::AddTrack(Variant& track, bool isAudio) {
 	return true;
 }
 
+// TODO: To Remove, duplicated
+bool InboundConnectivity::Initialize(BaseOutStream* outStream) {
+	//1. get the application
+	BaseClientApplication *pApplication = _pRTSP->GetApplication();
+	if (pApplication == NULL) {
+		FATAL("RTSP protocol not yet assigned to an application");
+		return false;
+	}
+
+	//2. Compute the bandwidthHint
+	uint32_t bandwidth = 0;
+	if (_videoTrack != V_NULL) {
+		bandwidth += (uint32_t) SDP_TRACK_BANDWIDTH(_videoTrack);
+	}
+	if (_audioTrack != V_NULL) {
+		bandwidth += (uint32_t) SDP_TRACK_BANDWIDTH(_audioTrack);
+	}
+	if (bandwidth == 0) {
+		bandwidth = _bandwidthHint;
+	}
+
+	//5. Create the in stream
+	if (_streamName == "")
+		_streamName = format("rtsp_%u", _pRTSP->GetId());
+	if (!pApplication->StreamNameAvailable(_streamName, _pRTSP)) {
+		FATAL("Stream name %s already taken", STR(_streamName));
+		return false;
+	}
+	_pInStream = new InNetRTPStream(_pRTSP, _streamName, _videoTrack, _audioTrack,
+			bandwidth, _rtcpDetectionInterval);
+	if (!_pInStream->SetStreamsManager(pApplication->GetStreamsManager())) {
+		FATAL("Unable to set the streams manager");
+		delete _pInStream;
+		_pInStream = NULL;
+		return false;
+	}
+
+	//	pCap->avc._widthOverride=session["width"];
+	//	pCap->avc._widthOverride=session[""];
+
+	//6. make the stream known to inbound RTP protocols
+	//and plug in the connectivity
+	InboundRTPProtocol *pTempRTP = NULL;
+	RTCPProtocol *pTempRTCP = NULL;
+
+	if ((pTempRTP = (InboundRTPProtocol *) ProtocolManager::GetProtocol(_rtpVideoId)) != NULL) {
+		pTempRTP->SetStream(_pInStream, false, false);
+		pTempRTP->SetInbboundConnectivity(this);
+	}
+	if ((pTempRTCP = (RTCPProtocol *) ProtocolManager::GetProtocol(_rtcpVideoId)) != NULL) {
+		pTempRTCP->SetInbboundConnectivity(this, false);
+	}
+	if ((pTempRTP = (InboundRTPProtocol *) ProtocolManager::GetProtocol(_rtpAudioId)) != NULL) {
+		pTempRTP->SetStream(_pInStream, true, false);
+		pTempRTP->SetInbboundConnectivity(this);
+	}
+	if ((pTempRTCP = (RTCPProtocol *) ProtocolManager::GetProtocol(_rtcpAudioId)) != NULL) {
+		pTempRTCP->SetInbboundConnectivity(this, true);
+	}
+
+	//8. Bind the waiting subscribers
+	outStream->Link((BaseInStream *) _pInStream);
+
+	//10. Done
+	return true;
+}
+
 bool InboundConnectivity::Initialize() {
 	//1. get the application
 	BaseClientApplication *pApplication = _pRTSP->GetApplication();

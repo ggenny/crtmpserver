@@ -29,6 +29,9 @@ class InNetRTPStream;
 class RTSPProtocol;
 class BaseProtocol;
 
+//TODO: TO REMOVE
+class BaseOutStream;
+
 class DLLEXP InboundConnectivity
 : public BaseConnectivity {
 private:
@@ -62,6 +65,10 @@ public:
 	void EnqueueForDelete();
 
 	bool AddTrack(Variant &track, bool isAudio);
+        
+        //TODO: TO REMOVE
+        bool Initialize(BaseOutStream* outStream);
+        
 	bool Initialize();
 
 	string GetTransportHeaderLine(bool isAudio, bool isClient);

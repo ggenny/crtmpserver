@@ -77,7 +77,7 @@ void FileLogLocation::Log(int32_t level, const char *pFileName,
 	tminfo = localtime(&now);
 	strftime(buf, sizeof(buf), "%F %T", tminfo);
 #ifdef LINUX
-	string logEntry = format("%s [%s]%d[%lu] %s:%" PRIu32" %s", STR(buf), STR(Logger::LevelToString(level)),
+	string logEntry = format("%s [%s]%d[%lu] %s:%" PRIu32" %s", STR(buf), STR(BaseLogger::LevelToString(level)),
                 getpid(), pthread_self(), pFileName, lineNumber, STR(message));
 #else
 	string logEntry = format("%s %s:%" PRIu32" %s\n", STR(buf), pFileName, lineNumber, STR(message));

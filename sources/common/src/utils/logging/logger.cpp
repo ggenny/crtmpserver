@@ -20,7 +20,7 @@
 #include "common.h"
 #include "version.h"
 
-Logger *Logger::_pLogger = NULL;
+BaseLogger *BaseLogger::_pLogger = NULL;
 string Version::_lifeId;
 uint16_t Version::_instance;
 
@@ -145,13 +145,13 @@ Variant Version::GetBuilder() {
 	return result;
 }
 
-MUTEX_TYPE Logger::_lock = MUTEX_STATIC_INIT;
+MUTEX_TYPE BaseLogger::_lock = MUTEX_STATIC_INIT;
 
-Logger::Logger() {
+BaseLogger::BaseLogger() {
 	_freeAppenders = false;
 }
 
-Logger::~Logger() {
+BaseLogger::~BaseLogger() {
 	if (_freeAppenders) {
 
 		FOR_VECTOR(_logLocations, i) {
@@ -161,14 +161,14 @@ Logger::~Logger() {
 	}
 }
 
-void Logger::Init() {
+void BaseLogger::Init() {
 	LOCK(&_lock);
 	if (_pLogger != NULL)
 		return;
-	_pLogger = new Logger();
+	_pLogger = new BaseLogger();
 }
 
-void Logger::Free(bool freeAppenders) {
+void BaseLogger::Free(bool freeAppenders) {
 	LOCK(&_lock);
 	if (_pLogger != NULL) {
 		_pLogger->_freeAppenders = freeAppenders;
@@ -203,7 +203,7 @@ void Logger::Free(bool freeAppenders) {
 //}
 
 // TODO: This new version need refactoring...
-void Logger::Log(int32_t level, const char *pFileName, uint32_t lineNumber,
+void BaseLogger::Log(int32_t level, const char *pFileName, uint32_t lineNumber,
 		const char *pFunctionName, const char *pFormatString, ...) {
 	{
 		LOCK(&_lock);
@@ -238,7 +238,41 @@ void Logger::Log(int32_t level, const char *pFileName, uint32_t lineNumber,
 	}
 }
 
-bool Logger::AddLogLocation(BaseLogLocation *pLogLocation) {
+// TODO: This new version need refactoring...
+void BaseLogger::SimpleLog(int32_t level, const char *pFileName, uint32_t lineNumber,
+		const char *pFunctionName, const char *pFormatString) {
+	{
+		LOCK(&_lock);
+		if (_pLogger == NULL)
+			return;
+	}
+
+	string message = pFormatString;
+        
+        // Add separator
+        
+        message = "- " + message;
+        
+        // FIX        
+        int fLen = strlen(pFileName);
+        
+        for (int i = fLen - 1 ; i >= 0 ; i--) {
+            if (pFileName[i] == '/') {
+                pFileName = pFileName + i + 1;
+                break;
+            }
+        }
+
+	FOR_VECTOR(_pLogger->_logLocations, i) {
+		if (_pLogger->_logLocations[i]->EvalLogLevel(level, pFileName, lineNumber,
+				pFunctionName))
+			_pLogger->_logLocations[i]->Log(level, pFileName,
+				lineNumber, pFunctionName, message);
+	}
+}
+
+
+bool BaseLogger::AddLogLocation(BaseLogLocation *pLogLocation) {
 	LOCK(&_lock);
 	if (_pLogger == NULL)
 		return false;
@@ -248,7 +282,7 @@ bool Logger::AddLogLocation(BaseLogLocation *pLogLocation) {
 	return true;
 }
 
-void Logger::SignalFork(uint32_t forkId) {
+void BaseLogger::SignalFork(uint32_t forkId) {
 	LOCK(&_lock);
 	if (_pLogger == NULL)
 		return;
@@ -258,7 +292,7 @@ void Logger::SignalFork(uint32_t forkId) {
 	}
 }
 
-void Logger::SetLevel(int32_t level) {
+void BaseLogger::SetLevel(int32_t level) {
 	LOCK(&_lock);
 	if (_pLogger == NULL)
 		return;
@@ -268,7 +302,7 @@ void Logger::SetLevel(int32_t level) {
 	}
 }
 
-string Logger::LevelToString(int32_t level) {
+string BaseLogger::LevelToString(int32_t level) {
     string result;
 
     switch (level) {
@@ -298,4 +332,15 @@ string Logger::LevelToString(int32_t level) {
     }
 
     return result;
+}
+
+int BaseLogger::GetLevel() {
+    if (_pLogger == NULL)
+        return -1;
+
+    FOR_VECTOR(_pLogger->_logLocations, i) {
+        return _pLogger->_logLocations[i]->GetLevel();
+    }
+
+    return -1;
 }

@@ -75,7 +75,7 @@ void ConsoleLogLocation::Log(int32_t level, const char *pFileName,
 	if (_allowColors) {
 		SET_CONSOLE_TEXT_COLOR(_colors[level]);
 #ifdef LINUX
-		fprintf(stdout, "%s [%s]%d[%lu] %s:%" PRIu32" %s", STR(buf), STR(Logger::LevelToString(level)),
+		fprintf(stdout, "%s [%s]%d[%lu] %s:%" PRIu32" %s", STR(buf), STR(BaseLogger::LevelToString(level)),
                         getpid(), pthread_self(), pFileName, lineNumber, STR(message));
 #else
 		fprintf(stdout, "%s %s:%" PRIu32" %s", STR(buf), pFileName, lineNumber, STR(message));
@@ -85,7 +85,7 @@ void ConsoleLogLocation::Log(int32_t level, const char *pFileName,
 		fprintf(stdout, "\n");
 	} else {
 #ifdef LINUX
-		fprintf(stdout, "%s [%s]%d[%lu] %s:%" PRIu32" %s\n", STR(buf), STR(Logger::LevelToString(level)),
+		fprintf(stdout, "%s [%s]%d[%lu] %s:%" PRIu32" %s\n", STR(buf), STR(BaseLogger::LevelToString(level)),
                         getpid(), pthread_self(), pFileName, lineNumber, STR(message));
 #else
 		fprintf(stdout, "%s %s:%" PRIu32" %s\n", STR(buf), pFileName, lineNumber, STR(message));

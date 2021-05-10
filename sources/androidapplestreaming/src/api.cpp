@@ -54,16 +54,16 @@ void EnvRun(string ip, uint16_t port, int logLevel)
 	//1. Initialize the logger
 	logLevel = logLevel < 0 ? 0 : logLevel;
 	logLevel = logLevel >= _FINEST_ ? _FINEST_ : logLevel;
-	Logger::Init();
+	BaseLogger::Init();
 	BaseLogLocation *pLogLocation = NULL;
 #ifdef ANDROID
 	pLogLocation = new LogCatLogLocation();
 	pLogLocation->SetLevel(logLevel);
-	Logger::AddLogLocation(pLogLocation);
+	BaseLogger::AddLogLocation(pLogLocation);
 #else
 	pLogLocation = new ConsoleLogLocation(true);
 	pLogLocation->SetLevel(logLevel);
-	Logger::AddLogLocation(pLogLocation);
+	BaseLogger::AddLogLocation(pLogLocation);
 #endif /* ANDROID */
 
 #ifdef BUILD_SIGNATURE
@@ -211,7 +211,7 @@ void EnvRun(string ip, uint16_t port, int logLevel)
 	ClientApplicationManager::Shutdown();
 
 	//15. Shutting down the logger leaving you in the dark. Bye bye
-	Logger::Free(true);
+	BaseLogger::Free(true);
 }
 
 void WaitEnvReady() {

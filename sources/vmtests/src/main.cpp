@@ -46,10 +46,10 @@ bool TestV8VM(Variant &testSuite);
 
 int main(int argc, char **argv) {
 	//1. Init the logger
-	Logger::Init();
+	BaseLogger::Init();
 	ConsoleLogLocation consoleLogLocation(true);
 	consoleLogLocation.SetLevel(_FINEST_);
-	Logger::AddLogLocation(&consoleLogLocation);
+	BaseLogger::AddLogLocation(&consoleLogLocation);
 
 	FINEST("Prepare test suite");
 	Variant testSuite = PrepareTestsSuite();
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 		FINEST("Tests completed with errors");
 	}
 
-	Logger::Free(false);
+	BaseLogger::Free(false);
 
 	return result ? 0 : -1;
 }

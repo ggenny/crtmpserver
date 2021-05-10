@@ -42,24 +42,27 @@ public:
 	static Variant GetBuilder();
 };
 
-class DLLEXP Logger {
+class DLLEXP BaseLogger {
 private:
 	static MUTEX_TYPE _lock;
-	static Logger *_pLogger; //! Pointer to the Logger class.
+	static BaseLogger *_pLogger; //! Pointer to the Logger class.
 	vector<BaseLogLocation *> _logLocations; //! Vector that stores the location of the log file.
 	bool _freeAppenders; //! Boolean that releases the logger.
 private:
-	Logger();
+	BaseLogger();
 public:
-	virtual ~Logger();
+	virtual ~BaseLogger();
 
 	static void Init();
 	static void Free(bool freeAppenders);
 	static void Log(int32_t level, const char *pFileName, uint32_t lineNumber,
 			const char *pFunctionName, const char *pFormatString, ...);
+        static void SimpleLog(int32_t level, const char *pFileName, uint32_t lineNumber,
+                        const char *pFunctionName, const char *pFormatString);  
 	static bool AddLogLocation(BaseLogLocation *pLogLocation);
 	static void SignalFork(uint32_t forkId);
 	static void SetLevel(int32_t level);
         static string LevelToString(int32_t level);
+        static int GetLevel();        
 
 };

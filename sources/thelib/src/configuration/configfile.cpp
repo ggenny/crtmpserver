@@ -219,7 +219,7 @@ bool ConfigFile::ConfigLogAppender(Variant &node) {
 	}
 	if (pLogLocation != NULL) {
 		pLogLocation->SetLevel((int32_t) node[CONF_LOG_APPENDER_LEVEL]);
-		if (!Logger::AddLogLocation(pLogLocation)) {
+		if (!BaseLogger::AddLogLocation(pLogLocation)) {
 			delete pLogLocation;
 		}
 	}
