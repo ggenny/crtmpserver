@@ -108,7 +108,7 @@ bool FileLogLocation::OpenFile() {
 
 	//default the file name to the specified value
 #ifdef FILE_LOG_LOCATION_NO_FORMAT_NAME
-        string filename = format("%s", STR(_fileName));
+        string fileName = format("%s", STR(_fileName));
 #else
 	string fileName = format("%s.%02" PRIu32".log",
 					_fileName.c_str(),
