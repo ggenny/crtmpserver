@@ -121,7 +121,7 @@ int main(int argc, const char **argv) {
 }
 
 bool Initialize() {
-	Logger::Init();
+	BaseLogger::Init();
 
 	if ((bool)gRs.commandLine["arguments"]["--use-implicit-console-appender"]) {
 		Variant dummy;
@@ -131,7 +131,7 @@ bool Initialize() {
 		dummy[CONF_LOG_APPENDER_LEVEL] = (uint32_t) 6;
 		ConsoleLogLocation * pLogLocation = new ConsoleLogLocation(dummy);
 		pLogLocation->SetLevel(_FINEST_);
-		Logger::AddLogLocation(pLogLocation);
+		BaseLogger::AddLogLocation(pLogLocation);
 	}
 
 	INFO("Reading configuration from %s", STR(gRs.commandLine["arguments"]["configFile"]));
@@ -203,7 +203,7 @@ bool Initialize() {
 
 			gRs.daemon = true;
 
-			Logger::SignalFork(pid);
+			BaseLogger::SignalFork(pid);
 		}
 	}
 #endif /* WIN32 */
@@ -307,7 +307,7 @@ void Cleanup() {
 	CleanupSSL();
 
 	WARN("Shutting down the logger leaving you in the dark. Bye bye... :(");
-	Logger::Free(true);
+	BaseLogger::Free(true);
 }
 
 void QuitSignalHandler(void) {
