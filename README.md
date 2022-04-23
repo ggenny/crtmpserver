@@ -30,6 +30,21 @@ Play the stream with ffplay:
 ffplay -probesize 2048 rtmp://localhost/live/livestream
 ```
 
+## 1.7 Version
+
+- [ ] Add multi-tier streaming service
+- [ ] Add flow mixing: video from one source and metadata from another ( from an AI Engine )
+
+## 1.6 Version
+
+- [ ] Add HLS Streaming
+
+## 1.5 Version
+
+- [ ] Add on-demand shared stream
+- [ ] Add basic http file download ( mp4 fragmented stream )
+- [ ] Add h265 on rtsp
+
 ## 1.4 Version
 
 - [x] Align to my history
