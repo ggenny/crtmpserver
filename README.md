@@ -147,7 +147,7 @@ push stream:
 liveflv: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f flv -metadata streamName=tcpchan5 "tcp://localhost:6666"
 mpegts: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f mpegts tcp://localhost:9999/
 rtmp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f mpegts tcp://localhost:9999/
-rtsp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f rtsp -y rtsp://localhost:5544/tcpchan5
+rtsp: ffmpeg -f v4l2 -framerate 25 -video_size 320x240 -i /dev/video0 -vcodec libx264 -pix_fmt yuv420p -preset ultrafast -g 5 -f rtsp -metadata title=tcpchan5 -y rtsp://localhost:5544/tcpchan5
 ```
 play:
 ```bash
